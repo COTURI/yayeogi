@@ -8,8 +8,6 @@ class Green3ApplicationTests {
 
 	@Test
 	void contextLoads() {
-
-		System.out.println("Hello Worldgㅈㄷㄱㅈㄷㄱ");
 	}
 
 }
