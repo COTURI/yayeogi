@@ -1,8 +1,8 @@
-package yayeogi.Green3;
+package yayeogi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+/*기본창은 index.html*/
 @SpringBootApplication
 public class Green3Application {
 
