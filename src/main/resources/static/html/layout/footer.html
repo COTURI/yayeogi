@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>Footer Example</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: "Noto Sans KR", sans-serif;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+
+            .content {
+                flex: 1;
+            }
+
+            #footer {
+                overflow: hidden;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                padding: 20px;
+                font-weight: 400;
+                font-size: 12px;
+                color: black;
+                background-color: whitesmoke;
+                z-index: 2;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+                text-align: center;
+            }
+
+            .footer-box {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            hr {
+                border: none;
+                border-top: 1px solid rgba(0, 0, 0, 0.2);
+                margin: 10px 0;
+            }
+
+            .gray_subtext {
+                color: #555;
+                line-height: 1.6;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="content">
+            <!-- Your main content goes here -->
+        </div>
+
+        <div class="container" id="footer">
+            <hr>
+            <div class="footer-box">
+                <div class="gray_subtext">
+                    <span>
+                        (주)YAYEOGI | 대표이사: 홍길동 | 사업자 등록번호: 000-00-000000 | 통신판매업신고: 야여기-0000호 | 메일: help@yayeogi.com
+                        <br>관광사업자 등록번호: 제2022-05호 | 주소: 서울 강남구 테헤란로 000길 00 | 호스팅서비스 제공자: 주식회사 YAYEOGI
+                        <br>고객센터: 1644-1346 (오전 9시 - 익일 새벽 3시)
+                        <br>(주)GOING은 통신판매 중개자로서 통신판매의 당사자가 아니며 상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.
+                        <br>(주)GOING이 소유/운영/관리하는 웹사이트 및 앱 내의 상품/판매자/이벤트 정보, 디자인 및 화면의 구성, UI를 포함하여 일체의 콘텐츠에 대한 무단 복제, 배포, 방송 또는 전송, 스크래핑 등의 행위는 저작권법 및 콘텐츠산업 진흥법 등 관련 법령에 의하여 엄격히 금지됩니다.
+                    </span>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </body>
+</html>
