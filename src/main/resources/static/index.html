@@ -1,103 +1,26 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>항공편 검색</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1 {
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 10px;
-        }
-        .results {
-            margin-top: 20px;
-        }
-        .flight {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        .flight h3 {
-            margin-top: 0;
-        }
-        .flight p {
-            margin: 5px 0;
-        }
-        .flight a {
-            margin-right: 10px;
-        }
-    </style>
+    <title>Flight Offers Search</title>
 </head>
 <body>
-<h1>항공편 검색</h1>
-<div class="form-group">
+<h1>항공권 검색</h1>
+
+<form action="/search-flight-offers" method="get">
     <label for="origin">출발지:</label>
-    <input type="text" id="origin" placeholder="출발지 (예: ORY)">
-</div>
-<div class="form-group">
-    <label for="maxPrice">최대 가격 (EUR):</label>
-    <input type="number" id="maxPrice" placeholder="최대 가격">
-</div>
-<div class="form-group">
-    <button onclick="fetchFlightData()">검색</button>
-</div>
-<div class="results" id="results"></div>
+    <input type="text" id="origin" name="origin" required><br><br>
 
-<script>
-    async function fetchFlightData() {
-        const origin = document.getElementById('origin').value;
-        const maxPrice = document.getElementById('maxPrice').value;
+    <label for="destination">도착지:</label>
+    <input type="text" id="destination" name="destination" required><br><br>
 
-        if (!origin || !maxPrice) {
-            alert('출발지와 최대 가격을 입력하세요.');
-            return;
-        }
+    <label for="date">날짜:</label>
+    <input type="date" id="date" name="date" required><br><br>
 
-        try {
-            const response = await fetch(`/flights?origin=${origin}&maxPrice=${maxPrice}`);
-            if (!response.ok) {
-                throw new Error('네트워크 응답이 실패했습니다 ' + response.statusText);
-            }
-            const data = await response.json();
-            console.log("데이터 가져오기 성공: ", data); // 데이터 로그 추가
-            displayFlightData(data.data); // 데이터를 화면에 표시하는 함수 호출
-        } catch (error) {
-            console.error('데이터 가져오는 중 오류 발생:', error);
-            alert('항공편 정보를 가져오는 데 문제가 발생했습니다.');
-        }
-    }
+    <label for="adults">성인 수:</label>
+    <input type="number" id="adults" name="adults" min="1" required><br><br>
 
-    function displayFlightData(data) {
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = ''; // 이전 결과 초기화
-
-        if (data.length === 0) {
-            resultsDiv.innerHTML = '<p>검색 결과가 없습니다.</p>';
-            return;
-        }
-
-        data.forEach(flight => {
-            const flightDiv = document.createElement('div');
-            flightDiv.className = 'flight';
-            flightDiv.innerHTML = `
-                <h3>출발지: ${flight.origin} - 목적지: ${flight.destination}</h3>
-                <p>출발일: ${flight.departureDate}</p>
-                <p>도착일: ${flight.returnDate}</p>
-                <p>가격: ${flight.price.total} EUR</p>
-                <p>
-                    <a href="${flight.links.flightDates}" target="_blank">출발일 선택</a>
-                    <a href="${flight.links.flightOffers}" target="_blank">항공편 예약</a>
-                </p>
-            `;
-            resultsDiv.appendChild(flightDiv);
-        });
-    }
-</script>
+    <button type="submit">검색</button>
+</form>
 </body>
 </html>
