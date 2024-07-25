@@ -2,7 +2,9 @@ package yayeogi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-/*기본창은 index.html*/
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
+
 @SpringBootApplication
 public class Green3Application {
 
@@ -10,4 +12,8 @@ public class Green3Application {
 		SpringApplication.run(Green3Application.class, args);
 	}
 
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 }
