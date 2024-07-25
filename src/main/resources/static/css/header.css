@@ -1,0 +1,66 @@
+body {
+    width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px 0px;
+
+}
+
+.logo-button {
+    flex: 1;
+}
+
+.logo-button img {
+    height: 40px; /* 로고 이미지 높이 조정 */
+    width: auto; /* 비율 유지 */
+}
+
+.menu-container {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+.menu {
+    display: flex;
+}
+
+.menu button {
+    margin: 0 5px;
+    padding: 10px 15px;
+    background-color: #17a2b8; /* 버튼 배경색 조정 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #fff;
+}
+
+.auth {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.auth button {
+    margin: 0 5px;
+    padding: 10px 20px;
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.auth button:hover {
+    background-color: #5a6268;
+}
