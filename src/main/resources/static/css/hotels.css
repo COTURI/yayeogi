@@ -8,20 +8,20 @@
      overflow: auto; /* 스크롤을 활성화 */
  }
 
-#hotels_search_page .hotels_search_form{
+#hotels_search_page .hotels_search_form{    /* 메인 */
   background-color: var(--box_bg);
     box-shadow: 0px 1px 6px 5px var(--form);
     margin-bottom: 32px;
 
 }
 
-#hotels_search_page .search_from_box{
+#hotels_search_page .search_from_box{   /* 메인 */
   position: absolute;
   color:#F4FFFF;
   width:1100px;
 
 }
-.background_image{
+.background_image{              /* 검색창 뒷배경 */
   background-image: url('img/vacation.png');
     background-size: cover;
     background-position: center;
@@ -32,8 +32,8 @@
     justify-content: center;
     position: relative;
 }
-.overlay {
-        weight:1200px;
+.overlay {                      /* 검색창 큰틀 */
+    weight:1200px;
     background-color: #00008C;
     color: white;
     padding: 20px;
@@ -45,12 +45,12 @@ h1 {
     margin-bottom: 20px;
 }
 
-.search-bar {
+.search-bar {               /* 검색창 */
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
 }
-.search-bar-check{
+.search-bar-check{          /* 검색버튼 */
     float: right;
     display: flex;
     gap: 10px;
@@ -58,7 +58,7 @@ h1 {
 
 }
 
-.search-bar input[type="text"],
+.search-bar input[type="text"], /* 검색창 텍스트, 날짜 */
 .search-bar input[type="date"],
 .search-bar select {
     padding: 10px;
@@ -68,7 +68,7 @@ h1 {
 }
 
 
-.search-bar-check button {
+.search-bar-check button {  /* 검색버튼*/
     padding: 10px 20px;
     background-color: #0066cc;
     color: white;
@@ -78,57 +78,203 @@ h1 {
 
 }
 
-.filters {
+.filters {              /* 인기필터 */
     display: flex;
     justify-content: left;
     gap: 15px;
 }
 
-.filters label {
+.filters label {        /* 인기필터 라벨 속성 */
     color: white;
 }
 
+.banner{                /* 배너 이미지 */
+        width:1200px;
+        height:400px;
+        border-radius:10px;
 
-.event-banner{
-       position: relative;
+}
+.event-banner{          /* 배너 이미지*/
+             top:100px;
+             position: relative;
              width: 100%;
-             max-width: 900px;
+             max-width: 1200px;
              margin: 0 auto; /* 배너 중앙 정렬 */
              border-radius: 10px;
              overflow: hidden; /* 텍스트가 배너를 벗어나지 않도록 */
+             margin-left:400px;
          }
-  .banner-content {
+  .banner-content {         /* 배너 대표 문구 */
             position: absolute;
             bottom: 190px; /* 배너 하단에서 20px 위 */
-            left: 50px; /* 배너 왼쪽에서 20px */
+            left: 80px; /* 배너 왼쪽에서 20px */
             color: white;
             padding: 10px;
             border-radius: 5px;
-            font-size: 30px;
+            font-size: 40px;
             font-weight: bold;
             z-index: 10;
         }
- .banner-sub-content{
+ .banner-sub-content{    /* 배너 서브 문구 */
                position: absolute;
-               top:83px; /* 배너 하단에서 20px 위 */
+               top:115px; /* 배너 하단에서 20px 위 */
                left: 0px; /* 배너 왼쪽에서 20px */
                color: white;
                font-weight: lighter;
                padding: 10px;
-               font-size: 12px;
+               font-size: 16px;
                z-index: 10;
  }
- .product-check{
+ .product-check{         /* 배너 호텔 상품보기 버튼 */
      position: absolute;
      height:30px;
+     width:120px;
      color:black;
-     top:200px;
-     left:10px;
+     top:300px;
+     left:90px;
      font-weight: bold;
      background-color: white;
-     font-size: 12px;
+     font-size: 13px;
      padding: 5px;
      border-radius: 5px;
      border: none;
      z-index: 10;
+       text-indent: 13px;
  }
+ .banner-sale-image{         /* 배너 할인 이미지 */
+        position: absolute;
+        border-radius:10px;
+        width:180px;
+        height:90px;
+        z-index: 10;
+        margin-left:830px;
+        top:120px;
+ }
+ .title-comment{              /* 브랜드 대표 문구 */
+        position: absolute;
+        font-weight: bold;
+        font-size:36px;
+        margin-left:400px;
+        margin-top:200px;
+ }
+ .hotels-brand{             /* 호텔 브랜드 */
+         bottom:20px;
+         width:100px;
+         height:90px;
+         right:0px;
+ }
+  .title-comment1{          /* 국내 호텔 대표 문구 */
+         position: absolute;
+         font-weight: bold;
+         font-size:36px;
+         margin-left:400px;
+         margin-top:460px;
+  }
+   .title-comment2 {            /* 국내 호텔 카드 */
+         display: flex; /* Flexbox 사용 */
+        gap:30px; /* 카드 간격 균등 분배 */
+         align-items: stretch; /* 모든 카드의 높이를 동일하게 */
+         font-weight: bold;
+         font-size: 36px;
+         color: black;
+         margin-left: 400px;
+         margin-top: 600px;
+         text-decoration: none;
+    }
+    .card a {           /* 카드 a 값 제거 */
+        color: inherit;
+        text-decoration: none;
+    }
+    .h10{       /* 카드내 글자 값 */
+    font-size:20px;
+    color:#161616;
+    }
+    .kor_area_button{       /* 국내 지역 버튼 */
+        padding:3px 15px;
+        background-color:white;
+        border-color: #afb0b3;
+        border-radius: 7px;
+        font-size:14px;
+    }
+   .product_img_size{       /* 해외호텔 카드 사이즈 */
+       position: relative;
+      width: 380px;
+      max-height: 300px;
+      border-radius: 15px;
+       object-fit: cover;
+    }
+   .product_img{         /* 해외호텔 이미지 사이즈 */
+      object-fit: cover;
+       max-width: 391px; /* 카드의 최대 너비 */
+         width: 100%; /* 부모 컨테이너에 맞춤 */
+         height: 140px;
+      border-top-left-radius:15px;
+      border-top-right-radius:15px;
+    }
+
+    .product_title{              /* 해외호텔 이름 */
+      overflow: hidden;
+        text-overflow: ellipsis;
+     font-size:20px;
+     color:#161616;
+       font-weight: bold;
+       text-decoration:none;
+       margin-top:5px;
+
+    }
+
+    .product_rating{          /* 호텔 별점 */
+      overflow: hidden;
+        text-overflow: ellipsis;
+        font-size:14px;
+       text-decoration:none;
+        font-color:black;
+
+
+    }
+    .product_price{           /* 호텔 가격 */
+      float: right;
+      font-weight: bold;
+      text-decoration:none;
+      margin-top:30px;
+       font-color:black;
+    }
+    .product_date{                /* 1박 요금 */
+    font-size:12px;
+       color:#afb0b3;
+        float: right;
+       padding-bottom:1px;
+    }
+  .title-comment3{            /* 요약정보 */
+           position: absolute;
+           font-weight: bold;
+           font-size:32px;
+           margin-left:410px;
+           margin-top:120px;
+    }
+.title-card1{                 /* 해외호텔 카드 */
+     display: flex; /* Flexbox 사용 */
+        gap:30px; /* 카드 간격 균등 분배 */
+         align-items: stretch; /* 모든 카드의 높이를 동일하게 */
+         font-weight: bold;
+         font-size: 36px;
+         color: black;
+         margin-left: 400px;
+         margin-top: 250px;
+         text-decoration: none;
+         }
+.icon_build{                  /* 요약정보 아이콘 */
+        margin-top:20px;
+        width:25px;
+        height:25px;
+}
+.icon_title{
+        size:16px;
+        color:#161616;
+        margin-top:10px;
+}
+.icon_detail{
+        size:20px;
+        font-weight: bold;
+        color:#161616;
+}

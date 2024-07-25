@@ -14,17 +14,18 @@
 <main id="hotels_search_page">
     <section class="hotels_search_form">
         <div class="background_image">
-            <img src="img/vacation.png" width="1920px;" height="480px;" style="position: relative;"> <!--검색창 백그라운드 이미지-->
+            <img src="img/vacation.png" width="1920px;" height="480px;" style="position: relative;">
+            <!--검색창 백그라운드 이미지-->
             <div class="search_from_box">
                 <h1 style="font-weight: bold;">마음에 꼭 드는 호텔을 찾아보세요.</h1>
-                <div class="overlay"> <!--검색창 틀-->
+                <div class="overlay" style="width:1200px;"> <!--검색창 틀-->
 
                     <div class="search-bar"> <!--검색창-->
                         <label>
                             <input type="text" placeholder="목적지 또는 호텔명을 입력하십시오." size=70>
                             <input type="date" value="2024-07-31" size=30>
                             <input type="date" value="2024-08-01">
-                            <select id="guest-button">
+                            <select id="guest-button" style="width:275px;">
                                 <option>성인 2명, 객실 1개</option>
                             </select>
                         </label>
@@ -44,22 +45,157 @@
 
         </div>
         <div class="event-banner">  <!--배너-->
-        <span class="banner" style="width:900px; height:400px;">
-            <a href="https://google.com">   <!--배너 클릭시 이동 주소-->
-            <img src="img/banner.png" style=" border-radius:10px; width:900px; height:400px;">
-            </a>
-            <div class="banner-content">
-                <strong>이번 호텔 예약은 <br>더욱 저렴하게 </strong>
-            <div class="banner-sub-content" style="width:330px;">
-            인기 호텔 특가 상품을 선택해 멋진 객실을<br> 멋진 가격에 이용해보세요.
-            </div>
-            <a href="https://google.com">
-            <div type="button" class="product-check">호텔 상품 보기</div>
-            </a>
+            <span class="banner" >
+                <a href="https://google.com">   <!--배너 클릭시 이동 주소-->
+                    <img src="img/banner.png" alt="banner" style="width:1200px; height:400px;">
+                <div class="banner-content"><!-- 배너에 작성된 문구들-->
+                            <strong>이번 호텔 예약<br>더욱 저렴하게 </strong>
+                             <div class="banner-sub-content" style="width:330px;">
+                                인기 호텔 특가 상품을 선택해 멋진 <br>객실을 멋진 가격에 이용해보세요.
+                             </div>
+                </div>
+                    <div typeof="button" class="product-check"> <!--배너에 있는 버튼-->
+                        호텔 상품 보기
+                    </div>
+                                <div>
+                                     <img src="img/sale.png" alt="sale" class="banner-sale-image" >
+                                </div>
+                      </a>
+            </span>
         </div>
-        </span>
+<div class="title-comment">
+        <strong>다양한 브랜드의 호텔을 비교해보세요</strong><br>
+    <span>
+        <img src="img/Hilton.png" alt="Hilton" class="hotels-brand">
+        <img src="img/InterContinental.png" alt="InterContinental" class="hotels-brand" style="width:160px;">
+        <img src="img/Marriott.png" alt="Marriott" class="hotels-brand" style="width:160px; height:80px;">
+        <img src="img/Hyatt.png" alt="Hyatt" class="hotels-brand" style="width:160px;margin-top:20px;">
+        <img src="img/Agoda.png" alt="Agoda" class="hotels-brand" style="margin-top:20px; width:130px;">
+        <img src="img/Hotels.png" alt="Hotels" class="hotels-brand" style="width:130px;">
 
+    </span>
+</div>
+
+        <div class="title-comment1">
+            <strong>국내 호텔 지역별 TOP3</strong>
+            <h6>여러분의 다음 여행은 금방일지도 몰라요.주변 호텔을 찾아보세요</h6>
+            <button type="button" class="kor_area_button">서울</button>
+            <button type="button" class="kor_area_button">제주</button>
+            <button type="button" class="kor_area_button">부산</button>
+            <button type="button" class="kor_area_button">강릉</button>
+            <button type="button" class="kor_area_button">여수</button>
         </div>
+        <br>
+        <div class="title-comment2">
+            <div class="card product_img_size">
+                <a href="https://google.com">
+                    <img src="img/product1.png" class="card-img-top product_img" alt="image">
+                    <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
+                        <h5 class="product_title">웨스틴조선 서울
+                            <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
+                        </h5>
+                        <h5 class="product_price">￦459,800
+                            <br>
+                            <p class="product_date">1박 요금</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card product_img_size">
+                <a href="https://google.com">
+                    <img src="img/product1.png" class="card-img-top product_img" alt="image">
+                    <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
+                        <h5 class="product_title">웨스틴조선 서울
+                            <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
+                        </h5>
+                        <h5 class="product_price">￦459,800
+                            <br>
+                            <p class="product_date">1박 요금</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card product_img_size">
+                <a href="https://google.com">
+                    <img src="img/product1.png" class="card-img-top product_img" alt="image">
+                    <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
+                        <h5 class="product_title">웨스틴조선 서울
+                            <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
+                        </h5>
+                        <h5 class="product_price">￦459,800
+                            <br>
+                            <p class="product_date">1박 요금</p>
+                        </h5>
+                    </div>
+                </a>
+            </div>
+        </div>
+<div class="title-comment3">
+    도심 휴가를 즐기기 좋은 해외 국가별 호텔 BEST TOP3
+    <h6>도심에서 휴가를 보낼 계획이라면, 접근성 좋은 곳에 있는 숙소를 잡는 것이 중요하죠. 시내 중심가에 있는 호텔을 확인해 보세요.</h6>
+    <button type="button" class="kor_area_button">일본</button>
+    <button type="button" class="kor_area_button">중국</button>
+    <button type="button" class="kor_area_button">태국</button>
+    <button type="button" class="kor_area_button">다낭</button>
+    <button type="button" class="kor_area_button">발리</button>
+</div>
+        <br>
+        <div class="title-card1">
+            <div class="card product_img_size">
+                <a href="https://google.com">
+                    <img src="img/Japan.png" class="card-img-top product_img" alt="image">
+                    <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
+                        <h5 class="product_title">케이스 하우스 이토 온센
+                            <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
+                        </h5>
+                        <h5 class="product_price">￦96,800
+                            <br>
+                            <p class="product_date">1박 요금</p>
+                        </h5>
+                    </div>
+                </a>
+            </div>
+            <div class="card product_img_size">
+                <a href="https://google.com">
+                    <img src="img/Japan.png" class="card-img-top product_img" alt="image">
+                    <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
+                        <h5 class="product_title">케이스 하우스 이토 온센
+                            <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
+                        </h5>
+                        <h5 class="product_price">￦96,800
+                        <br>
+                            <p class="product_date">1박 요금</p>
+                        </h5>
+
+                    </div>
+                </a>
+            </div>
+            <div class="card product_img_size">
+                <a href="https://google.com">
+                    <img src="img/Japan.png" class="card-img-top product_img" alt="image">
+                    <div class="card-body" style="border-bottom: solid 1px #afb0b3;">
+                        <h5 class="product_title">케이스 하우스 이토 온센
+                            <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
+                        </h5>
+                        <h5 class="product_price">￦96,800
+                            <br>
+                            <p class="product_date">1박 요금</p>
+                        </h5>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="title-comment3">
+            요약 정보
+            <h6>여행 전 알아두면 좋은 정보를 확인하고 마음 편히 여행하세요.</h6>
+            <img src="img/building.png" class="icon_build" alt="building">
+            <h6 class="icon_title"> 이용할 수 있는 호텔 브랜드</h6>
+            <h5 class="icon_detail">60개 이상</h5>
+</div>
+
+
+
+
+
+
     </section>
 </main>
 </body>
