@@ -1,0 +1,134 @@
+.body, html {
+    margin: 0;
+    padding: 0;
+    height: 1000%; /* 페이지 전체 높이를 100%로 설정 */
+}
+.main {
+     height: 100%; /* main 요소의 높이 설정 */
+     overflow: auto; /* 스크롤을 활성화 */
+ }
+
+#hotels_search_page .hotels_search_form{
+  background-color: var(--box_bg);
+    box-shadow: 0px 1px 6px 5px var(--form);
+    margin-bottom: 32px;
+
+}
+
+#hotels_search_page .search_from_box{
+  position: absolute;
+  color:#F4FFFF;
+  width:1100px;
+
+}
+.background_image{
+  background-image: url('img/vacation.png');
+    background-size: cover;
+    background-position: center;
+    weight:1920px;
+    height: 550px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.overlay {
+        weight:1200px;
+    background-color: #00008C;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.search-bar-check{
+    float: right;
+    display: flex;
+    gap: 10px;
+    margin-top: -7px;
+
+}
+
+.search-bar input[type="text"],
+.search-bar input[type="date"],
+.search-bar select {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    flex: 1;
+}
+
+
+.search-bar-check button {
+    padding: 10px 20px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+
+.filters {
+    display: flex;
+    justify-content: left;
+    gap: 15px;
+}
+
+.filters label {
+    color: white;
+}
+
+
+.event-banner{
+       position: relative;
+             width: 100%;
+             max-width: 900px;
+             margin: 0 auto; /* 배너 중앙 정렬 */
+             border-radius: 10px;
+             overflow: hidden; /* 텍스트가 배너를 벗어나지 않도록 */
+         }
+  .banner-content {
+            position: absolute;
+            bottom: 190px; /* 배너 하단에서 20px 위 */
+            left: 50px; /* 배너 왼쪽에서 20px */
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 30px;
+            font-weight: bold;
+            z-index: 10;
+        }
+ .banner-sub-content{
+               position: absolute;
+               top:83px; /* 배너 하단에서 20px 위 */
+               left: 0px; /* 배너 왼쪽에서 20px */
+               color: white;
+               font-weight: lighter;
+               padding: 10px;
+               font-size: 12px;
+               z-index: 10;
+ }
+ .product-check{
+     position: absolute;
+     height:30px;
+     color:black;
+     top:200px;
+     left:10px;
+     font-weight: bold;
+     background-color: white;
+     font-size: 12px;
+     padding: 5px;
+     border-radius: 5px;
+     border: none;
+     z-index: 10;
+ }
