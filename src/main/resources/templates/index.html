@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>항공권 검색</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            margin: 0;
+            text-align: center;
+        }
+        .search-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .search-form .form-group {
+            flex: 1;
+            position: relative;
+        }
+        .search-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        .search-form input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .search-form input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .suggestions {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #fff;
+            position: absolute;
+            z-index: 1000;
+            width: calc(100% - 2px);
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+        .search-form button {
+            flex: 1;
+            background-color: #007bff;
+            color: #fff;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        .search-form button:hover {
+            background-color: #0056b3;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        .result-item {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            font-size: 16px;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-item p {
+            margin: 0;
+            padding: 5px 0;
+        }
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+            .search-form button {
+                width: 100%;
+                padding: 15px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+<h1>항공권 검색</h1>
+<div class="search-container">
+    <div class="search-form">
+        <div class="form-group">
+            <label for="origin">출발지</label>
+            <input type="text" id="origin" oninput="updateSuggestions('origin')" autocomplete="off" placeholder="출발지를 입력하세요">
+            <div id="origin-suggestions" class="suggestions"></div>
+        </div>
+        <div class="form-group">
+            <label for="destination">목적지</label>
+            <input type="text" id="destination" oninput="updateSuggestions('destination')" autocomplete="off" placeholder="목적지를 입력하세요">
+            <div id="destination-suggestions" class="suggestions"></div>
+        </div>
+        <div class="form-group">
+            <label for="departureDate">출발 날짜</label>
+            <input type="date" id="departureDate" required>
+        </div>
+        <div class="form-group">
+            <label for="adults">성인 수</label>
+            <input type="number" id="adults" value="1" min="1" required>
+        </div>
+        <button onclick="searchFlights()">검색</button>
+    </div>
+    <div id="results"></div>
+</div>
+
+<script>
+    const airports = {
+         "ICN": "인천국제공항",
+         "NYC": "뉴욕시",
+         "LAX": "로스앤젤레스 국제공항",
+         "ATL": "하츠필드-잭슨 애틀랜타 국제공항",
+         "ORD": "오헤어 국제공항",
+         "DFW": "댈러스 포트워스 국제공항",
+         "JFK": "존 F. 케네디 국제공항",
+         "SFO": "샌프란시스코 국제공항",
+         "SEA": "시애틀-타코마 국제공항",
+         "MIA": "마이애미 국제공항",
+         "BKK": "수완나품 국제공항",
+         "HND": "하네다 공항",
+         "CDG": "샤를 드 골 공항",
+         "LHR": "히드로 공항",
+         "HKG": "홍콩 국제공항",
+         "SYD": "시드니 국제공항",
+         "NRT": "나리타 공항",
+         "DXB": "두바이 국제공항",
+         "TLV": "벤구리온 공항",
+         "FRA": "프랑크푸르트 공항",
+         "AMS": "스히폴 공항",
+         "KIX": "간사이 국제공항",
+         "SIN": "싱가포르 창이 공항",
+         "BOM": "차트라파트리 시바지 국제공항",
+         "DEL": "인디라 간디 국제공항",
+         "MEX": "베니토 후아레즈 국제공항",
+         "JNB": "요하네스버그 오알탐보 국제공항",
+         "CPT": "케이프타운 국제공항",
+         "ZRH": "취리히 공항",
+         "WAW": "와르샤바 공항",
+         "IST": "이스탄불 공항",
+         "HEL": "헬싱키-반타 공항",
+         "MUC": "뮌헨 공항",
+         "VIE": "빈 국제공항",
+         "BRU": "브뤼셀 공항",
+         "OSL": "오슬로 공항",
+         "CPH": "코펜하겐 공항",
+         "MAD": "마드리드 바라하스 공항",
+         "BCN": "바르셀로나 공항",
+         "LIS": "리스본 공항",
+         "DOH": "하마드 국제공항",
+         "RUH": "킹 칼리드 국제공항",
+         "KUL": "쿠알라룸푸르 국제공항",
+         "MNL": "니노이 아키노 국제공항",
+         "SHA": "상하이 홍차오 국제공항",
+         "CAN": "광저우 바이윈 국제공항",
+         "XMN": "샤먼 국제공항",
+         "PEK": "베이징 서우두 국제공항",
+         "PVG": "상하이 푸둥 국제공항",
+         "HFE": "허페이 신톈주 국제공항",
+         "WUH": "우한 톈허 국제공항",
+         "XIY": "시안 셴양 국제공항",
+         "SZX": "선전 바오안 국제공항",
+         "HAK": "하이커우 메이란 국제공항",
+         "CKG": "충칭 장베이 국제공항",
+         "KMG": "쿤밍 창수이 국제공항",
+         "CGK": "수카르노-하타 국제공항",
+         "GRU": "상파울로 그와룰류스 국제공항",
+         "SGN": "탄손낫 국제공항",
+         "TPE": "타이완 타오위안 국제공항",
+         "TSN": "톈진 빈하이 국제공항",
+         "DLC": "다롄 저우수이쯔 국제공항",
+         "BJS": "베이징"
+         };
+
+         const airlines = {
+         "AA": "아메리칸 항공",
+         "DL": "델타 항공",
+         "UA": "유나이티드 항공",
+         "LH": "루프트한자",
+         "AF": "에어프랑스",
+         "BA": "영국항공",
+         "CX": "캐세이퍼시픽",
+         "SQ": "싱가포르항공",
+         "JL": "일본항공",
+         "NH": "전일본공수",
+         "QF": "콴타스항공",
+         "EK": "에미레이트 항공",
+         "QR": "카타르 항공",
+         "EY": "에티하드 항공",
+         "SA": "남아프리카항공",
+         "MU": "중국동방항공",
+         "CA": "중국국제항공",
+         "HU": "하이난항공",
+         "CZ": "중국남방항공",
+         "MF": "마르코 항공",
+         "JJ": "주주항공",
+         "VN": "베트남 항공",
+         "CI": "중화항공",
+         "GA": "가르다 항공",
+         "LY": "엘알 이스라엘 항공",
+         "TP": "타파 항공",
+         "SN": "브뤼셀 항공",
+         "OS": "오스트리아 항공",
+         "SK": "스칸디나비아 항공",
+         "LX": "스위스 국제항공",
+         "AY": "핀에어",
+         "YP": "AirAsia",
+         "TW": "T'way Air",
+         "7C": "Jeju Air",
+         "H1": "Hainan Airlines",
+         "RS": "에어서울",
+         "LJ": "진에어",
+         "HL": "한진항공",
+         "MM": "Peach Aviation",
+         "BF": "Vanilla Air",
+         "IB": "IBEX Airlines",
+         "NU": "스카이 마크",
+         "GW": "일본 스카이",
+         "9C": "스프링 항공",
+         "ZH": "지에지앙항공"
+         };
+
+
+
+        function updateSuggestions(inputId) {
+            const inputElement = document.getElementById(inputId);
+            const suggestionsElement = document.getElementById(inputId + '-suggestions');
+            const query = inputElement.value.toLowerCase();
+            suggestionsElement.innerHTML = '';
+
+            if (query.length > 1) {
+                const suggestions = Object.entries(airports).filter(([code, name]) => name.toLowerCase().includes(query) || code.toLowerCase().includes(query));
+                suggestions.forEach(([code, name]) => {
+                    const item = document.createElement('div');
+                    item.classList.add('suggestion-item');
+                    item.textContent = `${name} (${code})`;
+                    item.onclick = () => {
+                        inputElement.value = name;
+                        suggestionsElement.innerHTML = '';
+                    };
+                    suggestionsElement.appendChild(item);
+                });
+            }
+        }
+
+
+    async function searchFlights() {
+        const origin = document.getElementById('origin').value;
+        const destination = document.getElementById('destination').value;
+        const departureDate = document.getElementById('departureDate').value;
+        const adults = document.getElementById('adults').value;
+
+        try {
+            const originCode = Object.keys(airports).find(code => airports[code] === origin) || origin;
+            const destinationCode = Object.keys(airports).find(code => airports[code] === destination) || destination;
+
+            const response = await fetch(`/flights?origin=${originCode}&destination=${destinationCode}&departureDate=${departureDate}&adults=${adults}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            if (Array.isArray(data) && data.length > 0) {
+                let resultHtml = '<h3>검색 결과:</h3>';
+                data.forEach((flight, index) => {
+                    if (flight.itineraries && flight.itineraries.length > 0) {
+                        flight.itineraries.forEach(itinerary => {
+                            if (itinerary.segments && itinerary.segments.length > 0) {
+                                itinerary.segments.forEach(segment => {
+                                    const carrierCode = segment.carrierCode ? segment.carrierCode.toUpperCase() : '알 수 없음';
+                                    const airlineName = airlines[carrierCode] || '알 수 없음';
+
+                                    const departureAirportCode = segment.departure.iataCode || '알 수 없음';
+                                    const arrivalAirportCode = segment.arrival.iataCode || '알 수 없음';
+
+                                    const departureAirport = airports[departureAirportCode] || departureAirportCode;
+                                    const arrivalAirport = airports[arrivalAirportCode] || arrivalAirportCode;
+
+                                    resultHtml += `
+                                        <div class="result-item">
+                                            <p><strong>항공사:</strong> ${airlineName}</p>
+                                            <p><strong>출발:</strong> ${departureAirport} (${segment.departure.at})</p>
+                                            <p><strong>도착:</strong> ${arrivalAirport} (${segment.arrival.at})</p>
+                                            <p><strong>가격:</strong> ${flight.price.total} ${flight.price.currency}</p>
+                                            <a href="/detail?origin=${originCode}&destination=${destinationCode}&departureDate=${departureDate}&adults=${adults}&carrierCode=${carrierCode}&departureAirport=${departureAirportCode}&arrivalAirport=${arrivalAirportCode}&price=${flight.price.total}&currency=${flight.price.currency}" target="_blank">상세보기</a>
+                                        </div>
+                                    `;
+                                });
+                            }
+                        });
+                    }
+                });
+                document.getElementById('results').innerHTML = resultHtml;
+            } else {
+                document.getElementById('results').innerHTML = '<p>검색 결과가 없습니다.</p>';
+            }
+        } catch (error) {
+            document.getElementById('results').innerHTML = `<p>오류가 발생했습니다: ${error.message}</p>`;
+        }
+    }
+</script>
+</body>
+</html>
