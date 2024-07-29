@@ -1,0 +1,90 @@
+.body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* 페이지 전체 높이를 100%로 설정 */
+}
+.main {
+     height: 100%; /* main 요소의 높이 설정 */
+     overflow: auto; /* 스크롤을 활성화 */
+ }
+
+.background_image{              /* 검색창 뒷배경 */
+    background-size: cover;
+    background-position: center;
+    weight:1920px;
+    height: 1400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+   object-fit: cover;
+}
+
+
+.deals_title {
+    position: absolute; /* 배경 이미지 위에 위치를 절대적으로 설정 */
+  margin-bottom:1000px;
+    color: white;
+      justify-content: center;
+    font-weight:bold;
+    font-size:100px;
+    font-family:Impact,Charcoal,sans-serif;
+
+}
+.deals_content {
+    position: absolute; /* 배경 이미지 위에 위치를 절대적으로 설정 */
+ margin-bottom:850px;
+ margin-right:240px;
+          color: white;
+    font-size:24px;
+    font-weight:bold;
+}
+   .card a {           /* 카드 a 값 제거 */
+        color: inherit;
+        text-decoration: none;
+    }
+
+         .product_title{              /* 해외호텔 이름 */
+                overflow: hidden;
+                  text-overflow: ellipsis;
+               font-size:20px;
+               color:#161616;
+                 font-weight: bold;
+                 text-decoration:none;
+                 margin-top:5px;
+
+              }
+                .product_rating{          /* 호텔 별점 */
+                    overflow: hidden;
+                      text-overflow: ellipsis;
+                      font-size:14px;
+                     text-decoration:none;
+                      font-color:black;
+
+
+                  }
+                  .product_price{           /* 호텔 가격 */
+                    float: right;
+                    font-weight: bold;
+                    text-decoration:none;
+                    margin-top:30px;
+                     font-color:black;
+                  }
+                  .product_date{                /* 1박 요금 */
+                  font-size:12px;
+                     color:#afb0b3;
+                      float: right;
+                     padding-bottom:1px;
+                  }
+                  .title-card1{                 /* 해외호텔 카드 */
+                       display: flex; /* Flexbox 사용 */
+                          gap:30px; /* 카드 간격 균등 분배 */
+                           align-items: stretch; /* 모든 카드의 높이를 동일하게 */
+                           font-weight: bold;
+                           font-size: 36px;
+                           color: black;
+                           margin-left:100px;
+                           margin-bottom:350px;
+                           text-decoration: none;
+                             position: absolute
+                        }

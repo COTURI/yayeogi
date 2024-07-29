@@ -1,7 +1,7 @@
 .body, html {
     margin: 0;
     padding: 0;
-    height: 1000%; /* 페이지 전체 높이를 100%로 설정 */
+    height: 100%; /* 페이지 전체 높이를 100%로 설정 */
 }
 .main {
      height: 100%; /* main 요소의 높이 설정 */
@@ -17,7 +17,7 @@
 
 #hotels_search_page .search_from_box{   /* 메인 */
   position: absolute;
-  color:#F4FFFF;
+  color: #05203C;
   width:1100px;
 
 }
@@ -34,7 +34,7 @@
 }
 .overlay {                      /* 검색창 큰틀 */
     weight:1200px;
-    background-color: #00008C;
+    background-color:  #05203C;
     color: white;
     padding: 20px;
     border-radius: 10px;
@@ -245,8 +245,8 @@ h1 {
         float: right;
        padding-bottom:1px;
     }
-  .title-comment3{            /* 요약정보 */
-           position: absolute;
+  .title-comment3{            /*  해외 호텔,요약정보 */
+
            font-weight: bold;
            font-size:32px;
            margin-left:410px;
@@ -260,7 +260,7 @@ h1 {
          font-size: 36px;
          color: black;
          margin-left: 400px;
-         margin-top: 250px;
+         margin-top: 30px;
          text-decoration: none;
          }
 .icon_build{                  /* 요약정보 아이콘 */
@@ -268,13 +268,64 @@ h1 {
         width:25px;
         height:25px;
 }
-.icon_title{
-        size:16px;
+.icon_title{            /* 요약정보 제목 */
+        size:14px;
         color:#161616;
         margin-top:10px;
 }
-.icon_detail{
-        size:20px;
+.icon_detail{            /* 요약정보 상세설명 */
+        size:18px;
         font-weight: bold;
         color:#161616;
+}
+.summary-info {         /* 요약정보 */
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    float:left;
+}
+
+.info-item {        /* 요약정보 정렬 */
+    flex: 1;
+    margin: 0 20px;
+    width:520px;
+}
+.panel {                /* 패널 */
+   background-color: #e0f7fa;
+    border-radius: 10px;
+    width: 1200px;
+    height: 420px;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+
+    align-items: center;
+    margin-left:400px;
+    margin-top:260px;
+}
+.panel-block{       /* 패널 블럭 */
+    width:370px;
+    height:350px;
+    margin-left:20px;
+     text-align: center;
+     padding-right:20px;
+}
+.panel-img{       /* 패널 이미지 */
+    width:220px;
+    height:180px;
+    display: flex;
+    justify-content: center;
+    margin-left:80px;
+}
+.panel-title{
+  margin-top:50px;
+  font-size:24px;
+   font-weight: bold;
+}
+.panel-content{
+font-size:15px;
 }
