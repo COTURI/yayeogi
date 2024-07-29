@@ -1,0 +1,36 @@
+.body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* 페이지 전체 높이를 100%로 설정 */
+}
+.main {
+     height: 100%; /* main 요소의 높이 설정 */
+     overflow: auto; /* 스크롤을 활성화 */
+ }
+.search_form{
+  background-size: cover;
+    background-position: center;
+    weight:1920px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: #05203C;
+}
+.search_form button{
+    height:44px;
+    margin-bottom:5px;
+}
+.card-container{
+ position: relative;
+ display: flex;
+width:750px;
+}
+        .form-control:first-child {
+            flex: 1; /* 첫 번째 필드가 가용 공간을 채우도록 설정 */
+        }
+
+        .form-control:not(:first-child) {
+            width: 1px; /* 두 번째 및 이후 필드의 너비를 고정 */
+        }
