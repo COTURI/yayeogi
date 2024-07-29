@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 페이지</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .login-container label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        .login-container input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h2>로그인</h2>
+    <div class="error-message" id="error-message"></div>
+    <form id="login-form">
+        <label for="username">아이디</label>
+        <input type="text" id="username" required>
+
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" required>
+
+        <button type="submit">로그인</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('login-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // 폼 제출 기본 동작 방지
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const errorMessage = document.getElementById('error-message');
+
+        if (username === 'system' && password === '1234') {
+            alert('로그인 성공!');
+            // 로그인 성공 시 이동할 페이지나 기능 추가
+        } else {
+            errorMessage.textContent = '아이디나 비밀번호가 올바르지 않습니다.';
+        }
+    });
+</script>
+</body>
+</html>
