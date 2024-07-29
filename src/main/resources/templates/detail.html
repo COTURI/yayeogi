@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>항공권 상세 보기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            margin: 0;
+            text-align: center;
+        }
+        .details-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .details-item {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .details-item:last-child {
+            border-bottom: none;
+        }
+        .details-item p {
+            margin: 0;
+            padding: 5px 0;
+        }
+        @media (max-width: 768px) {
+            .details-container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<h1>항공권 상세 보기</h1>
+<div class="details-container" id="details">
+    <!-- 항공권 상세 정보가 이곳에 표시됩니다 -->
+</div>
+
+<script>
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    window.onload = function() {
+        const origin = getQueryParam('origin');
+        const destination = getQueryParam('destination');
+        const departureDate = getQueryParam('departureDate');
+        const adults = getQueryParam('adults');
+        const carrierCode = getQueryParam('carrierCode');
+        const departureAirport = getQueryParam('departureAirport');
+        const arrivalAirport = getQueryParam('arrivalAirport');
+        const price = getQueryParam('price');
+        const currency = getQueryParam('currency');
+
+        const airlineName = {
+            "AA": "아메리칸 항공",
+            "DL": "델타 항공",
+            "UA": "유나이티드 항공",
+            // ... (필요한 항공사 코드와 이름 추가)
+        }[carrierCode] || '알 수 없음';
+
+        const detailsHtml = `
+            <div class="details-item">
+                <p><strong>출발지:</strong> ${origin}</p>
+                <p><strong>목적지:</strong> ${destination}</p>
+                <p><strong>출발 날짜:</strong> ${departureDate}</p>
+                <p><strong>성인 수:</strong> ${adults}</p>
+                <p><strong>항공사:</strong> ${airlineName}</p>
+                <p><strong>출발 공항:</strong> ${departureAirport}</p>
+                <p><strong>도착 공항:</strong> ${arrivalAirport}</p>
+                <p><strong>가격:</strong> ${price} ${currency}</p>
+            </div>
+        `;
+
+        document.getElementById('details').innerHTML = detailsHtml;
+    }
+</script>
+</body>
+</html>

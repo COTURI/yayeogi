@@ -17,3 +17,5 @@ public class Green3Application {
 		return new RestTemplate();
 	}
 }
+
+
