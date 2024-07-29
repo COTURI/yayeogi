@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOING ADMIN</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+    display: flex;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    background-color: #FFC107;
+    padding: 20px;
+    width: 200px;
+}
+
+.sidebar h1 {
+    color: white;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 20px 0;
+    color: white;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.filter {
+    margin-bottom: 20px;
+}
+
+#salesChart {
+    width: 100%;
+    max-width: 600px;
+}
+
+    </style>
+</head>
+<body>
+<div class="sidebar"><img src="../layout/logo1.png" height="50" width="150"/>
+        <ul>
+        <li>월별 매출</li>
+        <li>지역별 매출</li>
+
+          </ul>
+</div>
+<div class="main-content">
+    <h2>숙소 카테고리별 매출</h2>
+    <div class="filter">
+        <select id="monthSelect">
+            <option value="5">5월</option>
+            <!-- 다른 월 옵션 추가 -->
+        </select>
+        <button onclick="updateChart()">검색</button>
+    </div>
+    <canvas id="salesChart"></canvas>
+</div>
+<script src="scripts.js"></script>
+</body>
+<script>
+    const ctx = document.getElementById('salesChart').getContext('2d');
+let salesChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['호텔', '모텔', '펜션', '리조트'],
+        datasets: [{
+            label: '매출',
+            data: [5000000, 200000, 300000, 100000], // 예시 데이터
+            backgroundColor: 'rgba(255, 193, 7, 1)'
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+function updateChart() {
+    // 여기서 AJAX 등을 사용하여 새로운 데이터 가져오기
+    // 그리고 salesChart.data.datasets[0].data를 업데이트
+    salesChart.update();
+}
+
+</script>
+</html>
