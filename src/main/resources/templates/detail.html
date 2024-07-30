@@ -4,89 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>항공권 상세 보기</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-        h1 {
-            background-color: #007bff;
-            color: #fff;
-            padding: 20px;
-            margin: 0;
-            text-align: center;
-        }
-        .details-container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .details-item {
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-        }
-        .details-item:last-child {
-            border-bottom: none;
-        }
-        .details-item p {
-            margin: 0;
-            padding: 5px 0;
-        }
-        @media (max-width: 768px) {
-            .details-container {
-                padding: 10px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/css/detail.css">
 </head>
 <body>
-<h1>항공권 상세 보기</h1>
-<div class="details-container" id="details">
-    <!-- 항공권 상세 정보가 이곳에 표시됩니다 -->
-</div>
+<header>
+    <h1>항공권 상세 보기</h1>
+</header>
+<main class="details-container" id="details">
+    <a href="/reservation?origin=${origin}&destination=${destination}&departureDate=${departureDate}&adults=${adults}&carrierCode=${carrierCode}&price=${price}&currency=${currency}" id="book-button" class="button">예약하기</a>
+</main>
 
 <script>
+    let airports = {};
+    let airlines = {};
+
+    async function loadData() {
+        try {
+            const airportResponse = await fetch('/js/airports.json');
+            const airlineResponse = await fetch('/js/airlines.json');
+
+            if (!airportResponse.ok || !airlineResponse.ok) {
+                throw new Error('데이터를 불러오는 데 문제가 발생했습니다.');
+            }
+
+            airports = await airportResponse.json();
+            airlines = await airlineResponse.json();
+        } catch (error) {
+            console.error('데이터 불러오기 오류:', error);
+        }
+    }
+
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
 
-    window.onload = function() {
-        const origin = getQueryParam('origin');
-        const destination = getQueryParam('destination');
+    function convertEuroToWon(euroAmount) {
+        const exchangeRate = 1500; // 1 Euro = 1500 KRW
+        return euroAmount * exchangeRate;
+    }
+
+    window.onload = async function() {
+        await loadData();
+
+        const originCode = getQueryParam('origin');
+        const destinationCode = getQueryParam('destination');
         const departureDate = getQueryParam('departureDate');
         const adults = getQueryParam('adults');
         const carrierCode = getQueryParam('carrierCode');
-        const departureAirport = getQueryParam('departureAirport');
-        const arrivalAirport = getQueryParam('arrivalAirport');
-        const price = getQueryParam('price');
+        const price = parseFloat(getQueryParam('price')); // 가격을 숫자로 변환
         const currency = getQueryParam('currency');
 
-        const airlineName = {
-            "AA": "아메리칸 항공",
-            "DL": "델타 항공",
-            "UA": "유나이티드 항공",
-            // ... (필요한 항공사 코드와 이름 추가)
-        }[carrierCode] || '알 수 없음';
+        // Get names from codes
+        const origin = airports[originCode] || originCode;
+        const destination = airports[destinationCode] || destinationCode;
+        const airlineName = airlines[carrierCode] || carrierCode;
 
-        const detailsHtml = `
-            <div class="details-item">
-                <p><strong>출발지:</strong> ${origin}</p>
-                <p><strong>목적지:</strong> ${destination}</p>
-                <p><strong>출발 날짜:</strong> ${departureDate}</p>
-                <p><strong>성인 수:</strong> ${adults}</p>
-                <p><strong>항공사:</strong> ${airlineName}</p>
-                <p><strong>출발 공항:</strong> ${departureAirport}</p>
-                <p><strong>도착 공항:</strong> ${arrivalAirport}</p>
-                <p><strong>가격:</strong> ${price} ${currency}</p>
-            </div>
-        `;
+        // Convert price to KRW if it's in EUR
+        const priceInKRW = currency === 'EUR' ? convertEuroToWon(price) : price;
+        const priceCurrency = currency === 'EUR' ? 'KRW' : currency;
+
+        const detailsHtml =
+            `<div class="details-item">
+                <h2>항공권 정보</h2>
+                <p><span class="label">출발지:</span><span class="value">${origin}</span></p>
+                <p><span class="label">목적지:</span><span class="value">${destination}</span></p>
+                <p><span class="label">출발 날짜:</span><span class="value">${departureDate}</span></p>
+                <p><span class="label">성인 수:</span><span class="value">${adults}</span></p>
+                <p><span class="label">항공사:</span><span class="value">${airlineName}</span></p>
+                <p class="price"><span class="label">가격:</span><span class="value">${priceInKRW.toLocaleString()} ${priceCurrency}</span></p>
+                <a href="/reservation?origin=${originCode}&destination=${destinationCode}&departureDate=${departureDate}&adults=${adults}&carrierCode=${carrierCode}&price=${price}&currency=${currency}" class="button">예약하기</a>
+            </div>`;
 
         document.getElementById('details').innerHTML = detailsHtml;
     }
