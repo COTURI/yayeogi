@@ -7,6 +7,11 @@
      height: 100%; /* main 요소의 높이 설정 */
      overflow: auto; /* 스크롤을 활성화 */
  }
+ .card {
+     display: flex; /* 카드 내 요소를 배치할 수 있는 유연한 레이아웃 */
+     flex-direction: column; /* 세로 방향으로 요소를 배치 */
+     align-items: stretch; /* 자식 요소를 카드 너비에 맞게 조정 */
+ }
 .search_form{
   background-size: cover;
     background-position: center;
@@ -24,13 +29,28 @@
 }
 .card-container{
  position: relative;
- display: flex;
+
 width:750px;
 }
-        .form-control:first-child {
+ .form-control:first-child {
             flex: 1; /* 첫 번째 필드가 가용 공간을 채우도록 설정 */
-        }
+}
 
-        .form-control:not(:first-child) {
+ .form-control:not(:first-child) {
             width: 1px; /* 두 번째 및 이후 필드의 너비를 고정 */
-        }
+ }
+
+ .responsive-image {
+     width: 100%;
+     height: 100%; /* 이미지가 카드의 높이에 맞춰지도록 설정 */
+     object-fit: cover; /* 이미지 비율을 유지하면서 전체 공간 채우기 */
+ }
+
+ .card-body {
+     max-height: 250px; /* 카드 내용의 최대 높이 설정 */
+ }
+ .gmp-map{
+ width:580px;
+ height:800px;
+ padding:0px;
+ }
