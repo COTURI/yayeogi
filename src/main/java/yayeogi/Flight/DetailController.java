@@ -33,4 +33,26 @@ public class DetailController {
 
         return mav;
     }
+
+    @GetMapping("/reservation")
+    public ModelAndView reservation(
+            @RequestParam String origin,
+            @RequestParam String destination,
+            @RequestParam String departureDate,
+            @RequestParam String adults,
+            @RequestParam String carrierCode,
+            @RequestParam String price,
+            @RequestParam String currency) {
+
+        ModelAndView mav = new ModelAndView("reservation");
+        mav.addObject("origin", origin);
+        mav.addObject("destination", destination);
+        mav.addObject("departureDate", departureDate);
+        mav.addObject("adults", adults);
+        mav.addObject("carrierCode", carrierCode);
+        mav.addObject("price", price);
+        mav.addObject("currency", currency);
+
+        return mav;
+    }
 }

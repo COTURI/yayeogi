@@ -37,7 +37,7 @@ public class FlightSearchService {
                             .and("destinationLocationCode", destination)
                             .and("departureDate", departureDate)
                             .and("adults", adults)
-                            .and("max", 10) // 최대 5개의 결과
+                            .and("max", 100)
             );
 
             // Gson을 사용하여 JSON 문자열로 변환
