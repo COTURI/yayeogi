@@ -1,83 +1,79 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>항공권 상세 보기</title>
-    <link rel="stylesheet" href="/css/detail.css">
+    <title>저렴한 호텔 비교 특가</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/css/hotels.css"/> <!-- css 연결-->
+    <link rel="stylesheet" href="../static/css/header.css"><!-- header css 연결-->
 </head>
+<style>
+    #map {
+        height: 500px;
+        width: 100%;
+    }
+</style>
 <body>
-<header>
-    <h1>항공권 상세 보기</h1>
-</header>
-<main class="details-container" id="details">
-    <a href="/reservation?origin=${origin}&destination=${destination}&departureDate=${departureDate}&adults=${adults}&carrierCode=${carrierCode}&price=${price}&currency=${currency}" id="book-button" class="button">예약하기</a>
-</main>
+<div class="header-body">     <!-- header-->
+    <header>
 
-<script>
-    let airports = {};
-    let airlines = {};
+        <div class="left-section">
+            <button type="button" class="btn logo-button">
+                <img src="../static/html/layout/LOGO.png" alt="YAYEOGI 로고" >
+            </button>
+            &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-    async function loadData() {
-        try {
-            const airportResponse = await fetch('/js/airports.json');
-            const airlineResponse = await fetch('/js/airlines.json');
+            <p>
+            <div class="menu">
+                <button type="button" class="btn btn-info">항공권</button>
+                <button type="button" class="btn btn-info">호텔</button>
+            </div>
+        </div>
+        </p>
+        <div class="auth">
+            <button type="button" class="btn btn-secondary">
+                회원가입
+            </button>
+            <button type="button" class="btn btn-secondary">
+                로그인
+            </button>
+            <!--          <div class="auth">
+                            <button type="button" >
+                                <img> 찜
+                            </button>
+                            <button type="button" >
+                                <img> 내정보
+                            </button>
+                                  <button type="button" >
+                                <img> 로그아웃
+                            </button> -->
 
-            if (!airportResponse.ok || !airlineResponse.ok) {
-                throw new Error('데이터를 불러오는 데 문제가 발생했습니다.');
-            }
+        </div>
+    </header>
+</div>
 
-            airports = await airportResponse.json();
-            airlines = await airlineResponse.json();
-        } catch (error) {
-            console.error('데이터 불러오기 오류:', error);
-        }
-    }
+<div class="footer-body" style="margin-top:1200px;">       <!-- footer-->
+    <div class="content">
+        <!-- Your main content goes here -->
+    </div>
 
-    function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
-    }
-
-    function convertEuroToWon(euroAmount) {
-        const exchangeRate = 1500; // 1 Euro = 1500 KRW
-        return euroAmount * exchangeRate;
-    }
-
-    window.onload = async function() {
-        await loadData();
-
-        const originCode = getQueryParam('origin');
-        const destinationCode = getQueryParam('destination');
-        const departureDate = getQueryParam('departureDate');
-        const adults = getQueryParam('adults');
-        const carrierCode = getQueryParam('carrierCode');
-        const price = parseFloat(getQueryParam('price')); // 가격을 숫자로 변환
-        const currency = getQueryParam('currency');
-
-        // Get names from codes
-        const origin = airports[originCode] || originCode;
-        const destination = airports[destinationCode] || destinationCode;
-        const airlineName = airlines[carrierCode] || carrierCode;
-
-        // Convert price to KRW if it's in EUR
-        const priceInKRW = currency === 'EUR' ? convertEuroToWon(price) : price;
-        const priceCurrency = currency === 'EUR' ? 'KRW' : currency;
-
-        const detailsHtml =
-            `<div class="details-item">
-                <h2>항공권 정보</h2>
-                <p><span class="label">출발지:</span><span class="value">${origin}</span></p>
-                <p><span class="label">목적지:</span><span class="value">${destination}</span></p>
-                <p><span class="label">출발 날짜:</span><span class="value">${departureDate}</span></p>
-                <p><span class="label">성인 수:</span><span class="value">${adults}</span></p>
-                <p><span class="label">항공사:</span><span class="value">${airlineName}</span></p>
-                <p class="price"><span class="label">가격:</span><span class="value">${priceInKRW.toLocaleString()} ${priceCurrency}</span></p>
-                <a href="/reservation?origin=${originCode}&destination=${destinationCode}&departureDate=${departureDate}&adults=${adults}&carrierCode=${carrierCode}&price=${price}&currency=${currency}" class="button">예약하기</a>
-            </div>`;
-
-        document.getElementById('details').innerHTML = detailsHtml;
-    }
-</script>
+    <div class="container" id="footer">
+        <hr>
+        <div class="footer-box">
+            <div class="gray_subtext">
+                    <span>
+                        (주)YAYEOGI | 대표이사: 홍길동 | 사업자 등록번호: 000-00-000000 | 통신판매업신고: 야여기-0000호 | 메일: help@yayeogi.com
+                        <br>관광사업자 등록번호: 제2022-05호 | 주소: 서울 강남구 테헤란로 000길 00 | 호스팅서비스 제공자: 주식회사 YAYEOGI
+                        <br>고객센터: 1644-1346 (오전 9시 - 익일 새벽 3시)
+                        <br>(주)GOING은 통신판매 중개자로서 통신판매의 당사자가 아니며 상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.
+                        <br>(주)GOING이 소유/운영/관리하는 웹사이트 및 앱 내의 상품/판매자/이벤트 정보, 디자인 및 화면의 구성, UI를 포함하여 일체의 콘텐츠에 대한 무단 복제, 배포, 방송 또는 전송, 스크래핑 등의 행위는 저작권법 및 콘텐츠산업 진흥법 등 관련 법령에 의하여 엄격히 금지됩니다.
+                    </span>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>
 </body>
 </html>
