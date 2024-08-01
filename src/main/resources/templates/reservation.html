@@ -3,71 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>예약 페이지</title>
+    <title>항공권 예약</title>
     <link rel="stylesheet" href="/css/reservation.css">
 </head>
 <body>
-<header>
-    <h1>예약 페이지</h1>
-</header>
-<main class="reservation-container">
-    <div class="reservation-summary">
-        <h2>나의 주문</h2>
-        <p><span class="label">출발지:</span><span id="summary-origin">ICN</span></p>
-        <p><span class="label">목적지:</span><span id="summary-destination">NRT</span></p>
-        <p><span class="label">출발 날짜:</span><span id="summary-departureDate">2024-08-22</span></p>
-        <p><span class="label">성인 수:</span><span id="summary-adults">1</span></p>
-        <p><span class="label">항공사:</span><span id="summary-airlineName">YP</span></p>
-        <p><span class="label">가격:</span><span id="summary-price">81450 KRW</span></p>
-    </div>
-    <form id="reservation-form">
-        <h2>여행객 정보 입력</h2>
-        <label for="name">이름:</label>
-        <input type="text" id="name" name="name" required>
-        <label for="email">이메일:</label>
-        <input type="email" id="email" name="email" required>
-        <label for="phone">전화번호:</label>
-        <input type="tel" id="phone" name="phone" required>
-        <button type="submit">예약하기</button>
+
+<h1>항공권 예약</h1>
+<div class="reservation-detail">
+    <h2>출발 항공편</h2>
+    <p>출발지: ${origin}</p>
+    <p>목적지: ${destination}</p>
+    <p>출발일: ${departureDate}</p>
+    <p>가격: ${price} ${currency}</p>
+    <p>항공사: ${carrierCode}</p>
+
+    <h2>돌아오는 항공편</h2>
+    <p>출발지: ${destination}</p>
+    <p>목적지: ${origin}</p>
+    <p>돌아오는 일자: ${returnDate}</p>
+    <p>가격: ${returnPrice} ${currency}</p>
+    <p>항공사: ${returnCarrierCode}</p>
+
+    <form action="/confirmReservation" method="post">
+        <input type="hidden" name="origin" value="${origin}">
+        <input type="hidden" name="destination" value="${destination}">
+        <input type="hidden" name="departureDate" value="${departureDate}">
+        <input type="hidden" name="returnDate" value="${returnDate}">
+        <input type="hidden" name="adults" value="${adults}">
+        <input type="hidden" name="carrierCode" value="${carrierCode}">
+        <input type="hidden" name="price" value="${price}">
+        <input type="hidden" name="currency" value="${currency}">
+        <input type="hidden" name="returnCarrierCode" value="${returnCarrierCode}">
+        <input type="hidden" name="returnPrice" value="${returnPrice}">
+
+        <button type="submit">예약 확인</button>
     </form>
-</main>
-<script>
-    let airports = {};
-    let airlines = {};
+</div>
 
-    async function loadData() {
-        try {
-            const airportResponse = await fetch('/JS/airports.json');
-            const airlineResponse = await fetch('/JS/airlines.json');
-
-            if (!airportResponse.ok || !airlineResponse.ok) {
-                throw new Error('데이터를 불러오는 데 문제가 발생했습니다.');
-            }
-
-            airports = await airportResponse.json();
-            airlines = await airlineResponse.json();
-        } catch (error) {
-            console.error('데이터 불러오기 오류:', error);
-        }
-    }
-
-    async function updateReservationSummary() {
-        try {
-            await loadData();
-
-            const originCode = document.getElementById('summary-origin').textContent.trim();
-            const destinationCode = document.getElementById('summary-destination').textContent.trim();
-            const carrierCode = document.getElementById('summary-airlineName').textContent.trim();
-
-            document.getElementById('summary-origin').textContent = airports[originCode] || originCode;
-            document.getElementById('summary-destination').textContent = airports[destinationCode] || destinationCode;
-            document.getElementById('summary-airlineName').textContent = airlines[carrierCode] || carrierCode;
-        } catch (error) {
-            console.error('예약 요약 업데이트 오류:', error);
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', updateReservationSummary);
-</script>
 </body>
 </html>

@@ -3,81 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>항공권 상세 보기</title>
+    <title>항공권 상세</title>
     <link rel="stylesheet" href="/css/detail.css">
 </head>
 <body>
-<header>
-    <h1>항공권 상세 보기</h1>
-</header>
-<main class="details-container" id="details">
-    <a href="/reservation?origin=${origin}&destination=${destination}&departureDate=${departureDate}&adults=${adults}&carrierCode=${carrierCode}&price=${price}&currency=${currency}" id="book-button" class="button">예약하기</a>
-</main>
 
-<script>
-    let airports = {};
-    let airlines = {};
+<h1>항공권 상세</h1>
+<div class="flight-detail">
+    <h2>출발 항공편</h2>
+    <p>출발지: ${origin}</p>
+    <p>목적지: ${destination}</p>
+    <p>출발일: ${departureDate}</p>
+    <p>가격: ${price} ${currency}</p>
+    <p>항공사: ${carrierCode}</p>
 
-    async function loadData() {
-        try {
-            const airportResponse = await fetch('/js/airports.json');
-            const airlineResponse = await fetch('/js/airlines.json');
+    <h2>돌아오는 항공편</h2>
+    <p>출발지: ${destination}</p>
+    <p>목적지: ${origin}</p>
+    <p>돌아오는 일자: ${returnDate}</p>
+    <p>가격: ${returnPrice} ${currency}</p>
+    <p>항공사: ${returnCarrierCode}</p>
 
-            if (!airportResponse.ok || !airlineResponse.ok) {
-                throw new Error('데이터를 불러오는 데 문제가 발생했습니다.');
-            }
+    <a href="/reservation?origin=${origin}&destination=${destination}&departureDate=${departureDate}&returnDate=${returnDate}&adults=${adults}&carrierCode=${carrierCode}&price=${price}&currency=${currency}&returnCarrierCode=${returnCarrierCode}&returnPrice=${returnPrice}">예약하기</a>
+</div>
 
-            airports = await airportResponse.json();
-            airlines = await airlineResponse.json();
-        } catch (error) {
-            console.error('데이터 불러오기 오류:', error);
-        }
-    }
-
-    function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
-    }
-
-    function convertEuroToWon(euroAmount) {
-        const exchangeRate = 1500; // 1 Euro = 1500 KRW
-        return euroAmount * exchangeRate;
-    }
-
-    window.onload = async function() {
-        await loadData();
-
-        const originCode = getQueryParam('origin');
-        const destinationCode = getQueryParam('destination');
-        const departureDate = getQueryParam('departureDate');
-        const adults = getQueryParam('adults');
-        const carrierCode = getQueryParam('carrierCode');
-        const price = parseFloat(getQueryParam('price')); // 가격을 숫자로 변환
-        const currency = getQueryParam('currency');
-
-        // Get names from codes
-        const origin = airports[originCode] || originCode;
-        const destination = airports[destinationCode] || destinationCode;
-        const airlineName = airlines[carrierCode] || carrierCode;
-
-        // Convert price to KRW if it's in EUR
-        const priceInKRW = currency === 'EUR' ? convertEuroToWon(price) : price;
-        const priceCurrency = currency === 'EUR' ? 'KRW' : currency;
-
-        const detailsHtml =
-            `<div class="details-item">
-                <h2>항공권 정보</h2>
-                <p><span class="label">출발지:</span><span class="value">${origin}</span></p>
-                <p><span class="label">목적지:</span><span class="value">${destination}</span></p>
-                <p><span class="label">출발 날짜:</span><span class="value">${departureDate}</span></p>
-                <p><span class="label">성인 수:</span><span class="value">${adults}</span></p>
-                <p><span class="label">항공사:</span><span class="value">${airlineName}</span></p>
-                <p class="price"><span class="label">가격:</span><span class="value">${priceInKRW.toLocaleString()} ${priceCurrency}</span></p>
-                <a href="/reservation?origin=${originCode}&destination=${destinationCode}&departureDate=${departureDate}&adults=${adults}&carrierCode=${carrierCode}&price=${price}&currency=${currency}" class="button">예약하기</a>
-            </div>`;
-
-        document.getElementById('details').innerHTML = detailsHtml;
-    }
-</script>
 </body>
 </html>

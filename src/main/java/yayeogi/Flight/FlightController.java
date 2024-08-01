@@ -19,16 +19,17 @@ public class FlightController {
     public ResponseEntity<String> searchFlights(@RequestParam String origin,
                                                 @RequestParam String destination,
                                                 @RequestParam String departureDate,
+                                                @RequestParam(required = false) String returnDate,
                                                 @RequestParam int adults) {
         try {
-            // FlightSearchService를 통해 비즈니스 로직 수행
-            String jsonResponse = flightSearchService.searchFlightsAsString(origin, destination, departureDate, adults);
-
-            // JSON 문자열을 직접 반환
-            return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
+            String jsonResponse = flightSearchService.searchFlightsAsString(origin, destination, departureDate, returnDate, adults);
+            return ResponseEntity.ok(jsonResponse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"Internal Server Error: " + e.getMessage() + "\"}");
         } catch (Exception e) {
-            e.printStackTrace(); // 예외 발생 시 스택 트레이스를 출력
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // HTTP 500 상태 코드 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"Internal Server Error\"}");
         }
     }
 }

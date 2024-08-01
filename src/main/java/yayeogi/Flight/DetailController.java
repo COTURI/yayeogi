@@ -13,23 +13,25 @@ public class DetailController {
             @RequestParam String origin,
             @RequestParam String destination,
             @RequestParam String departureDate,
+            @RequestParam String returnDate,
             @RequestParam String adults,
             @RequestParam String carrierCode,
-            @RequestParam String departureAirport,
-            @RequestParam String arrivalAirport,
             @RequestParam String price,
-            @RequestParam String currency) {
+            @RequestParam String currency,
+            @RequestParam String returnCarrierCode, // 돌아오는 항공편의 항공사 코드
+            @RequestParam String returnPrice) {     // 돌아오는 항공편 가격
 
         ModelAndView mav = new ModelAndView("detail");
         mav.addObject("origin", origin);
         mav.addObject("destination", destination);
         mav.addObject("departureDate", departureDate);
+        mav.addObject("returnDate", returnDate);
         mav.addObject("adults", adults);
         mav.addObject("carrierCode", carrierCode);
-        mav.addObject("departureAirport", departureAirport);
-        mav.addObject("arrivalAirport", arrivalAirport);
         mav.addObject("price", price);
         mav.addObject("currency", currency);
+        mav.addObject("returnCarrierCode", returnCarrierCode); // 돌아오는 항공편 항공사 코드
+        mav.addObject("returnPrice", returnPrice);             // 돌아오는 항공편 가격
 
         return mav;
     }
@@ -39,19 +41,25 @@ public class DetailController {
             @RequestParam String origin,
             @RequestParam String destination,
             @RequestParam String departureDate,
+            @RequestParam String returnDate,
             @RequestParam String adults,
             @RequestParam String carrierCode,
             @RequestParam String price,
-            @RequestParam String currency) {
+            @RequestParam String currency,
+            @RequestParam String returnCarrierCode, // 돌아오는 항공편의 항공사 코드
+            @RequestParam String returnPrice) {     // 돌아오는 항공편 가격
 
         ModelAndView mav = new ModelAndView("reservation");
         mav.addObject("origin", origin);
         mav.addObject("destination", destination);
         mav.addObject("departureDate", departureDate);
+        mav.addObject("returnDate", returnDate);
         mav.addObject("adults", adults);
         mav.addObject("carrierCode", carrierCode);
         mav.addObject("price", price);
         mav.addObject("currency", currency);
+        mav.addObject("returnCarrierCode", returnCarrierCode); // 돌아오는 항공편 항공사 코드
+        mav.addObject("returnPrice", returnPrice);             // 돌아오는 항공편 가격
 
         return mav;
     }
