@@ -1,79 +1,86 @@
+/* 기본 스타일 */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: '맑은 고딕', Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
 }
 
 header {
     background-color: #007bff;
     color: #fff;
-    padding: 1em;
+    padding: 20px;
     text-align: center;
-}
-
-h1 {
-    margin: 0;
+    font-size: 24px;
 }
 
 main {
-    padding: 2em;
+    display: flex;
+    justify-content: center;
+    margin: 20px;
 }
 
 .reservation-container {
-    max-width: 800px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 2em;
+    background-color: #fff;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
 }
 
-.reservation-summary {
-    margin-bottom: 2em;
-}
-
-.reservation-summary h2 {
-    margin-top: 0;
+h2, h3 {
     color: #007bff;
 }
 
-.reservation-summary p {
-    margin: 0.5em 0;
-    font-size: 1.1em;
-}
-
-.label {
-    font-weight: bold;
-}
-
-form {
-    display: grid;
-    gap: 1em;
-}
-
-form label {
+label {
     display: block;
+    margin-top: 10px;
     font-weight: bold;
 }
 
-form input {
+input[type="text"], input[type="tel"], input[type="email"], input[type="date"], select {
     width: 100%;
-    padding: 0.8em;
-    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
-form button {
-    background-color: #007bff;
+input[type="text"], input[type="tel"], input[type="email"], input[type="date"], select {
+    display: block;
+    width: calc(100% - 22px); /* Adjust for padding and border */
+}
+
+.passenger-info, .passenger-details {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.book-now-button {
+    background: linear-gradient(90deg, #007bff, #0056b3);
     color: #fff;
+    padding: 14px 24px;
     border: none;
-    padding: 1em;
-    border-radius: 4px;
-    font-size: 1.1em;
+    border-radius: 12px;
+    font-size: 18px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+    text-align: center;
 }
 
-form button:hover {
-    background-color: #0056b3;
+.book-now-button:hover {
+    background: linear-gradient(90deg, #0056b3, #003d7a);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
 }

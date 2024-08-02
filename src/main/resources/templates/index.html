@@ -7,229 +7,48 @@
     <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
-
-<h1>항공권 검색</h1>
+<h1>항공편 검색</h1>
 <div class="search-container">
-    <div class="search-form-wrapper">
-        <div class="search-form">
-            <label for="origin">출발지:</label>
-            <input type="text" id="origin" oninput="updateSuggestions('origin')">
-            <div id="origin-suggestions" class="suggestions"></div>
+    <form class="search-form" id="search-form">
+        <div class="search-form-group">
+            <label for="departure-city">출발 도시</label>
+            <input type="text" id="departure-city" name="departure-city" placeholder="출발 도시" required>
+            <div id="departure-city-suggestions" class="suggestions"></div>
         </div>
-
-        <div class="search-form">
-            <label for="destination">도착지:</label>
-            <input type="text" id="destination" oninput="updateSuggestions('destination')">
-            <div id="destination-suggestions" class="suggestions"></div>
+        <div class="search-form-group">
+            <label for="arrival-city">도착 도시</label>
+            <input type="text" id="arrival-city" name="arrival-city" placeholder="도착 도시" required>
+            <div id="arrival-city-suggestions" class="suggestions"></div>
         </div>
-
-        <div class="search-form">
-            <label for="departureDate">출발일:</label>
-            <input type="date" id="departureDate">
+        <div class="search-form-group">
+            <label for="departure-date">출발일</label>
+            <input type="date" id="departure-date" name="departure-date" required>
         </div>
-
-        <div class="search-form">
-            <label for="returnDate">돌아오는 일자:</label>
-            <input type="date" id="returnDate">
+        <div class="search-form-group">
+            <label for="return-date">귀국일</label>
+            <input type="date" id="return-date" name="return-date">
         </div>
-
-        <div class="search-form">
-            <label for="adults">성인 수:</label>
-            <input type="number" id="adults" min="1" value="1">
+        <div class="search-form-group">
+            <label for="adults">성인 수</label>
+            <input type="number" id="adults" name="adults" min="1" value="1" required>
         </div>
+        <button type="button" id="search-button" class="search-button">검색</button>
+    </form>
+</div>
 
-        <button class="search-button" onclick="searchFlights()">항공권 검색</button>
-    </div>
-
-    <div class="results-container">
-        <!-- 출발 항공편 결과와 페이지네이션을 표시할 컨테이너 -->
-        <div id="outbound-results" class="results"></div>
-        <div id="outbound-pagination-controls" class="pagination-controls"></div>
-
-        <!-- 돌아오는 항공편 결과와 페이지네이션을 표시할 컨테이너 -->
-        <div id="inbound-results" class="results"></div>
-        <div id="inbound-pagination-controls" class="pagination-controls"></div>
+<div class="results-container" id="results-container" style="visibility: hidden;">
+    <div class="results-section-container">
+        <div class="results-section" id="outbound-flights">
+            <!-- 출발 항공편 결과는 여기에 삽입됩니다. -->
+        </div>
+        <div class="results-section" id="inbound-flights">
+            <!-- 귀국 항공편 결과는 여기에 삽입됩니다. -->
+        </div>
     </div>
 </div>
 
-<script>
-    let airports = {};
-    let airlines = {};
-    let outboundFlights = [];
-    let inboundFlights = [];
-    let currentPageOutbound = 1;
-    let currentPageInbound = 1;
-    const resultsPerPage = 5;
+<button id="book-button" class="book-button">예약하기</button>
 
-  function formatDate(dateString) {
-        if (!dateString) return 'NaN-NaN-NaN';
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) return 'NaN-NaN-NaN';
-        const year = date.getFullYear();
-        const month = ('0' + (date.getMonth() + 1)).slice(-2);
-        const day = ('0' + date.getDate()).slice(-2);
-        return `${year}-${month}-${day}`;
-    }
-
-    function formatTime(timeString) {
-        if (!timeString) return '00:00';
-        const [date, time] = timeString.split('T');
-        return time.split('.')[0];
-    }
-
-
-    function convertEuroToWon(euroAmount) {
-        const exchangeRate = 1500; // 1 유로 = 1500 원
-        return (euroAmount * exchangeRate).toFixed(0);
-    }
-
-    async function loadData() {
-        try {
-            const airportResponse = await fetch('/js/airports.json');
-            const airlineResponse = await fetch('/js/airlines.json');
-
-            if (!airportResponse.ok || !airlineResponse.ok) {
-                throw new Error('데이터를 불러오는 데 문제가 발생했습니다.');
-            }
-
-            airports = await airportResponse.json();
-            airlines = await airlineResponse.json();
-        } catch (error) {
-            console.error('데이터 불러오기 오류:', error);
-        }
-    }
-
-    function getAirportCode(name) {
-        const entry = Object.entries(airports).find(([code, airportName]) => airportName.toLowerCase() === name.toLowerCase());
-        return entry ? entry[0] : null;
-    }
-
-    function updateSuggestions(inputId) {
-        const inputElement = document.getElementById(inputId);
-        const suggestionsElement = document.getElementById(inputId + '-suggestions');
-        const query = inputElement.value.toLowerCase();
-        suggestionsElement.innerHTML = '';
-
-        if (query.length > 1) {
-            const suggestions = Object.entries(airports).filter(([code, name]) =>
-                name.toLowerCase().includes(query) || code.toLowerCase().includes(query)
-            );
-            suggestions.forEach(([code, name]) => {
-                const item = document.createElement('div');
-                item.classList.add('suggestion-item');
-                item.textContent = `${name} (${code})`;
-                item.onclick = () => {
-                    inputElement.value = name;
-                    suggestionsElement.innerHTML = '';
-                };
-                suggestionsElement.appendChild(item);
-            });
-        }
-    }
-
-  async function searchFlights() {
-    const originInput = document.getElementById('origin').value;
-    const destinationInput = document.getElementById('destination').value;
-    const departureDate = document.getElementById('departureDate').value;
-    const returnDate = document.getElementById('returnDate').value;
-    const adults = document.getElementById('adults').value;
-
-    const origin = getAirportCode(originInput);
-    const destination = getAirportCode(destinationInput);
-    const formattedDepartureDate = formatDate(departureDate);
-    const formattedReturnDate = formatDate(returnDate);
-
-    if (!origin || !destination || !formattedDepartureDate || !adults) {
-        document.getElementById('outbound-results').innerHTML = '<p>필수 항목을 모두 입력해 주세요.</p>';
-        document.getElementById('inbound-results').innerHTML = '';
-        return;
-    }
-
-    try {
-        // 출발 항공편 API 요청
-        const outboundUrl = `/flights?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&departureDate=${encodeURIComponent(formattedDepartureDate)}&adults=${encodeURIComponent(adults)}`;
-        const outboundResponse = await fetch(outboundUrl);
-        if (!outboundResponse.ok) {
-            throw new Error(`출발 항공편 검색 오류! 상태: ${outboundResponse.status}`);
-        }
-        const outboundData = await outboundResponse.json();
-        console.log('출발 항공편 API 응답 데이터:', outboundData);
-
-        // 돌아오는 항공편 API 요청
-        const inboundUrl = `/flights?origin=${encodeURIComponent(destination)}&destination=${encodeURIComponent(origin)}&departureDate=${encodeURIComponent(formattedReturnDate)}&adults=${encodeURIComponent(adults)}`;
-        const inboundResponse = await fetch(inboundUrl);
-        if (!inboundResponse.ok) {
-            throw new Error(`돌아오는 항공편 검색 오류! 상태: ${inboundResponse.status}`);
-        }
-        const inboundData = await inboundResponse.json();
-        console.log('돌아오는 항공편 API 응답 데이터:', inboundData);
-
-        // 데이터 처리
-        outboundFlights = Array.isArray(outboundData.outboundDeparture) ? outboundData.outboundDeparture : [];
-        inboundFlights = Array.isArray(inboundData.inboundReturn) ? inboundData.inboundReturn : [];
-
-        updateResults('outbound', outboundFlights, currentPageOutbound);
-        updateResults('inbound', inboundFlights, currentPageInbound);
-
-        updatePaginationControls('outbound', outboundFlights.length);
-        updatePaginationControls('inbound', inboundFlights.length);
-    } catch (error) {
-        console.error('항공편 검색 중 오류 발생:', error);
-        document.getElementById('outbound-results').innerHTML = `<p>오류가 발생했습니다: ${error.message}</p>`;
-        document.getElementById('inbound-results').innerHTML = '';
-        document.getElementById('outbound-pagination-controls').innerHTML = '';
-        document.getElementById('inbound-pagination-controls').innerHTML = '';
-    }
-}
-
-     function updateResults(type, flights, page) {
-        const start = (page - 1) * resultsPerPage;
-        const end = start + resultsPerPage;
-        const pageFlights = flights.slice(start, end);
-        let resultsHTML = '';
-
-        if (pageFlights.length === 0) {
-            resultsHTML = `<p>검색된 ${type === 'outbound' ? '출발' : '돌아오는'} 항공편이 없습니다.</p>`;
-        } else {
-            pageFlights.forEach(flight => {
-                const flightDetails = flight;
-                resultsHTML += `
-                    <div class="flight">
-                        <h3>항공편 정보</h3>
-                        <p>출발 공항: ${airports[flight.itineraries[0].segments[0].departure.iataCode] || flight.itineraries[0].segments[0].departure.iataCode}</p>
-                        <p>도착 공항: ${airports[flight.itineraries[0].segments[0].arrival.iataCode] || flight.itineraries[0].segments[0].arrival.iataCode}</p>
-                        <p>출발 시간: ${formatTime(flight.itineraries[0].segments[0].departure.at)}</p>
-                        <p>도착 시간: ${formatTime(flight.itineraries[0].segments[0].arrival.at)}</p>
-                        <p>항공사: ${airlines[flight.itineraries[0].segments[0].carrierCode] || flight.itineraries[0].segments[0].carrierCode}</p>
-                        <p>가격: ${flight.price.total} ${flight.price.currency}</p>
-                    </div>
-                `;
-            });
-        }
-        document.getElementById(`${type}-results`).innerHTML = resultsHTML;
-    }
-
-   function updatePaginationControls(type, totalResults) {
-        const totalPages = Math.ceil(totalResults / resultsPerPage);
-        let paginationHTML = '';
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `<button onclick="changePage('${type}', ${i})">${i}</button>`;
-        }
-        document.getElementById(`${type}-pagination-controls`).innerHTML = paginationHTML;
-    }
-
-    function changePage(type, page) {
-        if (type === 'outbound') {
-            currentPageOutbound = page;
-            updateResults('outbound', outboundFlights, currentPageOutbound);
-        } else {
-            currentPageInbound = page;
-            updateResults('inbound', inboundFlights, currentPageInbound);
-        }
-    }
-
-    loadData();
-</script>
-
+<script src="/js/index.js"></script>
 </body>
 </html>

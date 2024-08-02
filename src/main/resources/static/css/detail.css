@@ -1,3 +1,4 @@
+/* 전체 스타일 */
 body {
     font-family: '맑은 고딕', Arial, sans-serif;
     margin: 0;
@@ -11,63 +12,63 @@ header {
     color: #fff;
     padding: 20px;
     text-align: center;
-}
-
-h1 {
-    margin: 0;
     font-size: 24px;
 }
 
-.details-container {
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 20px;
+main {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.flight-details-container {
     background-color: #fff;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.details-item {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    border-bottom: 1px solid #ddd;
+    width: 100%;
+    max-width: 600px;
 }
 
-.details-item:last-child {
-    border-bottom: none;
+.flight-details {
+    margin-bottom: 20px;
 }
 
-.details-item h2 {
+.flight-details h2 {
     margin-top: 0;
-    color: #007bff;
-    font-size: 20px;
 }
 
-.details-item p {
-    margin: 0;
-    padding: 10px 0;
+.flight-details p {
+    margin: 8px 0;
     font-size: 16px;
 }
 
-.details-item strong {
-    color: #555;
+.booking-container {
+    text-align: center;
 }
 
-.details-item .price {
+.book-now-button {
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: #fff;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 12px;
     font-size: 18px;
-    font-weight: bold;
-    color: #d9534f;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
 }
 
-.details-item .label {
-    font-weight: bold;
+.book-now-button:hover {
+    background: linear-gradient(90deg, #0056b3, #003d7a);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
 }
 
-.details-item .value {
-    margin-left: 0.5rem;
-}
-
-@media (max-width: 768px) {
-    .details-container {
-        padding: 10px;
-    }
+.book-now-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.3);
 }

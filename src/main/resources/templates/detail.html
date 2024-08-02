@@ -3,29 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>항공권 상세</title>
+    <title>항공편 상세 정보</title>
     <link rel="stylesheet" href="/css/detail.css">
 </head>
 <body>
 
-<h1>항공권 상세</h1>
-<div class="flight-detail">
-    <h2>출발 항공편</h2>
-    <p>출발지: ${origin}</p>
-    <p>목적지: ${destination}</p>
-    <p>출발일: ${departureDate}</p>
-    <p>가격: ${price} ${currency}</p>
-    <p>항공사: ${carrierCode}</p>
+<header>
+    <h1>항공편 상세 정보</h1>
+</header>
 
-    <h2>돌아오는 항공편</h2>
-    <p>출발지: ${destination}</p>
-    <p>목적지: ${origin}</p>
-    <p>돌아오는 일자: ${returnDate}</p>
-    <p>가격: ${returnPrice} ${currency}</p>
-    <p>항공사: ${returnCarrierCode}</p>
+<main>
+    <div class="flight-details-container">
+        <div class="flight-details">
+            <h2>출발 항공편</h2>
+            <p><strong>출발 공항:</strong> <span id="departureAirport"></span></p>
+            <p><strong>도착 공항:</strong> <span id="arrivalAirport"></span></p>
+            <p><strong>출발 시간:</strong> <span id="departureTime"></span></p>
+            <p><strong>도착 시간:</strong> <span id="arrivalTime"></span></p>
+            <p><strong>가격:</strong> <span id="price"></span> 원</p>
+            <p><strong>항공사:</strong> <span id="carrier"></span></p>
+        </div>
 
-    <a href="/reservation?origin=${origin}&destination=${destination}&departureDate=${departureDate}&returnDate=${returnDate}&adults=${adults}&carrierCode=${carrierCode}&price=${price}&currency=${currency}&returnCarrierCode=${returnCarrierCode}&returnPrice=${returnPrice}">예약하기</a>
-</div>
+        <div class="booking-container">
+            <a id="bookNowButton" href="#" class="book-now-button">지금 예약하기</a>
+        </div>
+    </div>
+</main>
+
+<script>
+    function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            flightIds: params.get('flightIds').split(','), // 여러 항공편 ID를 콤마로 구분
+            type: params.get('type') // 'outbound' 또는 'inbound'
+        };
+    }
+
+    async function loadFlightDetails() {
+        const { flightIds, type } = getQueryParams();
+
+        if (!flightIds || flightIds.length === 0) {
+            alert('항공편 ID가 없습니다.');
+            return;
+        }
+
+        // API 요청으로 항공편 정보를 가져옵니다. 예를 들어, fetch를 사용할 수 있습니다.
+        try {
+            // 여러 항공편 ID를 동시에 요청하거나 개별적으로 요청할 수 있습니다.
+            // 이 예제에서는 개별 요청을 가정하고 있습니다.
+            const flights = await Promise.all(flightIds.map(flightId =>
+                fetch(`/api/flight-details?id=${encodeURIComponent(flightId)}`).then(response => response.json())
+            ));
+
+            // 첫 번째 항공편 정보를 표시합니다.
+            // 여러 항공편을 지원하려면 UI를 수정해야 합니다.
+            const flight = flights[0]; // 첫 번째 항공편 예시
+
+            document.getElementById('departureAirport').textContent = flight.departureAirport;
+            document.getElementById('arrivalAirport').textContent = flight.arrivalAirport;
+            document.getElementById('departureTime').textContent = flight.departureTime;
+            document.getElementById('arrivalTime').textContent = flight.arrivalTime;
+            document.getElementById('price').textContent = flight.price;
+            document.getElementById('carrier').textContent = flight.carrier;
+
+        } catch (error) {
+            console.error('항공편 정보 로드 오류:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadFlightDetails);
+
+    document.getElementById('bookNowButton').addEventListener('click', function() {
+        const { flightIds, type } = getQueryParams();
+        const reservationUrl = `/reservation?flightIds=${encodeURIComponent(flightIds.join(','))}&type=${encodeURIComponent(type)}`;
+        window.location.href = reservationUrl;
+    });
+</script>
 
 </body>
 </html>
