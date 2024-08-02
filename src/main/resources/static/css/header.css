@@ -1,8 +1,5 @@
 body {
-    width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    font-family: Arial, sans-serif;
+
 }
 
 header {
@@ -12,6 +9,13 @@ header {
     padding: 10px 20px 0px;
 
 }
+.header-body{
+  width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    font-family: Arial, sans-serif;
+    }
+
 
 .logo-button {
     flex: 1;
@@ -64,3 +68,51 @@ header {
 .auth button:hover {
     background-color: #5a6268;
 }
+.footer-body{
+    margin: 0;
+    font-family: "Noto Sans KR", sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 30vh;
+                }
+ .content {
+ flex: 1;
+}
+
+#footer {
+    overflow: hidden;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    max-width: 100%;
+    padding: 20px;
+    font-weight: 400;
+    font-size: 12px;
+    color: black;
+    background-color:#05203C;
+     /*whitesmoke;*/
+    z-index: 2;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    text-align: left; /* 텍스트를 왼쪽으로 정렬 */
+}
+
+.footer-box {
+    max-width: 1200px;
+    margin: 0; /* margin을 0으로 설정하여 왼쪽에 붙이기 */
+    padding: 0; /* padding을 제거하여 왼쪽 정렬을 유지 */
+    text-align: center; /* 텍스트를 왼쪽으로 정렬 */
+}
+
+hr {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    margin: 10px 0;
+}
+
+.gray_subtext {
+    color: white;
+    /*#555;*/
+    line-height: 1.6;
+    text-align: left; /* 텍스트를 왼쪽으로 정렬 */
+}
+

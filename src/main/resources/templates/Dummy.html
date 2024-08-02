@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amadeus Hotel Search</title>
+</head>
+<body>
+<h1>Search Hotels by City</h1>
+<form id="hotelSearchForm">
+    <label for="city">City Code:</label>
+    <input type="text" id="city" placeholder="Enter city code (e.g., NYC)">
+    <button type="submit">Search Hotels</button>
+</form>
+
+<div id="hotelResults"></div>
+
+<script>
+    const express = require('express');
+   const fetch = require('node-fetch');
+   const app = express();
+   const PORT = 3000;
+
+   const CLIENT_ID = '7pygXkuxGN6Vfo8WoJeRHnpJM8SWZtlP';
+   const CLIENT_SECRET = 'M9uW6JX4XYjQfu7f';
+
+   async function getAccessToken() {
+       const tokenResponse = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
+           method: 'POST',
+           headers: {
+               'Content-Type': 'application/x-www-form-urlencoded'
+           },
+           body: new URLSearchParams({
+               grant_type: 'client_credentials',
+               client_id: CLIENT_ID,
+               client_secret: CLIENT_SECRET
+           })
+       });
+
+       const tokenData = await tokenResponse.json();
+       return tokenData.access_token;
+   }
+
+   app.get('/api/hotels', async (req, res) => {
+       const cityCode = req.query.cityCode;
+       try {
+           const accessToken = await getAccessToken();
+
+           const hotelResponse = await fetch(`https://test.api.amadeus.com/v2/shopping/hotel-offers?cityCode=${cityCode}`, {
+               headers: {
+                   'Authorization': `Bearer ${accessToken}`
+               }
+           });
+
+           const hotelData = await hotelResponse.json();
+           res.json(hotelData);
+       } catch (error) {
+           console.error('Error:', error);
+           res.status(500).send('An error occurred');
+       }
+   });
+
+   app.listen(PORT, () => {
+       console.log(`Server is running on http://localhost:${PORT}`);
+   });
+document.getElementById('hotelSearchForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const cityCode = document.getElementById('city').value;
+
+    try {
+        const response = await fetch(`/api/hotels?cityCode=${cityCode}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch hotel data: ${response.statusText}`);
+        }
+        const data = await response.json();
+        displayHotels(data);
+    } catch (error) {
+        console.error('Error fetching hotel data:', error);
+    }
+});
+
+</script>
+</body>
+</html>

@@ -1,27 +1,68 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-
+<!-- 카드에 값 넣는거 해야함 -->
 <head>
     <meta charset="UTF-8">
     <title>저렴한 호텔 비교 특가</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="../../css/hotels.css"/> <!-- css 연결-->
+    <link rel="stylesheet" type="text/css" href="../static/css/hotels.css"/> <!-- css 연결-->
+    <link rel="stylesheet" href="../static/css/header.css"><!-- header css 연결-->
+    <link rel="stylesheet" href="../static/css/map.css"><!-- map css 연결-->
 </head>
 
 
 <body>
+<div class="header-body">     <!-- header-->
+    <header>
+
+        <div class="left-section">
+            <button type="button" class="btn logo-button">
+                <img src="../static/html/layout/LOGO.png" alt="YAYEOGI 로고" >
+            </button>
+            &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <p>
+            <div class="menu">
+                <button type="button" class="btn btn-info">항공권</button>
+                <button type="button" class="btn btn-info">호텔</button>
+            </div>
+        </div>
+        </p>
+        <div class="auth">
+            <button type="button" class="btn btn-secondary">
+                회원가입
+            </button>
+            <button type="button" class="btn btn-secondary">
+                로그인
+            </button>
+            <!--          <div class="auth">
+                            <button type="button" >
+                                <img> 찜
+                            </button>
+                            <button type="button" >
+                                <img> 내정보
+                            </button>
+                                  <button type="button" >
+                                <img> 로그아웃
+                            </button> -->
+
+        </div>
+    </header>
+</div>
+
 <main id="hotels_search_page">
     <section class="hotels_search_form">
         <div class="background_image">
-            <img src="img/vacation.png" width="1920px;" height="480px;" style="position: relative;">
+            <img src="../static/html/hotels/img/vacation.png" width="1920px;" height="550px;" style="position: relative;" alt="background">
             <!--검색창 백그라운드 이미지-->
-            <div class="search_from_box">
-                <h1 style="font-weight: bold;">마음에 꼭 드는 호텔을 찾아보세요.</h1>
+            <div class="search_from_box" style="margin-top:200px;">
+                <h1 style="font-weight: bold;font-family:Impact,Charcoal,sans-serif; ">마음에 꼭 드는 호텔을 찾아보세요.</h1>
                 <div class="overlay" style="width:1200px;"> <!--검색창 틀-->
 
                     <div class="search-bar"> <!--검색창-->
                         <label>
+
                             <input type="text" placeholder="목적지 또는 호텔명을 입력하십시오." size=70>
                             <input type="date" value="2024-07-31" size=30>
                             <input type="date" value="2024-08-01">
@@ -46,8 +87,8 @@
         </div>
         <div class="event-banner">  <!--배너-->
             <span class="banner" >
-                <a href="https://google.com">   <!--배너 클릭시 이동 주소-->
-                    <img src="img/banner.png" alt="banner" style="width:1200px; height:400px;">
+                <a href="http://localhost:63342/Green3/src/main/resources/templates/deals.html?_ijt=arp8q9u98hil0fbvfkck1uojpp&_ij_reload=RELOAD_ON_SAVE">   <!--배너 클릭시 이동 주소-->
+                    <img src="../static/html/hotels/img/banner.png" alt="banner" style="width:1200px; height:400px;">
                 <div class="banner-content"><!-- 배너에 작성된 문구들-->
                             <strong>이번 호텔 예약<br>더욱 저렴하게 </strong>
                              <div class="banner-sub-content" style="width:330px;">
@@ -58,7 +99,7 @@
                         호텔 상품 보기
                     </div>
                                 <div>
-                                     <img src="img/sale.png" alt="sale" class="banner-sale-image" >
+                                     <img src="../static/html/hotels/img/sale.png" alt="sale" class="banner-sale-image" >
                                 </div>
                       </a>
             </span>
@@ -66,12 +107,12 @@
 <div class="title-comment">
         <strong>다양한 브랜드의 호텔을 비교해보세요</strong><br>
     <span>
-        <img src="img/Hilton.png" alt="Hilton" class="hotels-brand">
-        <img src="img/InterContinental.png" alt="InterContinental" class="hotels-brand" style="width:160px;">
-        <img src="img/Marriott.png" alt="Marriott" class="hotels-brand" style="width:160px; height:80px;">
-        <img src="img/Hyatt.png" alt="Hyatt" class="hotels-brand" style="width:160px;margin-top:20px;">
-        <img src="img/Agoda.png" alt="Agoda" class="hotels-brand" style="margin-top:20px; width:130px;">
-        <img src="img/Hotels.png" alt="Hotels" class="hotels-brand" style="width:130px;">
+        <img src="../static/html/hotels/img/Hilton.png" alt="Hilton" class="hotels-brand">
+        <img src="../static/html/hotels/img/InterContinental.png" alt="InterContinental" class="hotels-brand" style="width:160px;">
+        <img src="../static/html/hotels/img/Marriott.png" alt="Marriott" class="hotels-brand" style="width:160px; height:80px;">
+        <img src="../static/html/hotels/img/Hyatt.png" alt="Hyatt" class="hotels-brand" style="width:160px;margin-top:20px;">
+        <img src="../static/html/hotels/img/Agoda.png" alt="Agoda" class="hotels-brand" style="margin-top:20px; width:130px;">
+        <img src="../static/html/hotels/img/Hotels.png" alt="Hotels" class="hotels-brand" style="width:130px;">
 
     </span>
 </div>
@@ -89,7 +130,7 @@
         <div class="title-comment2">
             <div class="card product_img_size">
                 <a href="https://google.com">
-                    <img src="img/product1.png" class="card-img-top product_img" alt="image">
+                    <img src="../static/html/hotels/img/product1.png" class="card-img-top product_img" alt="image">
                     <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
                         <h5 class="product_title">웨스틴조선 서울
                             <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
@@ -102,7 +143,7 @@
             </div>
             <div class="card product_img_size">
                 <a href="https://google.com">
-                    <img src="img/product1.png" class="card-img-top product_img" alt="image">
+                    <img src="../static/html/hotels/img/product1.png" class="card-img-top product_img" alt="image">
                     <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
                         <h5 class="product_title">웨스틴조선 서울
                             <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
@@ -115,7 +156,7 @@
             </div>
             <div class="card product_img_size">
                 <a href="https://google.com">
-                    <img src="img/product1.png" class="card-img-top product_img" alt="image">
+                    <img src="../static/html/hotels/img/product1.png" class="card-img-top product_img" alt="image">
                     <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
                         <h5 class="product_title">웨스틴조선 서울
                             <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
@@ -141,7 +182,7 @@
         <div class="title-card1">
             <div class="card product_img_size">
                 <a href="https://google.com">
-                    <img src="img/Japan.png" class="card-img-top product_img" alt="image">
+                    <img src="../static/html/hotels/img/Japan.png" class="card-img-top product_img" alt="image">
                     <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
                         <h5 class="product_title">케이스 하우스 이토 온센
                             <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
@@ -155,7 +196,7 @@
             </div>
             <div class="card product_img_size">
                 <a href="https://google.com">
-                    <img src="img/Japan.png" class="card-img-top product_img" alt="image">
+                    <img src="../static/html/hotels/img/Japan.png" class="card-img-top product_img" alt="image">
                     <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
                         <h5 class="product_title">케이스 하우스 이토 온센
                             <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
@@ -170,7 +211,7 @@
             </div>
             <div class="card product_img_size">
                 <a href="https://google.com">
-                    <img src="img/Japan.png" class="card-img-top product_img" alt="image">
+                    <img src="../static/html/hotels/img/Japan.png" class="card-img-top product_img" alt="image">
                     <div class="card-body" style="border-bottom: solid 1px #afb0b3;">
                         <h5 class="product_title">케이스 하우스 이토 온센
                             <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
@@ -186,10 +227,44 @@
         <div class="title-comment3">
             요약 정보
             <h6>여행 전 알아두면 좋은 정보를 확인하고 마음 편히 여행하세요.</h6>
-            <img src="img/building.png" class="icon_build" alt="building">
-            <h6 class="icon_title"> 이용할 수 있는 호텔 브랜드</h6>
-            <h5 class="icon_detail">60개 이상</h5>
+            <div class="summary-info">
+                <div class="info-item">
+                <img src="../static/html/hotels/img/building.png" class="icon_build" alt="building">
+                <h6 class="icon_title"> 이용할 수 있는 호텔 브랜드</h6>
+                <h5 class="icon_detail">60개 이상</h5>
+            </div>
+            <div class="info-item">
+                <img src="../static/html/hotels/img/point.png" class="icon_build" alt="point" style="width:25px; height:25px;">
+                <h6 class="icon_title">호텔이 있는 지역</h6>
+                <h5 class="icon_detail">5,000곳 이상</h5>
+            </div>
+                <div class="info-item">
+                    <img src="../static/html/hotels/img/bed.png" class="icon_build" alt="bed" style="width:25px; height:25px;">
+                    <h6 class="icon_title">전 세계의 예약 가능한 호텔</h6>
+                    <h5 class="icon_detail">320만</h5>
+            </div>
+            </div>
 </div>
+
+            <div class="panel">
+                <div class="panel-block">
+            <img src="../static/html/hotels/img/sales.png" class="panel-img" alt="sales">
+            <p class="panel-title">매력적인 호텔 특가 상품</p>
+            <p class="panel-content">전 세계 유명 호텔 특가 상품을 검색하여 보여드립니다.</p>
+                </div>
+                <div class="panel-block">
+            <img src="../static/html/hotels/img/ring.png" class="panel-img" alt="ring" style="margin-top:20px;">
+            <p class="panel-title" style="margin-left:30px;margin-top:30px;">최신 가격</p>
+            <p class="panel-content" style="margin-left:40px;">야여기는 항상 최신 정보가 반영된 가격을 보여드리므로, 예상 금액을 정확하게 파악하실 수 있습니다.</p>
+                </div>
+                <div class="panel-block">
+            <img src="../static/html/hotels/img/fair.png" class="panel-img" alt="fair">
+            <p class="panel-title" style="margin-left:30px;">정확한 검색</p>
+            <p class="panel-content" style="margin-left:40px;">수영장이 있는 호텔, 무료 취소가 가능한 호텔, 예약 변경이 가능한 호텔 등 원하는 조건에 맞는 호텔을 검색하세요.</p>
+                </div>
+                </div>
+
+
 
 
 
@@ -198,5 +273,26 @@
 
     </section>
 </main>
+<div class="footer-body">       <!-- footer-->
+    <div class="content">
+        <!-- Your main content goes here -->
+    </div>
+
+    <div class="container" id="footer">
+        <hr>
+        <div class="footer-box">
+            <div class="gray_subtext">
+                    <span>
+                        (주)YAYEOGI | 대표이사: 홍길동 | 사업자 등록번호: 000-00-000000 | 통신판매업신고: 야여기-0000호 | 메일: help@yayeogi.com
+                        <br>관광사업자 등록번호: 제2022-05호 | 주소: 서울 강남구 테헤란로 000길 00 | 호스팅서비스 제공자: 주식회사 YAYEOGI
+                        <br>고객센터: 1644-1346 (오전 9시 - 익일 새벽 3시)
+                        <br>(주)GOING은 통신판매 중개자로서 통신판매의 당사자가 아니며 상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.
+                        <br>(주)GOING이 소유/운영/관리하는 웹사이트 및 앱 내의 상품/판매자/이벤트 정보, 디자인 및 화면의 구성, UI를 포함하여 일체의 콘텐츠에 대한 무단 복제, 배포, 방송 또는 전송, 스크래핑 등의 행위는 저작권법 및 콘텐츠산업 진흥법 등 관련 법령에 의하여 엄격히 금지됩니다.
+                    </span>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>
 </body>
 </html>
