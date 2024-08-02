@@ -15,16 +15,21 @@ public class UserService {
     }
 
     public User registerNewUser(User user) {
-        String fullEmail = user.getEmail(); // 이메일은 이미 완전한 이메일로 입력 받는 것이 좋습니다.
+        // 이메일을 완성합니다
+        String fullEmail = user.getEmail() + "@" + user.getDomain();
+        user.setEmail(fullEmail);
 
-        if (userRepository.findByEmail(fullEmail).isPresent()) {
+        // 이메일 중복 체크
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email already exists.");
         }
-        if (!user.getPassword().equals(user.getPasswordConfirm())) { // 패스워드 확인 로직 추가
+
+        // 비밀번호 확인
+        if (!user.getPassword().equals(user.getPasswordConfirm())) {
             throw new IllegalArgumentException("Passwords do not match.");
         }
-        // 비밀번호 암호화 (선택사항: Spring Security 사용 가능)
-        // user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+
+        // 사용자 저장
         return userRepository.save(user);
     }
 }
