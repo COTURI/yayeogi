@@ -149,33 +149,36 @@ h1 {
 }
 
 /* 페이지네이션 컨트롤 스타일 */
-.pagination-controls {
-    text-align: center;
+.pagination {
+    display: flex;
+    justify-content: center;
     margin-top: 20px;
 }
 
-.pagination-controls button {
+.pagination button {
     padding: 8px 16px;
     margin: 0 4px;
-    border: none;
-    background-color: #007bff;
-    color: white;
+    border: 1px solid #007bff;
+    background-color: #ffffff;
+    color: #007bff;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
 }
 
-.pagination-controls button.active {
-    background-color: #0056b3;
+.pagination button.active {
+    background-color: #007bff;
+    color: #ffffff;
 }
 
-.pagination-controls button:hover {
-    background-color: #0056b3;
+.pagination button:hover {
+    background-color: #e9ecef;
+    color: #0056b3;
     transform: translateY(-2px);
 }
 
-.pagination-controls button:disabled {
+.pagination button:disabled {
     background-color: #ddd;
     color: #666;
     cursor: not-allowed;
@@ -201,3 +204,4 @@ h1 {
     background-color: #218838;
     transform: translateY(-2px);
 }
+
