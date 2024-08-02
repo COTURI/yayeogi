@@ -98,12 +98,9 @@ function updateSuggestions(inputId) {
 }
 
 async function searchFlights() {
-     console.log('검색 시작'); // 디버깅을 위한 로그 추가
+    console.log('검색 시작'); // 디버깅을 위한 로그 추가
     if (isSearchInProgress) return;
     isSearchInProgress = true;
-
-
-
 
     const originInput = document.getElementById('departure-city').value.trim();
     const destinationInput = document.getElementById('arrival-city').value.trim();
@@ -161,33 +158,33 @@ function updateResults(type, flights, page) {
 
     if (!flightsToDisplay || flightsToDisplay.length === 0) {
         container.innerHTML = '<p>검색 결과가 없습니다.</p>';
-        document.getElementById(`pagination-${type}`).innerHTML = '';
         return;
     }
 
-    container.innerHTML = flightsToDisplay.map(flight => {
-        const airlineName = flight.validatingAirlineCodes ? getAirlineName(flight.validatingAirlineCodes[0]) : '정보 없음';
-        const priceEuro = flight.price ? flight.price.grandTotal : '정보 없음';
-        const priceWon = flight.price ? convertEuroToWon(parseFloat(flight.price.grandTotal)) : '정보 없음';
-        const departure = flight.itineraries && flight.itineraries[0] && flight.itineraries[0].segments && flight.itineraries[0].segments[0]
-            ? `${getAirportName(flight.itineraries[0].segments[0].departure.iataCode)} ${formatDate(flight.itineraries[0].segments[0].departure.at)} ${formatTime(flight.itineraries[0].segments[0].departure.at)}`
-            : '정보 없음';
-        const arrival = flight.itineraries && flight.itineraries[0] && flight.itineraries[0].segments && flight.itineraries[0].segments[0]
-            ? `${getAirportName(flight.itineraries[0].segments[0].arrival.iataCode)} ${formatDate(flight.itineraries[0].segments[0].arrival.at)} ${formatTime(flight.itineraries[0].segments[0].arrival.at)}`
-            : '정보 없음';
+    const resultsHtml = flightsToDisplay.map(flight => {
+        const itineraries = flight.itineraries[0] || {};
+        const segments = itineraries.segments || [];
+        const departureTime = segments.length > 0 ? formatTime(segments[0].departure.at) : '알 수 없음';
+        const arrivalTime = segments.length > 0 ? formatTime(segments[segments.length - 1].arrival.at) : '알 수 없음';
+        const priceInWon = convertEuroToWon(parseFloat(flight.price.total) || 0);
+        const airlineName = getAirlineName(flight.validatingAirlineCodes[0] || '알 수 없음');
 
         return `
-            <div class="flight">
-                <p>항공사: ${airlineName}</p>
-                <p>가격: ${priceEuro} EUR (${priceWon} 원)</p>
-                <p>출발: ${departure}</p>
-                <p>도착: ${arrival}</p>
+            <div class="flight-item">
+                <div class="flight-info">
+                    <p><strong>${getAirportName(flight.itineraries[0]?.segments[0]?.departure?.iataCode || '알 수 없음')}</strong> → <strong>${getAirportName(flight.itineraries[0]?.segments[segments.length - 1]?.arrival?.iataCode || '알 수 없음')}</strong></p>
+                    <p>출발: ${departureTime} / 도착: ${arrivalTime}</p>
+                    <p>항공사: ${airlineName}</p>
+                    <p>가격: €${flight.price.total} (${priceInWon}원)</p>
+                </div>
             </div>
         `;
     }).join('');
 
+    container.innerHTML = resultsHtml;
     updatePagination(type, flights.length, page);
 }
+
 
 function updatePagination(type, totalFlights, currentPage) {
     const totalPages = Math.ceil(totalFlights / flightsPerPage);
@@ -210,7 +207,6 @@ function updatePagination(type, totalFlights, currentPage) {
             } else {
                 inboundPage = page;
             }
-            console.log(`페이지 이동: ${type} ${page}`); // 디버깅을 위한 로그
             searchFlights(); // 페이지 버튼 클릭 시 검색 실행
         };
         return button;
@@ -232,61 +228,8 @@ function updatePagination(type, totalFlights, currentPage) {
     }
 }
 
-// 검색 결과 업데이트 함수
-function updateResults(type, flights, page) {
-    const container = document.getElementById(`${type}-flights`);
-    if (!container) return;
+document.getElementById('search-button').addEventListener('click', searchFlights);
+document.getElementById('departure-city').addEventListener('input', () => updateSuggestions('departure-city'));
+document.getElementById('arrival-city').addEventListener('input', () => updateSuggestions('arrival-city'));
 
-    const startIndex = (page - 1) * flightsPerPage;
-    const endIndex = startIndex + flightsPerPage;
-    const flightsToDisplay = flights.slice(startIndex, endIndex);
-
-    if (!flightsToDisplay || flightsToDisplay.length === 0) {
-        container.innerHTML = '<p>검색 결과가 없습니다.</p>';
-        document.getElementById(`pagination-${type}`).innerHTML = '';
-        return;
-    }
-
-    container.innerHTML = flightsToDisplay.map(flight => {
-        const airlineName = flight.validatingAirlineCodes ? getAirlineName(flight.validatingAirlineCodes[0]) : '정보 없음';
-        const priceEuro = flight.price ? flight.price.grandTotal : '정보 없음';
-        const priceWon = flight.price ? convertEuroToWon(parseFloat(flight.price.grandTotal)) : '정보 없음';
-        const departure = flight.itineraries && flight.itineraries[0] && flight.itineraries[0].segments && flight.itineraries[0].segments[0]
-            ? `${getAirportName(flight.itineraries[0].segments[0].departure.iataCode)} ${formatDate(flight.itineraries[0].segments[0].departure.at)} ${formatTime(flight.itineraries[0].segments[0].departure.at)}`
-            : '정보 없음';
-        const arrival = flight.itineraries && flight.itineraries[0] && flight.itineraries[0].segments && flight.itineraries[0].segments[0]
-            ? `${getAirportName(flight.itineraries[0].segments[0].arrival.iataCode)} ${formatDate(flight.itineraries[0].segments[0].arrival.at)} ${formatTime(flight.itineraries[0].segments[0].arrival.at)}`
-            : '정보 없음';
-
-        return `
-            <div class="flight">
-                <p>항공사: ${airlineName}</p>
-                <p>가격: ${priceEuro} EUR (${priceWon} 원)</p>
-                <p>출발: ${departure}</p>
-                <p>도착: ${arrival}</p>
-            </div>
-        `;
-    }).join('');
-
-    updatePagination(type, flights.length, page); // 페이지네이션 업데이트
-}
-
-function addEventListeners() {
-    document.getElementById('departure-city').addEventListener('input', () => updateSuggestions('departure-city'));
-    document.getElementById('arrival-city').addEventListener('input', () => updateSuggestions('arrival-city'));
-
-    document.getElementById('search-button').addEventListener('click', searchFlights);
-    document.getElementById('departure-date').addEventListener('change', () => {
-        if (document.getElementById('return-date').value && new Date(document.getElementById('return-date').value) < new Date(document.getElementById('departure-date').value)) {
-            document.getElementById('return-date').value = '';
-        }
-    });
-}
-
-
-
-
-window.onload = async function () {
-    await loadData();
-    addEventListeners();
-};
+loadData();

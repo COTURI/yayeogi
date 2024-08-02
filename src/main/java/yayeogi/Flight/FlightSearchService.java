@@ -4,14 +4,21 @@ import com.amadeus.Params;
 import com.amadeus.Amadeus;
 import com.amadeus.exceptions.ResponseException;
 import com.amadeus.resources.FlightOfferSearch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Service
 public class FlightSearchService {
 
+    private final Logger logger = LoggerFactory.getLogger(FlightSearchService.class);
     private final Amadeus amadeus;
     private final Gson gson;
 
@@ -22,10 +29,16 @@ public class FlightSearchService {
     }
 
     private String formatDate(String date) {
-        if (date == null || date.isEmpty()) {
-            throw new IllegalArgumentException("Date cannot be null or empty");
+        // 날짜 형식 변환 로직 추가
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date parsedDate = inputFormat.parse(date);
+            return outputFormat.format(parsedDate);
+        } catch (ParseException e) {
+            logger.error("날짜 형식 변환 오류: {}", e.getMessage());
+            throw new IllegalArgumentException("날짜 형식이 올바르지 않습니다.");
         }
-        return date; // 실제로 날짜 형식 변환이 필요하다면 여기에 로직 추가
     }
 
     public String searchFlightsAsString(String origin, String destination, String departureDate, String returnDate, int adults) {
@@ -37,7 +50,7 @@ public class FlightSearchService {
         String formattedReturnDate = returnDate != null ? formatDate(returnDate) : null;
 
         try {
-            System.out.println("Requesting outbound flights...");
+            logger.info("Requesting outbound flights...");
             FlightOfferSearch[] outboundOffers = amadeus.shopping.flightOffersSearch.get(
                     Params.with("originLocationCode", origin)
                             .and("destinationLocationCode", destination)
@@ -48,7 +61,7 @@ public class FlightSearchService {
 
             FlightOfferSearch[] inboundOffers = null;
             if (formattedReturnDate != null) {
-                System.out.println("Requesting inbound flights...");
+                logger.info("Requesting inbound flights...");
                 inboundOffers = amadeus.shopping.flightOffersSearch.get(
                         Params.with("originLocationCode", destination)
                                 .and("destinationLocationCode", origin)
@@ -58,17 +71,17 @@ public class FlightSearchService {
                 );
             }
 
+            // 결과를 JSON 문자열로 변환
             String outboundJson = gson.toJson(outboundOffers);
             String inboundJson = gson.toJson(inboundOffers != null ? inboundOffers : new FlightOfferSearch[0]);
 
+            // 결과를 JSON 문자열로 조합
             return "{\"outboundDeparture\": " + outboundJson + ", \"inboundReturn\": " + inboundJson + "}";
         } catch (ResponseException e) {
-            System.err.println("API 호출 실패: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("API 호출 실패: {}", e.getMessage());
             throw new RuntimeException("API 호출 실패: " + e.getMessage(), e);
         } catch (Exception e) {
-            System.err.println("예기치 않은 오류 발생: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("예기치 않은 오류 발생: {}", e.getMessage());
             throw new RuntimeException("예기치 않은 오류 발생: " + e.getMessage(), e);
         }
     }
