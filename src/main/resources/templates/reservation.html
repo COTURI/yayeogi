@@ -1,73 +1,203 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>예약 페이지</title>
+    <title>예약 정보</title>
     <link rel="stylesheet" href="/css/reservation.css">
-</head>
-<body>
-<header>
-    <h1>예약 페이지</h1>
-</header>
-<main class="reservation-container">
-    <div class="reservation-summary">
-        <h2>나의 주문</h2>
-        <p><span class="label">출발지:</span><span id="summary-origin">ICN</span></p>
-        <p><span class="label">목적지:</span><span id="summary-destination">NRT</span></p>
-        <p><span class="label">출발 날짜:</span><span id="summary-departureDate">2024-08-22</span></p>
-        <p><span class="label">성인 수:</span><span id="summary-adults">1</span></p>
-        <p><span class="label">항공사:</span><span id="summary-airlineName">YP</span></p>
-        <p><span class="label">가격:</span><span id="summary-price">81450 KRW</span></p>
-    </div>
-    <form id="reservation-form">
-        <h2>여행객 정보 입력</h2>
-        <label for="name">이름:</label>
-        <input type="text" id="name" name="name" required>
-        <label for="email">이메일:</label>
-        <input type="email" id="email" name="email" required>
-        <label for="phone">전화번호:</label>
-        <input type="tel" id="phone" name="phone" required>
-        <button type="submit">예약하기</button>
-    </form>
-</main>
-<script>
-    let airports = {};
-    let airlines = {};
+    <script>
+        let airlines = {};
 
-    async function loadData() {
-        try {
-            const airportResponse = await fetch('/JS/airports.json');
-            const airlineResponse = await fetch('/JS/airlines.json');
+        async function loadAirlineData() {
+            try {
+                const response = await fetch('/js/airlines.json');
+                if (!response.ok) {
+                    throw new Error('항공사 데이터 로드 실패');
+                }
+                airlines = await response.json();
+                updateReservationDetails();
+            } catch (error) {
+                console.error('항공사 데이터 로드 오류:', error);
+            }
+        }
 
-            if (!airportResponse.ok || !airlineResponse.ok) {
-                throw new Error('데이터를 불러오는 데 문제가 발생했습니다.');
+        function getAirlineName(carrierCode) {
+            return airlines[carrierCode] || carrierCode;
+        }
+
+        function convertEuroToWon(euroAmount) {
+            const exchangeRate = 1500; // 1 유로 = 1500 원
+            return (euroAmount * exchangeRate).toFixed(0);
+        }
+
+        function updateReservationDetails() {
+            const reservationDetails = document.getElementById('reservation-details');
+            if (!reservationDetails) {
+                console.error('예약 세부 정보 요소를 찾을 수 없습니다.');
+                return;
             }
 
-            airports = await airportResponse.json();
-            airlines = await airlineResponse.json();
-        } catch (error) {
-            console.error('데이터 불러오기 오류:', error);
+            const params = new URLSearchParams(window.location.search);
+
+            const origin = params.get('origin');
+            const destination = params.get('destination');
+            const departureDate = params.get('departureDate');
+            const returnDate = params.get('returnDate');
+            const adults = params.get('adults');
+            const price = params.get('price');
+            const carrierCode = params.get('carrierCode');
+            const returnPrice = params.get('returnPrice');
+            const returnCarrierCode = params.get('returnCarrierCode');
+
+            const originElement = document.getElementById('origin');
+            const destinationElement = document.getElementById('destination');
+            const departureDateElement = document.getElementById('departureDate');
+            const returnDateElement = document.getElementById('returnDate');
+            const adultsElement = document.getElementById('adults');
+
+            if (originElement) {
+                originElement.textContent = origin || '출발지 정보 없음';
+            }
+
+            if (destinationElement) {
+                destinationElement.textContent = destination || '목적지 정보 없음';
+            }
+
+            if (departureDateElement) {
+                departureDateElement.textContent = departureDate || '출발일 정보 없음';
+            }
+
+            if (returnDateElement) {
+                returnDateElement.textContent = returnDate || '돌아오는 일자 정보 없음';
+            }
+
+            if (adultsElement) {
+                adultsElement.textContent = adults || '성인 수 정보 없음';
+            }
+
+            const priceElements = reservationDetails.querySelectorAll('.price');
+            const carrierElements = reservationDetails.querySelectorAll('.carrier');
+
+            if (priceElements.length > 0) {
+                priceElements[0].textContent = `${convertEuroToWon(price)} 원`;
+            }
+
+            if (carrierElements.length > 0) {
+                carrierElements[0].textContent = getAirlineName(carrierCode);
+            }
+
+            if (priceElements.length > 1) {
+                priceElements[1].textContent = `${convertEuroToWon(returnPrice)} 원`;
+            }
+
+            if (carrierElements.length > 1) {
+                carrierElements[1].textContent = getAirlineName(returnCarrierCode);
+            }
         }
-    }
 
-    async function updateReservationSummary() {
-        try {
-            await loadData();
+        window.onload = loadAirlineData;
+    </script>
+</head>
+<body>
 
-            const originCode = document.getElementById('summary-origin').textContent.trim();
-            const destinationCode = document.getElementById('summary-destination').textContent.trim();
-            const carrierCode = document.getElementById('summary-airlineName').textContent.trim();
+<header>
+    <h1>예약 정보</h1>
+</header>
 
-            document.getElementById('summary-origin').textContent = airports[originCode] || originCode;
-            document.getElementById('summary-destination').textContent = airports[destinationCode] || destinationCode;
-            document.getElementById('summary-airlineName').textContent = airlines[carrierCode] || carrierCode;
-        } catch (error) {
-            console.error('예약 요약 업데이트 오류:', error);
-        }
-    }
+<main>
+    <div class="reservation-container">
+        <!-- 예약 요약 -->
+        <div class="reservation-summary">
+            <h2>예약 요약</h2>
+            <p><strong>출발지:</strong> <span id="origin" data-origin=""></span></p>
+            <p><strong>목적지:</strong> <span id="destination" data-destination=""></span></p>
+            <p><strong>출발일:</strong> <span id="departureDate" data-departure-date=""></span></p>
+            <p><strong>돌아오는 일자:</strong> <span id="returnDate" data-return-date=""></span></p>
+            <p><strong>성인 수:</strong> <span id="adults" data-adults=""></span></p>
+        </div>
 
-    document.addEventListener('DOMContentLoaded', updateReservationSummary);
-</script>
+        <!-- 출발 항공편 및 돌아오는 항공편 정보 -->
+        <div class="flight-details">
+            <h2>출발 항공편</h2>
+            <p><strong>항공사:</strong> <span class="carrier" data-carrier-code=""></span></p>
+            <p><strong>가격:</strong> <span class="price" data-price=""></span></p>
+
+            <h2>돌아오는 항공편</h2>
+            <p><strong>항공사:</strong> <span class="carrier" data-carrier-code=""></span></p>
+            <p><strong>가격:</strong> <span class="price" data-price=""></span></p>
+        </div>
+
+        <!-- 예약자 정보 -->
+        <div class="passenger-info">
+            <h2>예약자 정보</h2>
+            <label for="firstName">영문 이름(First Name):</label>
+            <input type="text" id="firstName" name="firstName" required>
+
+            <label for="lastName">영문 성(Last Name):</label>
+            <input type="text" id="lastName" name="lastName" required>
+
+            <label for="countryCode">국가/지역 번호:</label>
+            <select id="countryCode" name="countryCode" required>
+                <option value="">선택해 주세요</option>
+                <option value="+82">대한민국 (+82)</option>
+                <option value="+1">미국 (+1)</option>
+                <option value="+44">영국 (+44)</option>
+                <!-- 기타 국가 코드 추가 -->
+            </select>
+
+            <label for="phoneNumber">휴대전화번호:</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" required>
+
+            <label for="email">이메일 주소:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <!-- 탑승객 정보 -->
+        <div class="passenger-details">
+            <h2>탑승객 정보</h2>
+            <div class="passenger">
+                <h3>탑승객 1: 성인</h3>
+                <p>[주의] 탑승객 정보는 반드시 여권에 나와 있는 정보와 일치해야 합니다. 대한민국 국적 여행객의 경우 국내 항공편 이용 시에도 여권을 소지하지 않으신 경우 항공기 탑승이 제한됩니다.</p>
+
+                <label for="paxFirstName">영문 이름 & 영문 중간 이름:</label>
+                <input type="text" id="paxFirstName" name="paxFirstName" required>
+
+                <label for="paxLastName">영문 성(Last Name):</label>
+                <input type="text" id="paxLastName" name="paxLastName" required>
+
+                <label for="dob">생년월일:</label>
+                <input type="date" id="dob" name="dob" required>
+
+                <label for="nationality">국적:</label>
+                <select id="nationality" name="nationality" required>
+                    <option value="">선택해 주세요</option>
+                    <option value="KR">대한민국</option>
+                    <option value="US">미국</option>
+                    <option value="GB">영국</option>
+                    <!-- 기타 국가 추가 -->
+                </select>
+
+                <label for="passportNumber">여권 번호:</label>
+                <input type="text" id="passportNumber" name="passportNumber" required>
+
+                <label for="passportIssueCountry">여권 발행 국가/지역:</label>
+                <select id="passportIssueCountry" name="passportIssueCountry" required>
+                    <option value="">선택해 주세요</option>
+                    <option value="KR">대한민국</option>
+                    <option value="US">미국</option>
+                    <option value="GB">영국</option>
+                    <!-- 기타 국가 추가 -->
+                </select>
+
+                <label for="passportExpiryDate">여권 만료일:</label>
+                <input type="date" id="passportExpiryDate" name="passportExpiryDate" required>
+            </div>
+        </div>
+
+        <!-- 결제 버튼 -->
+        <a href="#" class="book-now-button">결제하기</a>
+    </div>
+</main>
+
 </body>
 </html>

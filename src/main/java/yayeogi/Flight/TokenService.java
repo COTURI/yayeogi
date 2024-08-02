@@ -1,6 +1,11 @@
 package yayeogi.Flight;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,29 +21,28 @@ public class TokenService {
     private String apiSecret;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public String getAccessToken() {
         String tokenUrl = "https://test.api.amadeus.com/v1/security/oauth2/token";
-        RestTemplate restTemplate = new RestTemplate();
-
-        String response = restTemplate.postForObject(tokenUrl,
-                createTokenRequest(),
-                String.class);
-
-        try {
-            JsonNode jsonResponse = objectMapper.readTree(response);
-            return jsonResponse.path("access_token").asText();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    private org.springframework.http.HttpEntity<String> createTokenRequest() {
-        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Basic " + java.util.Base64.getEncoder().encodeToString((apiKey + ":" + apiSecret).getBytes()));
         headers.set("Content-Type", "application/x-www-form-urlencoded");
 
-        return new org.springframework.http.HttpEntity<>("grant_type=client_credentials", headers);
+        HttpEntity<String> entity = new HttpEntity<>("grant_type=client_credentials", headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, entity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            try {
+                JsonNode jsonResponse = objectMapper.readTree(response.getBody());
+                return jsonResponse.path("access_token").asText();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "";
+            }
+        } else {
+            throw new RuntimeException("Failed to obtain access token. Status code: " + response.getStatusCode());
+        }
     }
 }
