@@ -1,8 +1,50 @@
-.hotel-image {
+body{
+height:2500px;
+}
+
+.hotels_image {
   width:1920px;
   height:420px;
+  display: flex;
+ grid-template-columns: repeat(3, 1fr);
+ grid-template-rows: auto;
+ gap: 10px;
+ margin: 0 auto;
+  }
+ .img_container{
+   display: flex; /* Flexbox 사용 */
+
+      align-items: center; /* 세로 중앙 정렬 */
+      width: 2114px;
+      height: 420px;
+      gap: 4px; /* 이미지 간격 */
+ }
+ .img_container1{
+    display: flex; /* Flexbox 사용 */
+       justify-content: center; /* 중앙 정렬 */
+
+       width: 600px;
+       height: 165px;
+       gap: 1px; /* 이미지 간격 */
   }
 
+ .detail_container{
+   display: flex; /* Flexbox 사용 */
+
+      align-items: center; /* 세로 중앙 정렬 */
+      width: 1050px;
+      height: 270px;
+      gap: 2px; /* 이미지 간격 */
+ }
+
+ .detail_container1{
+     display: flex; /* Flexbox 사용 */
+        justify-content: center; /* 중앙 정렬 */
+
+        width: 310px;
+        height: 160px;
+        gap: 1px; /* 이미지 간격 */
+   }
 .hotel-info {
     width: 1920px;
     height: 200px;
@@ -18,7 +60,7 @@
     color: #161616;
 }
 .main-content{
- width: 1200px;
+ width: 1050px;
     margin: 0 auto;
 }
 
@@ -127,8 +169,75 @@ margin-top:20px;
     /* 시계 아이콘 관련 스타일 */
 }
 
+
+
 .hotel-description {
-width:1200px;
-height:600px;
+width:1050px;
+height:750px;
+margin-top:100px;
     /* 호텔 설명 관련 스타일 */
+}
+
+
+         .header {
+             display: grid;
+             grid-template-columns: 3fr 2fr;
+             gap: 10px;
+             max-width: 1050px;
+             margin: 0 auto;
+             padding: 20px;
+         }
+
+
+.hotels_img1{
+  width: 1000px;
+             height: 420px;
+             display: block;
+             padding:0px;5px;0px;0px;
+}
+.hotels_img2{
+  width: 590px;
+             height: 255px;
+             display: block;
+              padding:0px;5px;5px;10px;
+margin-left:5px;
+}
+.hotels_img3{
+  width: 500px;
+             height: 172px;
+             display: block;
+ padding:5px;5px;0px;0px;
+}
+.hotels_img4{
+  width: 510px;
+             height: 420px;
+             display: block;
+              gap:10px;
+}
+
+
+.details_img1{
+  width: 520px;
+             height: 270px;
+             display: block;
+              gap:10px;
+}
+.details_img2{
+  width: 305px;
+             height: 160px;
+             display: block;
+margin-left:3px;
+margin-top: 50px;
+}
+.details_img3{
+  width: 155px;
+             height: 113px;
+             display: block;
+ padding:3px;3px;0px;0px;
+}
+.details_img4{
+  width: 210px;
+             height: 270px;
+             display: block;
+              padding:0px;0px;0px;1px;
 }

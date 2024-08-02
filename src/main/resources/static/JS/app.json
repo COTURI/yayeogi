@@ -1,0 +1,38 @@
+{
+  "data": [
+    {
+      "type": "flight-destination",
+      "origin": "PAR",
+      "destination": "CAS",
+      "departureDate": "2022-09-06",
+      "returnDate": "2022-09-11",
+      "price": {
+        "total": "161.90"
+      }
+    },
+    {
+      "type": "flight-destination",
+      "origin": "PAR",
+      "destination": "AYT",
+      "departureDate": "2022-10-16",
+      "returnDate": "2022-10-31",
+      "price": {
+        "total": "181.50"
+      }
+    }
+  ],
+  "meta": {
+    "description": "Sample data for hotel search.",
+    "count": 2,
+    "sort": [
+      "name"
+    ],
+    "links": {
+      "self": "http://localhost:3000/data/hotels.json",
+      "first": "http://localhost:3000/data/hotels.json",
+      "prev": null,
+      "next": null,
+      "last": "http://localhost:3000/data/hotels.json"
+    }
+  }
+}

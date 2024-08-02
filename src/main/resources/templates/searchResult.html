@@ -57,17 +57,17 @@
 <div class="search_form">
     <div class="search-bar" style="margin-top:20px;"> <!--검색창-->
         <label>
-            <input type="text"  id="city" placeholder="목적지 또는 호텔명을 입력하십시오." size=60>
-            <input type="date" value="2024-07-31" size=30>
-            <input type="date" value="2024-08-01">
+            <input type="text"  id="city" placeholder="목적지 또는 호텔명을 입력하십시오." size=60 required>
+            <input type="date"  id="checkInDate" value="2024-07-31" size=30 required>
+            <input type="date"  id="checkOutDate" value="2024-08-01" required>
             <select id="guest-button" style="width:250px;">
                 <option>성인 2명, 객실 1개</option>
             </select>
-            <button type="button" id="searchBtn" class="btn btn-primary" onclick="performSearch()">검색 버튼</button>
+            <button type="submit" id="searchBtn" class="btn btn-primary" onclick="performSearch()">검색 버튼</button>
         </label>
     </div>
 </div>
-    <div class="main-container" style="display: flex;">
+    <div class="main-container" style="display: flex; height:1000px;">
 <div style="width:280px;height:500px; margin-left:30px;margin-top:20px;">       <!-- 조건창 - 별점 -->
     <h4 style="font-size:18px;font-weight:bold;">별점</h4>
     <div class="form-check">
@@ -155,7 +155,7 @@
             </label>
         </div>
     </div>
-    <div class="card-container" style="overflow-y: auto; height:800px;" >                <!-- 목록 -->
+    <div class="card-container" style="overflow-y:auto; height:1000px; width:950px;" >                <!-- 목록 -->
         <div class="card mb-3" style="max-width: 900px; height: 300px;border:none;">
             <div class="row g-0" style="height: 100%;"> <!-- 행 높이도 100%로 설정 -->
                 <div id="hotel-list"></div>
@@ -166,7 +166,7 @@
     </div>
 
 
-        <div id="map" style="width:860px;height:800px;">
+        <div id="map" style="width:1000px;height:1000px;">
 
         </div>
     </div>
@@ -174,7 +174,7 @@
 
 </main>
 
-<div class="footer-body"  style="height : auto; min-height: 10%;">       <!-- footer-->
+<div class="footer-body"  style="height : auto;  min-height: 10%;">       <!-- footer-->
     <div class="container" id="footer">
         <hr>
         <div class="footer-box">
@@ -534,6 +534,33 @@ function displayHotels(hotelList) {
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJmWcT4VLac8E7KNO0HS0uP43Bn-IewbU&callback=initMap&libraries=places&v=weekly"
         defer>
+
+</script>
+<script>
+    var promise = fetch("https://test.api.amadeus.com/v1/security/oauth2/token", {
+      body: "grant_type=client_credentials&client_id=7pygXkuxGN6Vfo8WoJeRHnpJM8SWZtlP&client_secret=M9uW6JX4XYjQfu7f",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      method: "POST"
+    })
+    .then(res => res.json())
+    .then(data => {
+      var token = data.access_token;
+
+      // 액세스 토큰을 이용한 API 요청
+      fetch("https://test.api.amadeus.com/v2/reference-data/urls/checkin-links?airline=IB", {
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => console.error('Error:', error));
+    })
+    .catch(error => console.error('Error:', error));
 
 </script>
 
