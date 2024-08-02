@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class Green3Application {
 
-	public static void main(String[] args) {
+		public static void main(String[] args) {
 		SpringApplication.run(Green3Application.class, args);
 	}
 
