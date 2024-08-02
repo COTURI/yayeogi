@@ -205,3 +205,32 @@ h1 {
     transform: translateY(-2px);
 }
 
+/* 스피너 컨테이너 스타일 */
+.spinner-container {
+    position: fixed; /* 스크롤과 관계없이 화면에 고정 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* 반투명한 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 다른 요소 위에 표시 */
+}
+
+/* 스피너 스타일 */
+.spinner {
+    border: 16px solid #f3f3f3; /* 배경색 */
+    border-top: 16px solid #007bff; /* 스피너 색상 */
+    border-radius: 50%;
+    width: 80px; /* 스피너의 크기 */
+    height: 80px;
+    animation: spin 2s linear infinite; /* 회전 애니메이션 */
+}
+
+/* 애니메이션 정의 */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

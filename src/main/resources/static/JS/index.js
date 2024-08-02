@@ -34,6 +34,12 @@ function convertEuroToWon(euroAmount) {
 }
 
 async function loadData() {
+    if (Object.keys(airports).length > 0 && Object.keys(airlines).length > 0) {
+        // 이미 데이터가 로드된 경우, 함수 종료
+        console.log('데이터가 이미 로드되었습니다.');
+        return;
+    }
+
     try {
         const airportResponse = await fetch('/json/airports.json');
         const airlineResponse = await fetch('/json/airlines.json');
@@ -102,6 +108,9 @@ async function searchFlights() {
     if (isSearchInProgress) return;
     isSearchInProgress = true;
 
+    // 스피너 표시
+    document.getElementById('spinner').style.display = 'flex';
+
     const originInput = document.getElementById('departure-city').value.trim();
     const destinationInput = document.getElementById('arrival-city').value.trim();
     const departureDateInput = document.getElementById('departure-date').value;
@@ -117,6 +126,7 @@ async function searchFlights() {
         document.getElementById('outbound-flights').innerHTML = '<p>필수 항목을 모두 입력해 주세요.</p>';
         document.getElementById('inbound-flights').innerHTML = '';
         isSearchInProgress = false;
+        document.getElementById('spinner').style.display = 'none'; // 스피너 숨기기
         return;
     }
 
@@ -145,12 +155,16 @@ async function searchFlights() {
         document.getElementById('inbound-flights').innerHTML = '';
     } finally {
         isSearchInProgress = false;
+        document.getElementById('spinner').style.display = 'none'; // 스피너 숨기기
     }
 }
 
 function updateResults(type, flights, page) {
     const container = document.getElementById(`${type}-flights`);
-    if (!container) return;
+    if (!container) {
+        console.error(`결과 컨테이너를 찾을 수 없습니다: ${type}-flights`);
+        return;
+    }
 
     const startIndex = (page - 1) * flightsPerPage;
     const endIndex = startIndex + flightsPerPage;
@@ -184,7 +198,6 @@ function updateResults(type, flights, page) {
     container.innerHTML = resultsHtml;
     updatePagination(type, flights.length, page);
 }
-
 
 function updatePagination(type, totalFlights, currentPage) {
     const totalPages = Math.ceil(totalFlights / flightsPerPage);
@@ -228,8 +241,10 @@ function updatePagination(type, totalFlights, currentPage) {
     }
 }
 
-document.getElementById('search-button').addEventListener('click', searchFlights);
-document.getElementById('departure-city').addEventListener('input', () => updateSuggestions('departure-city'));
-document.getElementById('arrival-city').addEventListener('input', () => updateSuggestions('arrival-city'));
+document.addEventListener('DOMContentLoaded', () => {
+    loadData();
+    document.getElementById('search-button').addEventListener('click', searchFlights);
+    document.getElementById('departure-city').addEventListener('input', () => updateSuggestions('departure-city'));
+    document.getElementById('arrival-city').addEventListener('input', () => updateSuggestions('arrival-city'));
+});
 
-loadData();
