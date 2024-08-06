@@ -50,6 +50,9 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.11.0'
 
 
+		compileOnly 'org.projectlombok:lombok:1.18.24'
+		annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -57,6 +60,7 @@ dependencies {
 
 
 }
+
 
 
 tasks.named('test') {
