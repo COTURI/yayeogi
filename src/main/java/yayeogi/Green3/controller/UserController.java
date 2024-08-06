@@ -1,5 +1,7 @@
 package yayeogi.Green3.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import yayeogi.Green3.entity.User;
 import yayeogi.Green3.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +35,30 @@ public class UserController {
             model.addAttribute("errorMessage", e.getMessage());
             return "signUp";
         }
+    }
+
+    @GetMapping("/login")
+    public String showLoginForm(Model model) {
+        model.addAttribute("user", new User());
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String login(HttpServletRequest request, @ModelAttribute User user, Model model) {
+        try {
+            User authenticatedUser = userService.authenticateUser(user.getEmail(), user.getPassword());
+            HttpSession session = request.getSession();
+            session.setAttribute("user", authenticatedUser);
+            return "index";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "login";
+        }
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
     }
 }
