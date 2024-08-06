@@ -5,6 +5,8 @@ import yayeogi.Green3.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -31,5 +33,21 @@ public class UserService {
 
         // 사용자 저장
         return userRepository.save(user);
+    }
+
+    public User authenticateUser(String email, String password) {
+        // 이메일로 사용자 조회
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            // 비밀번호 확인
+            if (user.getPassword().equals(password)) {
+                return user; // 인증 성공
+            }
+        }
+
+        throw new IllegalArgumentException("Invalid email or password.");
     }
 }
