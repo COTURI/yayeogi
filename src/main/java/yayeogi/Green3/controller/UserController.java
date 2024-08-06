@@ -1,5 +1,8 @@
 package yayeogi.Green3.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.ResponseBody;
 import yayeogi.Green3.entity.User;
 import yayeogi.Green3.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +36,16 @@ public class UserController {
             model.addAttribute("errorMessage", e.getMessage());
             return "signUp";
         }
+    }
+//    @PostMapping("/login")
+//    @ResponseBody
+//    public login(HttpServletRequest request){
+//
+//    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "redirect:/login.do";
     }
 }
