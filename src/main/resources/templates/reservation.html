@@ -1,130 +1,23 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>예약 정보</title>
+    <title>예약 확인</title>
     <link rel="stylesheet" href="/css/reservation.css">
-    <script>
-        let airlines = {};
-
-        async function loadAirlineData() {
-            try {
-                const response = await fetch('/js/airlines.json');
-                if (!response.ok) {
-                    throw new Error('항공사 데이터 로드 실패');
-                }
-                airlines = await response.json();
-                updateReservationDetails();
-            } catch (error) {
-                console.error('항공사 데이터 로드 오류:', error);
-            }
-        }
-
-        function getAirlineName(carrierCode) {
-            return airlines[carrierCode] || carrierCode;
-        }
-
-        function convertEuroToWon(euroAmount) {
-            const exchangeRate = 1500; // 1 유로 = 1500 원
-            return (euroAmount * exchangeRate).toFixed(0);
-        }
-
-        function updateReservationDetails() {
-            const reservationDetails = document.getElementById('reservation-details');
-            if (!reservationDetails) {
-                console.error('예약 세부 정보 요소를 찾을 수 없습니다.');
-                return;
-            }
-
-            const params = new URLSearchParams(window.location.search);
-
-            const origin = params.get('origin');
-            const destination = params.get('destination');
-            const departureDate = params.get('departureDate');
-            const returnDate = params.get('returnDate');
-            const adults = params.get('adults');
-            const price = params.get('price');
-            const carrierCode = params.get('carrierCode');
-            const returnPrice = params.get('returnPrice');
-            const returnCarrierCode = params.get('returnCarrierCode');
-
-            const originElement = document.getElementById('origin');
-            const destinationElement = document.getElementById('destination');
-            const departureDateElement = document.getElementById('departureDate');
-            const returnDateElement = document.getElementById('returnDate');
-            const adultsElement = document.getElementById('adults');
-
-            if (originElement) {
-                originElement.textContent = origin || '출발지 정보 없음';
-            }
-
-            if (destinationElement) {
-                destinationElement.textContent = destination || '목적지 정보 없음';
-            }
-
-            if (departureDateElement) {
-                departureDateElement.textContent = departureDate || '출발일 정보 없음';
-            }
-
-            if (returnDateElement) {
-                returnDateElement.textContent = returnDate || '돌아오는 일자 정보 없음';
-            }
-
-            if (adultsElement) {
-                adultsElement.textContent = adults || '성인 수 정보 없음';
-            }
-
-            const priceElements = reservationDetails.querySelectorAll('.price');
-            const carrierElements = reservationDetails.querySelectorAll('.carrier');
-
-            if (priceElements.length > 0) {
-                priceElements[0].textContent = `${convertEuroToWon(price)} 원`;
-            }
-
-            if (carrierElements.length > 0) {
-                carrierElements[0].textContent = getAirlineName(carrierCode);
-            }
-
-            if (priceElements.length > 1) {
-                priceElements[1].textContent = `${convertEuroToWon(returnPrice)} 원`;
-            }
-
-            if (carrierElements.length > 1) {
-                carrierElements[1].textContent = getAirlineName(returnCarrierCode);
-            }
-        }
-
-        window.onload = loadAirlineData;
-    </script>
+    <script src="/js/reservation.js" defer></script>
 </head>
 <body>
 
 <header>
-    <h1>예약 정보</h1>
+    <h1>예약 확인</h1>
 </header>
 
 <main>
     <div class="reservation-container">
         <!-- 예약 요약 -->
-        <div class="reservation-summary">
-            <h2>예약 요약</h2>
-            <p><strong>출발지:</strong> <span id="origin" data-origin=""></span></p>
-            <p><strong>목적지:</strong> <span id="destination" data-destination=""></span></p>
-            <p><strong>출발일:</strong> <span id="departureDate" data-departure-date=""></span></p>
-            <p><strong>돌아오는 일자:</strong> <span id="returnDate" data-return-date=""></span></p>
-            <p><strong>성인 수:</strong> <span id="adults" data-adults=""></span></p>
-        </div>
-
-        <!-- 출발 항공편 및 돌아오는 항공편 정보 -->
-        <div class="flight-details">
-            <h2>출발 항공편</h2>
-            <p><strong>항공사:</strong> <span class="carrier" data-carrier-code=""></span></p>
-            <p><strong>가격:</strong> <span class="price" data-price=""></span></p>
-
-            <h2>돌아오는 항공편</h2>
-            <p><strong>항공사:</strong> <span class="carrier" data-carrier-code=""></span></p>
-            <p><strong>가격:</strong> <span class="price" data-price=""></span></p>
+        <div id="booking-details" class="reservation-summary">
+            <!-- JavaScript에서 채워질 내용 -->
         </div>
 
         <!-- 예약자 정보 -->
@@ -142,10 +35,10 @@
                 <option value="+82">대한민국 (+82)</option>
                 <option value="+1">미국 (+1)</option>
                 <option value="+44">영국 (+44)</option>
-                <!-- 기타 국가 코드 추가 -->
+                <!-- 다른 국가/지역 번호 추가 -->
             </select>
 
-            <label for="phoneNumber">휴대전화번호:</label>
+            <label for="phoneNumber">전화번호:</label>
             <input type="tel" id="phoneNumber" name="phoneNumber" required>
 
             <label for="email">이메일 주소:</label>
@@ -194,8 +87,17 @@
             </div>
         </div>
 
-        <!-- 결제 버튼 -->
-        <a href="#" class="book-now-button">결제하기</a>
+        <!-- 약관 동의 -->
+        <div class="terms-and-conditions">
+            <h2>약관 동의</h2>
+            <p>
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">저는 <a href="/terms" target="_blank">이용 약관</a> 및 <a href="/privacy" target="_blank">개인정보 보호 정책</a>에 동의합니다.</label>
+            </p>
+        </div>
+
+        <!-- 예약 버튼 -->
+        <a href="#" class="book-now-button" id="bookNowButton">예약하기</a>
     </div>
 </main>
 

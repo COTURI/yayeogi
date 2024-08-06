@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <link rel="stylesheet" href="/css/payment.css"> <!-- 정적 CSS 파일 경로 -->
+</head>
+<body>
+<h1>Payment Page</h1>
+
+<div>
+    <h2>Prepare Payment</h2>
+    <input type="text" id="orderId" placeholder="Order ID">
+    <input type="text" id="userId" placeholder="User ID">
+    <input type="text" id="itemName" placeholder="Item Name">
+    <input type="number" id="quantity" placeholder="Quantity">
+    <input type="number" id="totalAmount" placeholder="Total Amount">
+    <input type="number" id="taxFreeAmount" placeholder="Tax-Free Amount">
+    <button id="preparePaymentButton">Prepare Payment</button>
+</div>
+
+<div id="approvalSection" style="display:none;">
+    <h2>Approve Payment</h2>
+    <input type="text" id="pgToken" placeholder="Payment Token">
+    <button id="approvePaymentButton">Approve Payment</button>
+    <p id="approvalMessage"></p>
+</div>
+
+<script src="/js/payment.js"></script> <!-- 정적 JS 파일 경로 -->
+</body>
+</html>

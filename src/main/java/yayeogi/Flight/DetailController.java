@@ -30,36 +30,34 @@ public class DetailController {
         airlines = mapper.readValue(airlinesResource.getFile(), Map.class);
     }
 
-    @GetMapping("/detail")
-    public ModelAndView detail(
-            @RequestParam String flightId,
-            @RequestParam String departureAirport,
-            @RequestParam String arrivalAirport,
+    @GetMapping("/indexmore")
+    public ModelAndView indexmore(
+            @RequestParam(required = false) String flightId,
+            @RequestParam(required = false) String departureAirport,
+            @RequestParam(required = false) String arrivalAirport,
             @RequestParam(required = false) String departureTime,
             @RequestParam(required = false) String price,
-            @RequestParam(required = false) String currency,
+            @RequestParam(required = false) String currency, // Add this line
             @RequestParam(required = false) String carrierCode,
             @RequestParam(required = false) String returnCarrierCode,
             @RequestParam(required = false) String returnPrice,
             @RequestParam(required = false) String returnDate) {
 
-        ModelAndView mav = new ModelAndView("detail");
+        ModelAndView mav = new ModelAndView("indexmore");
         mav.addObject("flightId", flightId);
         mav.addObject("departureAirport", departureAirport);
         mav.addObject("arrivalAirport", arrivalAirport);
         mav.addObject("departureTime", departureTime);
         mav.addObject("price", price);
-        mav.addObject("currency", currency);
+        mav.addObject("currency", currency); // Add this line
         mav.addObject("carrierCode", carrierCode);
         mav.addObject("returnCarrierCode", returnCarrierCode);
         mav.addObject("returnPrice", returnPrice);
         mav.addObject("returnDate", returnDate);
 
-        mav.addObject("airports", airports);
-        mav.addObject("airlines", airlines);
-
         return mav;
     }
+
 
     @GetMapping("/reservation")
     public ModelAndView reservation(
