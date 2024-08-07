@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>항공권 검색</title>
     <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
 </head>
 <body>
+
+<div th:replace="header :: header"></div>
+
 <h1>항공편 검색</h1>
 <div id="spinner" class="spinner-container" style="display: none;">
     <div class="spinner"></div>
@@ -60,6 +65,14 @@
 
 <button id="book-button" class="book-button" style="display: none;">예약하기</button>
 
+
+<div th:replace="footer :: footer"></div>
+
+
+
 <script src="/js/index.js"></script>
+
+
+
 </body>
 </html>
