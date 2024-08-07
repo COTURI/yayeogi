@@ -52,6 +52,30 @@ public class HotelService {
         return hotel.orElse(null); // 또는 Optional 처리 방식에 맞게 처리
     }
 
+    // 호텔 업데이트
+    public void updateHotel(Hotel hotel) {
+        if (hotelRepository.existsById(Long.valueOf(hotel.getHotelId()))) {
+            hotelRepository.save(hotel);
+        } else {
+            throw new IllegalArgumentException("Hotel not found with id: " + hotel.getHotelId());
+        }
+    }
+
+    // 호텔 검색
+    public List<Hotel> searchHotels(String searchTerm) {
+        return hotelRepository.findByHotelNameContainingIgnoreCase(searchTerm);
+    }
+
+    // 호텔 삭제
+    public void deleteHotel(int id) {
+        if (hotelRepository.existsById((long) id)) {
+            hotelRepository.deleteById((long) id);
+        } else {
+            throw new IllegalArgumentException("Hotel not found with id: " + id);
+        }
+    }
+
+
 
     private byte[] loadImage(String filePath) throws IOException {
         File file = new File(filePath);
