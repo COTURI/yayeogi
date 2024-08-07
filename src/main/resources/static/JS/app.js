@@ -1,35 +1,33 @@
-document.getElementById('fetchHotels').addEventListener('click', async () => {
-    const apiKey = '7pygXkuxGN6Vfo8WoJeRHnpJM8SWZtlP';  // Amadeus API Key
-    const apiSecret = 'M9uW6JX4XYjQfu7f';  // Amadeus API Secret
-    const hotelId = 'ARPARARA';  // 예시 호텔 ID
+function searchHotels() {
+    const cityCode = document.getElementById('cityCode').value;
+    const checkInDate = document.getElementById('checkInDate').value;
+    const checkOutDate = document.getElementById('checkOutDate').value;
+    const adults = document.getElementById('adults').value;
 
-    const authResponse = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({
-            'grant_type': 'client_credentials',
-            'M9uW6JX4XYjQfu7f': apiKey,
-            'ARPARARA': apiSecret
+    fetch(`/api/hotels/search?cityCode=${cityCode}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&adults=${adults}`)
+        .then(response => response.json())
+        .then(data => {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            if (data && data.length > 0) {
+                data.forEach(offer => {
+                    const hotelInfo = `
+                        <div>
+                            <h2>${offer.hotel.name}</h2>
+                            <p>${offer.hotel.address.lines.join(', ')}, ${offer.hotel.address.cityName}</p>
+                            <p>Price: ${offer.offers[0].price.total} ${offer.offers[0].price.currency}</p>
+                        </div>
+                        <hr/>
+                    `;
+                    resultsDiv.innerHTML += hotelInfo;
+                });
+            } else {
+                resultsDiv.innerHTML = 'No results found.';
+            }
         })
-    });
-
-    const authData = await authResponse.json();
-    const accessToken = authData.access_token;
-
-    const hotelsResponse = await fetch(`https://test.api.amadeus.com/v1/reference-data/locations/hotels?hotelIds=${hotelId}`, {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
-        }
-    });
-
-    if (!hotelsResponse.ok) {
-        console.error('Failed to fetch hotels:', hotelsResponse.status);
-        document.getElementById('result').textContent = 'Failed to fetch hotels.';
-        return;
-    }
-
-    const hotelsData = await hotelsResponse.json();
-    document.getElementById('result').textContent = JSON.stringify(hotelsData, null, 2);
-});
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('results').innerHTML = 'Error fetching results.';
+        });
+}

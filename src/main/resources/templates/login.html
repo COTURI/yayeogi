@@ -205,30 +205,34 @@
 <body>
 <div class="login">
     <div class="form">
-        <h2><img src="../layout/logo1.png" height="81" width="374" /></h2>
-        <div class="form-field">
-            <label for="login-mail"><i class="fa fa-user"></i></label>
-            <input id="login-mail" type="text" name="mail" placeholder="E-Mail"
-                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
-            <svg>
-                <use href="#svg-check"/>
-            </svg>
-        </div>
-        <div class="form-field">
-            <label for="login-password"><i class="fa fa-lock"></i></label>
-            <input id="login-password" type="password" name="password" placeholder="Password" pattern=".{6,}" required>
-            <svg>
-                <use href="#svg-check"/>
-            </svg>
-        </div>
-        <button type="submit" class="button">
-            <div class="arrow-wrapper">
-                <span class="arrow"></span>
+        <h2><img src="../static/html/layout/logo2.png" height="81" width="374"/></h2>
+
+        <form action="/login" method="post">
+            <div class="form-field">
+                <label for="login-email"><i class="fa fa-user"></i></label>
+                <input id="login-email" type="email" name="email" placeholder="E-Mail"
+                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                <svg>
+                    <use href="#svg-check"/>
+                </svg>
             </div>
-            <p class="button-text">SIGN IN</p>
-        </button>
+            <div class="form-field">
+                <label for="login-password"><i class="fa fa-lock"></i></label>
+                <input id="login-password" type="password" name="password" placeholder="Password" required>
+                <svg>
+                    <use href="#svg-check"/>
+                </svg>
+            </div>
+            <button type="submit" class="button">
+                <div class="arrow-wrapper">
+                    <span class="arrow"></span>
+                </div>
+                <p class="button-text">SIGN IN</p>
+            </button>
+        </form>
+
         <!-- 카카오 로그인 버튼 추가 -->
-        <div id="kakao-login-btn" style="margin: 10px 40px; "></div>
+        <div id="kakao-login-btn" style="margin: 10px 40px;"></div>
     </div>
     <div class="finished">
         <svg>

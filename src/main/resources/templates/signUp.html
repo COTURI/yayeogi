@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,6 @@
             width: 280px;
             height: 550px;
             margin: auto;
-
         }
         .email {
             width: 127px;
@@ -66,18 +65,18 @@
     </style>
 </head>
 <body>
-<form action="login.html">
+<form th:action="@{/register}" th:object="${user}" method="post">
     <table>
         <tr>
             <td><h2>회원가입</h2></td>
         </tr>
         <tr>
-            <td><input type="text" class="email"> @
-                <select>
-                    <option>naver.com</option>
-                    <option>gmail.com</option>
-                    <option>daum.net</option>
-                    <option>nate.com</option>
+            <td><input type="text" th:field="*{email}" class="email"> @
+                <select th:field="*{domain}">
+                    <option value="naver.com">naver.com</option>
+                    <option value="gmail.com">gmail.com</option>
+                    <option value="daum.net">daum.net</option>
+                    <option value="nate.com">nate.com</option>
                 </select>
             </td>
         </tr>
@@ -85,30 +84,31 @@
             <td>비밀번호</td>
         </tr>
         <tr>
-            <td><input type="password" class="text"></td>
+            <td><input type="password" th:field="*{password}" class="text"></td>
         </tr>
         <tr>
             <td>비밀번호 확인</td>
         </tr>
         <tr>
-            <td><input type="password" class="text"></td>
+            <td><input type="password" th:field="*{passwordConfirm}" class="text"></td>
         </tr>
         <tr>
             <td>이름</td>
         </tr>
         <tr>
-            <td><input type="text" class="text"></td>
+            <td><input type="text" th:field="*{name}" class="text"></td>
         </tr>
         <tr>
             <td>생년월일</td>
         </tr>
         <tr>
-            <td><input type="date" class="text"></td>
+            <td><input type="date" th:field="*{birthDate}" class="text"></td>
         </tr>
-
-
         <tr>
-            <td><input type="submit" value="가입하기" class="btn" onclick="alert('가입 성공!')"></td>
+            <td><input type="submit" value="가입하기" class="btn"></td>
+        </tr>
+        <tr th:if="${errorMessage}">
+            <td><p th:text="${errorMessage}"></p></td>
         </tr>
     </table>
 </form>
