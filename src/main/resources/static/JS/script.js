@@ -32,3 +32,7 @@ function displayHotels(hotels) {
         resultsContainer.textContent = 'No hotels found for the specified city.';
     }
 }
+}
+
+
+
