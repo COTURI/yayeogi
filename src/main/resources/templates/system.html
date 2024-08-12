@@ -104,6 +104,8 @@
     <ul>
         <li><a href="#"><i class="fas fa-chart-line"></i> 월별 매출</a></li>
         <li><a href="#"><i class="fas fa-map-marker-alt"></i> 지역별 매출</a></li>
+        <li><a href="#">예약내역</a></li>
+        <li><a href="#"></a></li>
     </ul>
 </div>
 <div class="main-content">
@@ -129,31 +131,50 @@
 </div>
 <script src="scripts.js"></script>
 <script>
-    const ctx = document.getElementById('salesChart').getContext('2d');
-    let salesChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['호텔', '항공권'],
-            datasets: [{
-                label: '매출',
-                data: [5000000, 200000], // 예시 데이터
-                backgroundColor: 'rgba(255, 193, 7, 1)'
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentMonth = new Date().getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+      document.getElementById('monthSelect').value = currentMonth;
 
-    function updateChart() {
-        // 여기서 AJAX 등을 사용하여 새로운 데이터 가져오기
-        // 그리고 salesChart.data.datasets[0].data를 업데이트
-        salesChart.update();
-    }
+      const ctx = document.getElementById('salesChart').getContext('2d');
+      let salesChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: ['호텔'],
+              datasets: [{
+                  label: '평균 매출',
+                  data: [0], // 초기 데이터는 빈 값으로 설정
+                  backgroundColor: 'rgba(255, 193, 7, 1)'
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+
+      function updateChart() {
+          const month = document.getElementById('monthSelect').value;
+          const year = new Date().getFullYear(); // 현재 연도 가져오기
+          const checkinDate = `${year}-${month.padStart(2, '0')}-01`; // 해당 월의 첫 날
+
+          fetch(`/api/hotel-statistics?checkinDate=${checkinDate}`)
+              .then(response => response.json())
+              .then(data => {
+                  salesChart.data.datasets[0].data = [data]; // 가져온 평균 매출 데이터로 업데이트
+                  salesChart.update();
+              })
+              .catch(error => console.error('Error fetching data:', error));
+      }
+
+      document.querySelector('button').addEventListener('click', updateChart);
+      updateChart(); // 페이지 로드 시 초기 통계 업데이트
+  });
+
+
 </script>
+
 </body>
 </html>
