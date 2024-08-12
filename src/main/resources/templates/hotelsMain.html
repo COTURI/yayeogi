@@ -1,16 +1,32 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <!-- 카드에 값 넣는거 해야함 -->
 <head>
     <meta charset="UTF-8">
     <title>저렴한 호텔 비교 특가</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="/static/css/hotels.css"/> <!-- css 연결-->
-    <link rel="stylesheet" href="/static/css/header.css"><!-- header css 연결-->
-    <link rel="stylesheet" href="/static/css/map.css"><!-- map css 연결-->
-</head>
+    <link rel="stylesheet" type="text/css" href="/css/hotels.css"/> <!-- css 연결-->
+    <link rel="stylesheet" href="/css/header.css"><!-- header css 연결-->
+    <link rel="stylesheet" href="/css/map.css"><!-- map css 연결-->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
+</head>
+<style>
+    .hotel-card {
+    border: 1px solid #ddd;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.hotel-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+</style>
 
 <body>
 <div class="header-body">     <!-- header-->
@@ -18,7 +34,7 @@
 
         <div class="left-section">
             <button type="button" class="btn logo-button">
-                <img src="../static/html/layout/LOGO.png" alt="YAYEOGI 로고" >
+                <img src="/html/layout/LOGO.png" alt="YAYEOGI 로고" >
             </button>
             &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -54,7 +70,8 @@
 <main id="hotels_search_page">
     <section class="hotels_search_form">
         <div class="background_image">
-            <img src="../static/html/hotels/img/vacation.png" width="1920px;" height="550px;" style="position: relative;" alt="background">
+            <img src="/html/hotels/img/vacation.png" width="2150px;" height="550px;" style="position: relative;" alt="background">
+
             <!--검색창 백그라운드 이미지-->
             <div class="search_from_box" style="margin-top:200px;">
                 <h1 style="font-weight: bold;font-family:Impact,Charcoal,sans-serif; ">마음에 꼭 드는 호텔을 찾아보세요.</h1>
@@ -63,7 +80,7 @@
                     <div class="search-bar"> <!--검색창-->
                         <label>
 
-                            <input type="text" placeholder="목적지 또는 호텔명을 입력하십시오." size=70>
+                            <input type="text" placeholder="목적지 또는 호텔명을 입력하십시오." size=65 style="margin-left:0   px;">
                             <input type="date" value="2024-07-31" size=30>
                             <input type="date" value="2024-08-01">
                             <select id="guest-button" style="width:275px;">
@@ -87,8 +104,8 @@
         </div>
         <div class="event-banner">  <!--배너-->
             <span class="banner" >
-                <a href="http://localhost:63342/Green3/src/main/resources/templates/deals.html?_ijt=arp8q9u98hil0fbvfkck1uojpp&_ij_reload=RELOAD_ON_SAVE">   <!--배너 클릭시 이동 주소-->
-                    <img src="../static/html/hotels/img/banner.png" alt="banner" style="width:1200px; height:400px;">
+                <a href="http://localhost:8080/hotels/deals">   <!--배너 클릭시 이동 주소-->
+                    <img src="/html/hotels/img/banner.png" alt="banner" style="width:1200px; height:400px;">
                 <div class="banner-content"><!-- 배너에 작성된 문구들-->
                             <strong>이번 호텔 예약<br>더욱 저렴하게 </strong>
                              <div class="banner-sub-content" style="width:330px;">
@@ -99,7 +116,7 @@
                         호텔 상품 보기
                     </div>
                                 <div>
-                                     <img src="../static/html/hotels/img/sale.png" alt="sale" class="banner-sale-image" >
+                                     <img src="/html/hotels/img/sale.png" alt="sale" class="banner-sale-image" >
                                 </div>
                       </a>
             </span>
@@ -107,139 +124,110 @@
 <div class="title-comment">
         <strong>다양한 브랜드의 호텔을 비교해보세요</strong><br>
     <span>
-        <img src="../static/html/hotels/img/Hilton.png" alt="Hilton" class="hotels-brand">
-        <img src="../static/html/hotels/img/InterContinental.png" alt="InterContinental" class="hotels-brand" style="width:160px;">
-        <img src="../static/html/hotels/img/Marriott.png" alt="Marriott" class="hotels-brand" style="width:160px; height:80px;">
-        <img src="../static/html/hotels/img/Hyatt.png" alt="Hyatt" class="hotels-brand" style="width:160px;margin-top:20px;">
-        <img src="../static/html/hotels/img/Agoda.png" alt="Agoda" class="hotels-brand" style="margin-top:20px; width:130px;">
-        <img src="../static/html/hotels/img/Hotels.png" alt="Hotels" class="hotels-brand" style="width:130px;">
+        <img src="/html/hotels/img/Hilton.png" alt="Hilton" class="hotels-brand">
+        <img src="/html/hotels/img/InterContinental.png" alt="InterContinental" class="hotels-brand" style="width:160px;">
+        <img src="/html/hotels/img/Marriott.png" alt="Marriott" class="hotels-brand" style="width:160px; height:80px;">
+        <img src="/html/hotels/img/Hyatt.png" alt="Hyatt" class="hotels-brand" style="width:160px;margin-top:20px;">
+        <img src="/html/hotels/img/Agoda.png" alt="Agoda" class="hotels-brand" style="margin-top:20px; width:130px;">
+        <img src="/html/hotels/img/Hotels.png" alt="Hotels" class="hotels-brand" style="width:130px;">
 
     </span>
 </div>
 
-        <div class="title-comment1">
-            <strong>국내 호텔 지역별 TOP3</strong>
-            <h6>여러분의 다음 여행은 금방일지도 몰라요.주변 호텔을 찾아보세요</h6>
-            <button type="button" class="kor_area_button">서울</button>
-            <button type="button" class="kor_area_button">제주</button>
-            <button type="button" class="kor_area_button">부산</button>
-            <button type="button" class="kor_area_button">강릉</button>
-            <button type="button" class="kor_area_button">여수</button>
+        <<div class="title-comment1">
+        <strong>국내 호텔 지역별 TOP3</strong>
+        <h6>여러분의 다음 여행은 금방일지도 몰라요. 주변 호텔을 찾아보세요</h6>
+        <button type="button" class="kor_area_button" data-location="2">서울</button>
+        <button type="button" class="kor_area_button" data-location="64">제주</button>
+        <button type="button" class="kor_area_button" data-location="51">부산</button>
+        <button type="button" class="kor_area_button" data-location="33">강릉</button>
+        <button type="button" class="kor_area_button" data-location="61">여수</button>
+    </div>
+
+        <div id="hotel-cards-container">
+           <!-- <div class="title-comment2">
+
+
+
+                <div class="title-card1" style="margin-left:0px;">
+
+                    <div th:each="hotel, iterStat : ${hotelsMain}" class="col-md-4 mb-3"
+                         th:if="${iterStat.index < 3}">
+
+                        <div class="card product_img_size">
+
+                            <a th:href="@{/hotels/{id}(id=${hotel.hotelId})}">
+                                <img th:src="'data:image/png;base64,' + ${hotel.hotelMainImgBase64}" class="card-img-top product_img" alt="호텔 이미지" src="">
+                                <div class="card-body" style="border-bottom: solid 1px #afb0b3;">
+                                    <h5 class="product_title">${hotel.hotelName}
+                                        <label class="product_rating" style="float: right; margin-bottom:20px;">★★★★★</label>
+                                    </h5>
+                                    <h5 class="product_price">
+                                        <span th:text="'￦' + ${hotel.price}">가격</span>
+                                        <br>
+                                        <p class="product_date">1박 요금</p>
+                                    </h5>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>-->
         </div>
-        <br>
-        <div class="title-comment2">
-            <div class="card product_img_size">
-                <a href="https://google.com">
-                    <img src="../static/html/hotels/img/product1.png" class="card-img-top product_img" alt="image">
-                    <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
-                        <h5 class="product_title">웨스틴조선 서울
-                            <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
-                        </h5>
-                        <h5 class="product_price">￦459,800
-                            <br>
-                            <p class="product_date">1박 요금</p>
-                    </div>
-                </a>
-            </div>
-            <div class="card product_img_size">
-                <a href="https://google.com">
-                    <img src="../static/html/hotels/img/product1.png" class="card-img-top product_img" alt="image">
-                    <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
-                        <h5 class="product_title">웨스틴조선 서울
-                            <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
-                        </h5>
-                        <h5 class="product_price">￦459,800
-                            <br>
-                            <p class="product_date">1박 요금</p>
-                    </div>
-                </a>
-            </div>
-            <div class="card product_img_size">
-                <a href="https://google.com">
-                    <img src="../static/html/hotels/img/product1.png" class="card-img-top product_img" alt="image">
-                    <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
-                        <h5 class="product_title">웨스틴조선 서울
-                            <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
-                        </h5>
-                        <h5 class="product_price">￦459,800
-                            <br>
-                            <p class="product_date">1박 요금</p>
-                        </h5>
-                    </div>
-                </a>
-            </div>
-        </div>
+
+
 <div class="title-comment3">
     도심 휴가를 즐기기 좋은 해외 국가별 호텔 BEST TOP3
     <h6>도심에서 휴가를 보낼 계획이라면, 접근성 좋은 곳에 있는 숙소를 잡는 것이 중요하죠. 시내 중심가에 있는 호텔을 확인해 보세요.</h6>
-    <button type="button" class="kor_area_button">일본</button>
-    <button type="button" class="kor_area_button">중국</button>
-    <button type="button" class="kor_area_button">태국</button>
-    <button type="button" class="kor_area_button">다낭</button>
-    <button type="button" class="kor_area_button">발리</button>
+    <button type="button" class="world_button" data-country="81">일본</button>
+    <button type="button" class="world_button" data-country="86">중국</button>
+    <button type="button" class="world_button" data-country="66">태국</button>
+    <button type="button" class="world_button" data-country="84">다낭</button>
+    <button type="button" class="world_button" data-country="62">발리</button>
 </div>
         <br>
-        <div class="title-card1">
-            <div class="card product_img_size">
-                <a href="https://google.com">
-                    <img src="../static/html/hotels/img/Japan.png" class="card-img-top product_img" alt="image">
-                    <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
-                        <h5 class="product_title">케이스 하우스 이토 온센
-                            <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
-                        </h5>
-                        <h5 class="product_price">￦96,800
-                            <br>
-                            <p class="product_date">1박 요금</p>
-                        </h5>
-                    </div>
-                </a>
-            </div>
-            <div class="card product_img_size">
-                <a href="https://google.com">
-                    <img src="../static/html/hotels/img/Japan.png" class="card-img-top product_img" alt="image">
-                    <div class="card-body"  style="border-bottom: solid 1px #afb0b3;">
-                        <h5 class="product_title">케이스 하우스 이토 온센
-                            <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
-                        </h5>
-                        <h5 class="product_price">￦96,800
-                        <br>
-                            <p class="product_date">1박 요금</p>
-                        </h5>
+        <div id="international-hotel-cards-container">
+            <!--<div class="title-comment2" style="margin-top:0px;">
+                <div class="title-card1" style="margin-left:0px;">
 
+                    <div th:each="hotel, iterStat : ${hotelsMain}" class="col-md-4 mb-3" th:if="${iterStat.index < 3}">
+                        <div class="card product_img_size">
+                            <a th:href="@{/hotels/{id}(id=${hotel.hotelId})}">
+                                <img th:src="'data:image/png;base64,' + ${hotel.hotelMainImgBase64}" class="card-img-top product_img" alt="호텔 이미지" src="">
+                                <div class="card-body" style="border-bottom: solid 1px #afb0b3;">
+                                    <h5 class="product_title">${hotel.hotelName}
+                                        <label class="product_rating" style="float: right; margin-bottom:20px;">★★★★★</label>
+                                    </h5>
+                                    <h5 class="product_price">
+                                        <span th:text="'￦' + ${hotel.price}">가격</span>
+                                        <br>
+                                        <p class="product_date">1박 요금</p>
+                                    </h5>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                </a>
-            </div>
-            <div class="card product_img_size">
-                <a href="https://google.com">
-                    <img src="../static/html/hotels/img/Japan.png" class="card-img-top product_img" alt="image">
-                    <div class="card-body" style="border-bottom: solid 1px #afb0b3;">
-                        <h5 class="product_title">케이스 하우스 이토 온센
-                            <label class="product_rating" style=" float: right; margin-bottom:20px;">★★★★★</label>
-                        </h5>
-                        <h5 class="product_price">￦96,800
-                            <br>
-                            <p class="product_date">1박 요금</p>
-                        </h5>
-                    </div>
-                </a>
-            </div>
+                </div>
+            </div>-->
         </div>
+
         <div class="title-comment3">
             요약 정보
             <h6>여행 전 알아두면 좋은 정보를 확인하고 마음 편히 여행하세요.</h6>
             <div class="summary-info">
                 <div class="info-item">
-                <img src="../static/html/hotels/img/building.png" class="icon_build" alt="building">
+                <img src="/html/hotels/img/building.png" class="icon_build" alt="building">
                 <h6 class="icon_title"> 이용할 수 있는 호텔 브랜드</h6>
                 <h5 class="icon_detail">60개 이상</h5>
             </div>
             <div class="info-item">
-                <img src="../static/html/hotels/img/point.png" class="icon_build" alt="point" style="width:25px; height:25px;">
+                <img src="/html/hotels/img/point.png" class="icon_build" alt="point" style="width:25px; height:25px;">
                 <h6 class="icon_title">호텔이 있는 지역</h6>
                 <h5 class="icon_detail">5,000곳 이상</h5>
             </div>
                 <div class="info-item">
-                    <img src="../static/html/hotels/img/bed.png" class="icon_build" alt="bed" style="width:25px; height:25px;">
+                    <img src="/html/hotels/img/bed.png" class="icon_build" alt="bed" style="width:25px; height:25px;">
                     <h6 class="icon_title">전 세계의 예약 가능한 호텔</h6>
                     <h5 class="icon_detail">320만</h5>
             </div>
@@ -248,17 +236,17 @@
 
             <div class="panel">
                 <div class="panel-block">
-            <img src="../static/html/hotels/img/sales.png" class="panel-img" alt="sales">
+            <img src="/html/hotels/img/sales.png" class="panel-img" alt="sales">
             <p class="panel-title">매력적인 호텔 특가 상품</p>
             <p class="panel-content">전 세계 유명 호텔 특가 상품을 검색하여 보여드립니다.</p>
                 </div>
                 <div class="panel-block">
-            <img src="../static/html/hotels/img/ring.png" class="panel-img" alt="ring" style="margin-top:20px;">
+            <img src="/html/hotels/img/ring.png" class="panel-img" alt="ring" style="margin-top:20px;">
             <p class="panel-title" style="margin-left:30px;margin-top:30px;">최신 가격</p>
             <p class="panel-content" style="margin-left:40px;">야여기는 항상 최신 정보가 반영된 가격을 보여드리므로, 예상 금액을 정확하게 파악하실 수 있습니다.</p>
                 </div>
                 <div class="panel-block">
-            <img src="../static/html/hotels/img/fair.png" class="panel-img" alt="fair">
+            <img src="/html/hotels/img/fair.png" class="panel-img" alt="fair">
             <p class="panel-title" style="margin-left:30px;">정확한 검색</p>
             <p class="panel-content" style="margin-left:40px;">수영장이 있는 호텔, 무료 취소가 가능한 호텔, 예약 변경이 가능한 호텔 등 원하는 조건에 맞는 호텔을 검색하세요.</p>
                 </div>
@@ -294,5 +282,196 @@
         <hr>
     </div>
 </div>
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // 기본 위치 코드를 설정하여 페이지 로드 시 호텔 정보를 가져옴
+        const defaultLocationCode = 2; // 서울의 위치 코드
+
+        // 페이지 로드 시 기본 위치의 호텔을 가져옴
+        fetchHotelsByLocation(defaultLocationCode);
+
+        // 지역 버튼에 대한 클릭 이벤트 설정
+        const buttons = document.querySelectorAll('.kor_area_button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const location = button.getAttribute('data-location');
+                fetchHotelsByLocation(location);
+            });
+        });
+    });
+
+      function fetchHotelsByLocation(location) {
+    console.log(`Fetching hotels for location: ${location}`);
+
+    // 요청 URL 구성
+    const url = `http://localhost:8080/hotels/mains?location=${encodeURIComponent(location)}`;
+    console.log(`Request URL: ${url}`);
+
+    fetch(url)
+        .then(response => {
+            console.log(`Response status: ${response.status}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Received data:', data);
+            updateHotelCards(data); // 수신한 데이터로 UI 업데이트
+        })
+        .catch(error => {
+            console.error('Error fetching hotels:', error);
+        });
+}
+
+      function updateHotelCards(hotels) {
+          const container = document.getElementById('hotel-cards-container');
+          if (!container) {
+              console.error('Container element not found');
+              return;
+          }
+
+          container.innerHTML = ''; // Clear previous cards
+
+          // Create the main container div
+          const titleCommentDiv = document.createElement('div');
+          titleCommentDiv.className = 'title-comment2';
+
+          // Create the card container div
+          const cardContainerDiv = document.createElement('div');
+          cardContainerDiv.className = 'title-card1';
+          cardContainerDiv.style.marginLeft = '0px';
+
+          // Append to the main container
+          titleCommentDiv.appendChild(cardContainerDiv);
+          container.appendChild(titleCommentDiv);
+
+          // Loop through hotels and create card elements
+          hotels.forEach((hotel, index) => {
+              if (index < 3) { // Only display the first 3 hotels
+                  const cardDiv = document.createElement('div');
+                  cardDiv.className = 'col-md-4 mb-3';
+
+
+                  cardDiv.innerHTML = `
+                      <div class="card product_img_size">
+                          <a href="/hotels/${hotel.hotelId}">
+                              <img src="data:image/png;base64,${hotel.hotelMainImgBase64}" class="card-img-top product_img" alt="호텔 이미지">
+                              <div class="card-body" style="border-bottom: solid 1px #afb0b3;">
+                                  <h5 class="product_title">${hotel.hotelName}
+                                  <label class="product_rating" style="float: right; margin-bottom:20px;">★★★★★</label>
+                                <h6 class="product_date" style="float:left; margin: -20px 0 0px;">${hotel.address}</h6>
+                              </h5>
+
+                              <h5 class="product_price" style="margin-right:0px;">￦${hotel.price}
+                                       <br>
+                                       <p class="product_date">1박 요금</p>
+                                   </h5>
+                                   </div>
+                          </a>
+                      </div>
+                  `;
+
+
+                  cardContainerDiv.appendChild(cardDiv);
+              }
+          });
+      }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+     // 기본 국가 코드를 설정하여 페이지 로드 시 호텔 정보를 가져옴
+     const defaultCountryCode = 81; // 일본의 국가 코드
+
+     // 페이지 로드 시 기본 국가의 호텔을 가져옴
+     fetchHotelsByCountry(defaultCountryCode);
+
+     // 국가 버튼에 대한 클릭 이벤트 설정
+     const worldButtons = document.querySelectorAll('.world_button');
+     worldButtons.forEach(button => {
+         button.addEventListener('click', () => {
+             const country = button.getAttribute('data-country');
+             fetchHotelsByCountry(country);
+         });
+     });
+ });
+
+    function fetchHotelsByCountry(country) {
+    console.log(`Fetching hotels for country: ${country}`);
+
+    // 요청 URL 구성
+    const url = `http://localhost:8080/hotels/country?country=${encodeURIComponent(country)}`;
+    console.log(`Request URL: ${url}`);
+
+    fetch(url)
+        .then(response => {
+            console.log(`Response status: ${response.status}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Received data:', data);
+            updateInternationalHotelCards(data); // 수신한 데이터로 UI 업데이트
+        })
+        .catch(error => {
+            console.error('Error fetching hotels:', error);
+        });
+}
+
+ function updateInternationalHotelCards(hotels) {
+    const container = document.getElementById('international-hotel-cards-container');
+    if (!container) {
+        console.error('Container element not found');
+        return;
+    }
+
+    container.innerHTML = ''; // 이전 카드 제거
+
+    // 카드 컨테이너 div 생성
+    const cardContainerDiv = document.createElement('div');
+    cardContainerDiv.className = 'title-card1';
+    cardContainerDiv.style.marginLeft = '';
+
+    // 메인 컨테이너에 추가
+    container.appendChild(cardContainerDiv);
+
+        // Loop through hotels and create card elements
+        hotels.forEach((hotel, index) => {
+            if (index < 3) { // Only display the first 3 hotels
+                const cardDiv = document.createElement('div');
+               cardDiv.className = 'col-md-4 mb-3';
+                   cardDiv.style.width = '400px';
+                     cardDiv.style.height = '270px';
+
+                cardDiv.innerHTML = `
+                    <div class="card product_img_size">
+                        <a href="/hotels/${hotel.hotelId}">
+                            <img src="data:image/png;base64,${hotel.hotelMainImgBase64}" class="card-img-top product_img" alt="${hotel.hotelName}">
+                            <div class="card-body" style="border-bottom: solid 1px #afb0b3;">
+                                <h5 class="product_title">${hotel.hotelName}
+                                    <label class="product_rating" style="float: right; margin-bottom:20px;">★★★★★</label>
+                                      <h6 class="product_date" style="float:left; margin: -20px 0 0px;">${hotel.address}</h6>
+                                </h5>
+                                <h5 class="product_price">￦${hotel.price}
+                                    <br>
+                                    <p class="product_date">1박 요금</p>
+                                </h5>
+                            </div>
+                        </a>
+                    </div>
+                `;
+
+                cardContainerDiv.appendChild(cardDiv);
+            }
+        });
+    }
+
+
+
+</script>
 </body>
 </html>
