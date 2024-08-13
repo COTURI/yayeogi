@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.sql.Blob;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "hotel")
+@Table(name = "hotels")
 @Getter
 @Setter
 @Builder
@@ -28,28 +29,28 @@ public class Hotel implements Serializable {
     private String hotelDetail;
 
     @Lob
-    @Column(name = "hotel_mainimg", nullable = false, columnDefinition = "LONGBLOB")
-    private byte[] hotelMainImg;
+    @Column(name = "hotel_mainimg", columnDefinition = "LONGBLOB")
+    private Blob hotelMainImg;
 
     @Lob
-    @Column(name = "hotel_img1", nullable = false, columnDefinition = "LONGBLOB")
-    private byte[] hotelImg1;
+    @Column(name = "hotel_img1", columnDefinition = "LONGBLOB")
+    private Blob hotelImg1;
 
     @Lob
     @Column(name = "hotel_img2", columnDefinition = "LONGBLOB")
-    private byte[] hotelImg2;
+    private Blob hotelImg2;
 
     @Lob
     @Column(name = "hotel_img3", columnDefinition = "LONGBLOB")
-    private byte[] hotelImg3;
+    private Blob hotelImg3;
 
     @Lob
     @Column(name = "hotel_img4", columnDefinition = "LONGBLOB")
-    private byte[] hotelImg4;
+    private Blob hotelImg4;
 
     @Lob
     @Column(name = "hotel_img5", columnDefinition = "LONGBLOB")
-    private byte[] hotelImg5;
+    private Blob hotelImg5;
 
     @Column(name = "checkin_state", columnDefinition = "TINYINT DEFAULT 0")
     private Integer checkinState;
@@ -58,10 +59,10 @@ public class Hotel implements Serializable {
     private Integer checkoutState;
 
     @Column(name = "checkin_time", nullable = false)
-    private Integer checkinTime;
+    private String checkinTime;
 
     @Column(name = "checkout_time", nullable = false)
-    private Integer checkoutTime;
+    private String checkoutTime;
 
     @Column(name = "country", nullable = false)
     private Integer country;
@@ -70,7 +71,7 @@ public class Hotel implements Serializable {
     private Integer location;
 
     @Column(name = "price", nullable = false)
-    private Integer price;
+    private String price;
 
     @Column(name = "checkin_date")
     private LocalDate checkinDate;
@@ -78,7 +79,7 @@ public class Hotel implements Serializable {
     @Column(name = "checkout_date")
     private LocalDate checkoutDate;
 
-    // 주소 필드 추가
     @Column(name = "address", length = 255, nullable = false)
     private String address;
 }
+
