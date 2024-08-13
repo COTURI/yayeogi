@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callback</title>
+</head>
+<body>
+<h1>Callback Page</h1>
+<p>Access Token: <span th:text="${accessToken}">[Access Token]</span></p>
+<p>User Info: <pre th:text="${userInfo}">[User Info]</pre></p>
+
+<form action="/start-payment" method="post">
+    <input type="hidden" name="accessToken" th:value="${accessToken}" />
+    <button type="submit">Start Payment</button>
+</form>
+</body>
+</html>

@@ -8,7 +8,9 @@ let outboundPage = 1;
 let inboundPage = 1;
 const currency = 'EUR'; // 기본 통화 설정
 
-// HTML 엔티티를 디코딩하는 함수
+
+
+
 function decodeHtmlEntities(text) {
     const textarea = document.createElement('textarea');
     textarea.innerHTML = text;
@@ -291,7 +293,7 @@ document.getElementById('book-button').addEventListener('click', () => {
     const departureAirport = encodeIfNotEmpty(selectedOutboundFlight.getAttribute('data-departure-airport'));
     const arrivalAirport = encodeIfNotEmpty(selectedOutboundFlight.getAttribute('data-arrival-airport'));
     const departureTime = encodeIfNotEmpty(selectedOutboundFlight.getAttribute('data-departure-time'));
-    const arrivalTime = encodeIfNotEmpty(selectedOutboundFlight.getAttribute('data-arrival-time')); // 수정
+    const arrivalTime = encodeIfNotEmpty(selectedOutboundFlight.getAttribute('data-arrival-time'));
     const price = encodeIfNotEmpty(selectedOutboundFlight.getAttribute('data-price'));
     const carrierCode = encodeIfNotEmpty(selectedOutboundFlight.getAttribute('data-carrier-code'));
 
@@ -309,13 +311,13 @@ document.getElementById('book-button').addEventListener('click', () => {
     if (departureAirport) params.append('departureAirport', departureAirport);
     if (arrivalAirport) params.append('arrivalAirport', arrivalAirport);
     if (departureTime) params.append('departureTime', departureTime);
-    if (arrivalTime) params.append('arrivalTime', arrivalTime); // 추가
+    if (arrivalTime) params.append('arrivalTime', arrivalTime);
     if (price) params.append('price', price);
     if (carrierCode) params.append('carrierCode', carrierCode);
     if (returnDepartureAirport) params.append('returnDepartureAirport', returnDepartureAirport);
     if (returnArrivalAirport) params.append('returnArrivalAirport', returnArrivalAirport);
     if (returnDepartureTime) params.append('returnDepartureTime', returnDepartureTime);
-    if (returnArrivalTime) params.append('returnArrivalTime', returnArrivalTime); // 추가
+    if (returnArrivalTime) params.append('returnArrivalTime', returnArrivalTime);
     if (returnPrice) params.append('returnPrice', returnPrice);
     if (returnCarrierCode) params.append('returnCarrierCode', returnCarrierCode);
 
@@ -356,5 +358,40 @@ document.addEventListener('DOMContentLoaded', () => {
         bookButton.style.display = 'none';
     }
 
+
+document.getElementById('check-reservation-button').addEventListener('click', function () {
+    var email = document.getElementById('departure-city').value; // 이메일 입력 필드의 ID를 확인하세요.
+
+    if (email) {
+        // 로그인 상태 확인을 위한 AJAX 요청
+        fetch('/api/check-login', {
+            method: 'GET',
+            credentials: 'include' // 쿠키와 같은 인증 정보를 포함
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.loggedIn) {
+                // 로그인된 경우 예약 확인 페이지로 이동
+                window.location.href = '/reservation-confirmation?email=' + encodeURIComponent(email);
+            } else {
+                // 로그인되지 않은 경우 로그인 페이지로 리디렉션
+                alert('로그인 후 다시 시도해주세요.');
+                window.location.href = '/login'; // 로그인 페이지로 리디렉션
+            }
+        })
+        .catch(error => {
+            console.error('로그인 상태 확인 중 오류 발생:', error);
+        });
+    } else {
+        alert('이메일을 입력해주세요.');
+    }
+});
+
+
+
     loadData(); // 페이지 로드 시 데이터 로드
+
+    // 페이지 URL에서 쿼리 파라미터를 가져와서 메시지를 표시하고 리다이렉트하는 함수 호출
+    handleAlertMessage();
+
 });
