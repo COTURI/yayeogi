@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>호텔 상세 정보</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJmWcT4VLac8E7KNO0HS0uP43Bn-IewbU&libraries=places&callback=initMap"></script>
+    <link rel="stylesheet" type="text/css" href="/css/hotels.css"/> <!-- css 연결-->
+    <link rel="stylesheet" href="/css/header.css"><!-- header css 연결-->
+    <link rel="stylesheet" href="/css/detail.css"><!-- detail css 연결-->
+</head>
+
+<body>
+<div class="header-body"> <!-- header-->
+    <header>
+        <div class="left-section">
+            <button type="button" class="btn logo-button">
+                <img src="/html/layout/LOGO.png" alt="YAYEOGI 로고">
+            </button>
+            &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p>
+            <div class="menu">
+                <button type="button" class="btn btn-info">항공권</button>
+                <button type="button" class="btn btn-info">호텔</button>
+            </div>
+        </div>
+        </p>
+        <div class="auth">
+            <button type="button" class="btn btn-secondary">
+                회원가입
+            </button>
+            <button type="button" class="btn btn-secondary">
+                로그인
+            </button>
+        </div>
+    </header>
+</div>
+
+<div class="hotel-image">
+    <img th:src="'data:image/png;base64,' + ${hotel.hotelMainImgBase64}"  alt="호텔 메인 이미지" class="hotel-imgMain1"  src="">
+    <img th:src="'data:image/png;base64,' + ${hotel.HotelImg1Base64}"  alt="호텔 메인 이미지" class="hotel-image1"  src="">
+    <img th:src="'data:image/png;base64,' + ${hotel.HotelImg2Base64}" alt="호텔 메인 이미지" class="hotel-image2" src="">
+    <img th:src="'data:image/png;base64,' + ${hotel.HotelImg5Base64}"  alt="호텔 메인 이미지" class="hotel-image5" src="">
+    <img th:src="'data:image/png;base64,' + ${hotel.HotelImg3Base64}"  alt="호텔 메인 이미지" class="hotel-image3" src="">
+    <img th:src="'data:image/png;base64,' + ${hotel.HotelImg4Base64}"  alt="호텔 메인 이미지" class="hotel-image4" src="">
+
+</div>
+
+<div class="main-content" style="margin-top:30px;">
+        <span class="hotel-info" >
+             <span th:text="${hotel.hotelName}">Hotel Name</span>
+        </span>
+
+    <div class="hotel-address">
+        <p th:text="${hotel.address}" id="address">hotel.address</p>
+
+    </div>
+
+    <div class="rating">
+    <span id="average-rating" class="rating-value" th:text="${averageRating}"></span>
+        <span class="rating-max">/5</span>
+    </div>
+    <!-- rating DB연결해서 값 불러와서 평균내기 -->
+
+    <span class="hotel-pay"><span th:text="￦+${hotel.price}"> </span> <button> 결제 </button> </span>
+
+
+    <div class="guest-reviews" style="margin-top:120px;">투숙객 후기</div> <!-- DB에 후기들 작성해서 값 불러오기-->
+    <div class="reviews-container">
+        <ul>
+            <li th:each="review : ${reviews}" class="review-item">
+                <div class="review">
+                    <div class="review-name" th:text="${review.email}">Reviewer Name</div>
+                    <div class="review-rating" id="rating" th:data-rating="${review.rating}"></div>
+                    <div class="review-text" th:text="${review.reviews}">Review text...</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+    <div class="location-description">호텔 위치</div>
+
+    <div id="map" style="width:1200px; height:450px; margin-top:30px;"></div>
+
+    <div class="check-header">체크인과 체크아웃</div>
+
+    <div class="check-info">
+        <div class="check-icon">
+            <span class="clock-icon" >
+                <img src="/html/hotels/img/clock.png">
+            </span>
+        </div>
+        <div class="check-details">
+            <div class="check-in-container ">
+                <div class="check-in-label">체크인 시작 시간</div>
+                <div class="check-in-time"><p th:text="${hotel.CheckinTime}"></p></div>
+            </div>
+            <div class="check-out-container">
+                <div class="check-out-label">체크아웃 종료 시간</div>
+                <div class="check-out-time"><p th:text="${hotel.CheckoutTime}"></p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hotel-description">호텔 설명
+    <div class="detail-image">
+        <img th:src="'data:image/png;base64,' + ${hotel.hotelMainImgBase64}"  alt="호텔 메인 이미지" class="detail-imgMain1"  src="">
+        <img th:src="'data:image/png;base64,' + ${hotel.HotelImg1Base64}"  alt="호텔 메인 이미지" class="detail-image1"  src="">
+        <img th:src="'data:image/png;base64,' + ${hotel.HotelImg2Base64}" alt="호텔 메인 이미지" class="detail-image2" src="">
+        <img th:src="'data:image/png;base64,' + ${hotel.HotelImg5Base64}"  alt="호텔 메인 이미지" class="detail-image5" src="">
+        <img th:src="'data:image/png;base64,' + ${hotel.HotelImg3Base64}"  alt="호텔 메인 이미지" class="detail-image3" src="">
+        <img th:src="'data:image/png;base64,' + ${hotel.HotelImg4Base64}"  alt="호텔 메인 이미지" class="detail-image4" src="">
+    </div>
+        <div class="hotelname-detail">  <span th:text="${hotel.hotelName}">Hotel Name</span> </div>
+        <div class="hotel-detail1">    <span th:text="${hotel.hotelDetail}">hotelDetail</span></div>
+
+    </div>
+
+</div>
+
+
+
+
+
+<div class="footer-body" style=""> <!-- footer-->
+    <div class="content">
+        <!-- Your main content goes here -->
+    </div>
+
+    <div class="container" id="footer">
+        <hr>
+        <div class="footer-box">
+            <div class="gray_subtext">
+                    <span>
+                        (주)YAYEOGI | 대표이사: 홍길동 | 사업자 등록번호: 000-00-000000 | 통신판매업신고: 야여기-0000호 | 메일: help@yayeogi.com
+                        <br>관광사업자 등록번호: 제2022-05호 | 주소: 서울 강남구 테헤란로 000길 00 | 호스팅서비스 제공자: 주식회사 YAYEOGI
+                        <br>고객센터: 1644-1346 (오전 9시 - 익일 새벽 3시)
+                        <br>(주)GOING은 통신판매 중개자로서 통신판매의 당사자가 아니며 상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.
+                        <br>(주)GOING이 소유/운영/관리하는 웹사이트 및 앱 내의 상품/판매자/이벤트 정보, 디자인 및 화면의 구성, UI를 포함하여 일체의 콘텐츠에 대한 무단 복제, 배포, 방송 또는 전송, 스크래핑 등의 행위는 저작권법 및 콘텐츠산업 진흥법 등 관련 법령에 의하여 엄격히 금지됩니다.
+                    </span>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>
+<script>
+    let map;
+      let geocoder;
+
+      function initMap() {
+          geocoder = new google.maps.Geocoder();
+          const defaultLocation = { lat: 37.57295, lng: 126.97915 }; // 서울 광화문
+
+          map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 15,
+              center: defaultLocation
+          });
+
+          // 페이지가 로드될 때 주소를 가져와 지오코딩을 수행
+          const addressElement = document.getElementById('address');
+          const address = addressElement.textContent; // HTML에서 주소 텍스트 가져오기
+
+          // 주소를 지오코딩하여 위치로 변환
+          geocoder.geocode({ 'address': address }, function(results, status) {
+              if (status === 'OK') {
+                  const hotelLocation = results[0].geometry.location;
+
+                  // 지도를 호텔 위치로 이동
+                  map.setCenter(hotelLocation);
+                  map.setZoom(15);
+
+                  // 마커 추가
+                  new google.maps.Marker({
+                      position: hotelLocation,
+                      map: map,
+                      title: address
+                  });
+              } else {
+                  console.error('Geocode was not successful for the following reason: ' + status);
+              }
+          });
+      }
+
+      // 페이지가 로드될 때 initMap 함수 호출
+      window.onload = initMap;
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+     // 별점 관련 처리
+     const ratingElements = document.querySelectorAll('.review-rating'); // 각 리뷰별 별점을 표시할 요소를 선택합니다.
+
+     // 별 이미지 경로
+     const starImages = [
+         '/html/hotels/img/star/star1.png', // 1점 이미지
+         '/html/hotels/img/star/star2.png', // 2점 이미지
+         '/html/hotels/img/star/star3.png', // 3점 이미지
+         '/html/hotels/img/star/star4.png', // 4점 이미지
+         '/html/hotels/img/star/star5.png'  // 5점 이미지
+     ];
+
+     // 별점을 표시하기 위한 별 이미지 생성
+     function createStarImage(src) {
+         const img = document.createElement('img');
+         img.src = src;
+         img.classList.add('star');
+         return img;
+     }
+
+     // 모든 리뷰의 별점을 설정
+     ratingElements.forEach(ratingElement => {
+         const rating = parseInt(ratingElement.getAttribute('data-rating'), 10); // 문자열을 숫자로 변환
+
+         // 유효한 별점 값인지 확인
+         if (rating >= 1 && rating <= 5) {
+             // 별점 이미지 하나만 추가
+             const starImage = createStarImage(starImages[rating - 1]);
+             ratingElement.appendChild(starImage);
+         } else {
+             console.error('Rating must be between 1 and 5.');
+         }
+     });
+
+
+
+     // 리뷰 관련 처리
+     // 모든 리뷰 아이템을 가져옵니다.
+     const reviewItems = document.querySelectorAll('.review-item');
+
+     // 리뷰 아이템 중 첫 3개만 표시하도록 합니다.
+     reviewItems.forEach((item, index) => {
+         if (index >= 3) {
+             item.style.display = 'none'; // 4번째 이후의 리뷰를 숨깁니다.
+         }
+     });
+ });
+
+</script>
+
+</body>
+
+</html>
