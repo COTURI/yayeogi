@@ -37,12 +37,18 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+
+
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation group: 'org.glassfish.web', name: 'jakarta.servlet.jsp.jstl', version: '2.0.0'
 	implementation "org.apache.tomcat.embed:tomcat-embed-jasper"
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+
+
+
 
 
 	implementation 'org.json:json:20240205'

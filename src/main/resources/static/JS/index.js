@@ -358,6 +358,37 @@ document.addEventListener('DOMContentLoaded', () => {
         bookButton.style.display = 'none';
     }
 
+
+document.getElementById('check-reservation-button').addEventListener('click', function () {
+    var email = document.getElementById('departure-city').value; // 이메일 입력 필드의 ID를 확인하세요.
+
+    if (email) {
+        // 로그인 상태 확인을 위한 AJAX 요청
+        fetch('/api/check-login', {
+            method: 'GET',
+            credentials: 'include' // 쿠키와 같은 인증 정보를 포함
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.loggedIn) {
+                // 로그인된 경우 예약 확인 페이지로 이동
+                window.location.href = '/reservation-confirmation?email=' + encodeURIComponent(email);
+            } else {
+                // 로그인되지 않은 경우 로그인 페이지로 리디렉션
+                alert('로그인 후 다시 시도해주세요.');
+                window.location.href = '/login'; // 로그인 페이지로 리디렉션
+            }
+        })
+        .catch(error => {
+            console.error('로그인 상태 확인 중 오류 발생:', error);
+        });
+    } else {
+        alert('이메일을 입력해주세요.');
+    }
+});
+
+
+
     loadData(); // 페이지 로드 시 데이터 로드
 
     // 페이지 URL에서 쿼리 파라미터를 가져와서 메시지를 표시하고 리다이렉트하는 함수 호출

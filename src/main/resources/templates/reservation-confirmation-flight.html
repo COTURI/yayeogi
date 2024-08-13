@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>예약 확인</title>
+    <link rel="stylesheet" href="/css/reservation-confirmation-flight.css"> <!-- CSS 파일 경로 -->
+</head>
+<body>
+<div class="container">
+    <h1>예약 확인</h1>
+    <div th:if="${message}" class="alert">
+        <p th:text="${message}"></p>
+    </div>
+    <div th:if="${reservations}">
+        <table>
+            <thead>
+            <tr>
+                <th>출국일</th>
+                <th>출발시간</th>
+                <th>도착시간</th>
+                <th>귀국일</th>
+                <th>귀국일 출발시간</th>
+                <th>귀국일 도착시간</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="reservation : ${reservations}">
+                <td th:text="${reservation.departureDate}"></td>
+                <td th:text="${reservation.departureTime}"></td>
+                <td th:text="${reservation.arrivalTime}"></td>
+                <td th:text="${reservation.returnDate}"></td>
+                <td th:text="${reservation.returnDepartureTime}"></td>
+                <td th:text="${reservation.returnArrivalTime}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="/js/reservation-confirmation-flight.js"></script> <!-- JS 파일 경로 -->
+</body>
+</html>

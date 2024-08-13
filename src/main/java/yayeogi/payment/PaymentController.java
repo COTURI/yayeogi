@@ -157,19 +157,24 @@ public class PaymentController {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(kakaoPayApproveUrl, HttpMethod.POST, entity, String.class);
 
-        ObjectMapper mapper = new ObjectMapper();
         try {
+            ResponseEntity<String> response = restTemplate.exchange(kakaoPayApproveUrl, HttpMethod.POST, entity, String.class);
+            System.out.println("Approve Response: " + response.getBody()); // 응답 출력
+
+            ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response.getBody());
+
             // 결제 성공 메시지를 세션에 저장
             session.setAttribute("alertMessage", "결제가 성공적으로 완료되었습니다!");
-        } catch (JsonProcessingException e) {
+            return "redirect:/"; //
+        } catch (Exception e) {
             e.printStackTrace();
+            session.setAttribute("alertMessage", "결제 처리 중 오류 발생");
+            return "redirect:/error";
         }
-
-        return "redirect:/index";
     }
+
 
     @GetMapping("/cancel")
     public String cancelPayment() {
