@@ -34,5 +34,6 @@ public class HotelDTO {
     private String hotelImg5Base64;
 
 
+
     // Getters and Setters (Lombok으로 자동 생성)
 }

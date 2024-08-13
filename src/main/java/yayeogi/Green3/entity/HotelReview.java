@@ -30,6 +30,13 @@ public class HotelReview {
     @Column(name = "use_check", columnDefinition = "TINYINT DEFAULT 0")
     private Integer useCheck;
 
+    @Column(name = "hotel_id", nullable = false)
+    private Integer hotelId;
+
+    @ManyToOne
+    @JoinColumn(name = "hotel_id", referencedColumnName = "hotel_id", insertable = false, updatable = false)
+    private Hotel hotel;
+
     @ManyToOne
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
     private User user;

@@ -3,6 +3,8 @@ package yayeogi.Green3.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import yayeogi.Green3.DTO.HotelDTO;
+import yayeogi.Green3.DTO.HotelReviewsDTO;
+import yayeogi.Green3.entity.Hotel;
 import yayeogi.Green3.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -121,4 +123,28 @@ public class HotelController {
         model.addAttribute("hotels", selectedHotels);
         return "deals"; // 'deals.html' 템플릿을 반환
     }
+
+    @GetMapping("/detail/{id}")
+    public String getHotelById(@PathVariable("id") Integer id, Model model) {
+        HotelDTO hotelDTO = hotelService.getHotelById(id);
+        model.addAttribute("hotel", hotelDTO);
+
+        List<HotelReviewsDTO> hotelReviews = hotelService.getHotelReviews(id);
+        model.addAttribute("reviews", hotelReviews);
+
+        // 평균 별점 계산
+        double averageRating = hotelService.getAverageRating(Long.valueOf(id));
+        model.addAttribute("averageRating", averageRating); // 모델에 추가
+
+        return "detail"; // 반환할 View 이름 (예: hotel-details.html)
+    }
+
+    @GetMapping("/api/hotels/search")
+    public List<Hotel> searchHotels(@RequestParam("query") String query) {
+        // query에 해당하는 호텔 정보를 DB에서 조회합니다.
+        List<Hotel> searchResult = hotelService.searchHotelsByCityOrName(query);
+        return searchResult;
+    }
+
+
 }

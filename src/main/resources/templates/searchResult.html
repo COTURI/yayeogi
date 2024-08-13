@@ -191,378 +191,40 @@
         <hr>
     </div>
 </div>
-
-<script>
-    // 가격 범위 정의 (천 원 단위)
- const minPrice = 50000;
- const maxPrice = 300000;
- let randomPrice;
-
- // 난수로 천 원 단위 가격 생성 함수
- function getRandomPrice(min, max) {
-     // 천 원 단위로 나누어 정수로 변환
-     const minUnits = Math.ceil(min / 1000);
-     const maxUnits = Math.floor(max / 1000);
-
-     // 난수로 단위 범위 내에서 가격 생성
-     const randomUnits = Math.floor(Math.random() * (maxUnits - minUnits + 1)) + minUnits;
-
-     // 다시 천 원 단위로 변환
-     return randomUnits * 1000;
- }
-
- function generateRandomPrice() {
-    randomPrice = getRandomPrice(minPrice, maxPrice);
-}
-
- let map, service, autocomplete, markers = [], currentInfoWindow = null;
-
- function initMap() {
-     map = new google.maps.Map(document.getElementById("map"), {
-         center: { lat: 37.57295, lng: 126.97915 }, // 서울 광화문
-         zoom: 12,
-     });
-
-     autocomplete = new google.maps.places.Autocomplete(document.getElementById("city"));
-     autocomplete.bindTo('bounds', map);
-
-     const searchBtn = document.getElementById("searchBtn");
-     searchBtn.addEventListener('click', () => {
-         const query = document.getElementById("city").value;
-         if (query) {
-             searchPlaces(query);
-         } else {
-             alert('Please enter a valid city or hotel.');
-         }
-     });
- }
-
- function searchPlaces(query) {
-     service = new google.maps.places.PlacesService(map);
-
-     const placeRequest = {
-         query: query,
-         fields: ['formatted_address', 'name', 'photos', 'geometry', 'place_id', 'price_level', 'rating'],
-     };
-
-     service.findPlaceFromQuery(placeRequest, (results, status) => {
-         if (status === google.maps.places.PlacesServiceStatus.OK && results.length > 0) {
-             clearMarkers();
-
-             const place = results[0];
-             const placeLocation = place.geometry.location;
-
-             const placeMarker = new google.maps.Marker({
-                 position: placeLocation,
-                 map: map,
-                 title: place.name
-             });
-
-             const placeInfoWindow = new google.maps.InfoWindow({
-                 content: createInfoWindowContent(place)
-             });
-
-             placeMarker.addListener('click', () => {
-                 if (currentInfoWindow) {
-                     currentInfoWindow.close();
-                 }
-                 currentInfoWindow = placeInfoWindow;
-                 placeInfoWindow.open(map, placeMarker);
-             });
-
-             placeInfoWindow.open(map, placeMarker);
-
-             map.setCenter(placeLocation);
-             map.setZoom(15);
-
-             searchNearbyHotels(placeLocation, place);
-         } else {
-             alert('No matching places found.');
-         }
-     });
- }
-
- function searchNearbyHotels(center, highlightedPlace) {
-     const request = {
-         location: center,
-         radius: '5000', // 검색 반경 (미터)
-         type: ['lodging']
-     };
-
-     service.nearbySearch(request, (results, status) => {
-         if (status === google.maps.places.PlacesServiceStatus.OK) {
-             const hotelListDiv = document.getElementById('hotel-list');
-             hotelListDiv.innerHTML = ''; // Clear previous results
-
-             // 마커를 저장할 배열
-             markers = [];
-
-             // 일치하는 항목을 제일 위에 표시
-             if (highlightedPlace) {
-                 const highlightedCard = createHotelCard(highlightedPlace, true);
-                 hotelListDiv.appendChild(highlightedCard);
-
-                 // 일치하는 항목에 마커 추가
-                 const highlightedMarker = new google.maps.Marker({
-                     position: highlightedPlace.geometry.location,
-                     map: map,
-                     title: highlightedPlace.name,
-                     icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' // 다른 색상으로 구분
-                 });
-
-                 const highlightedInfoWindow = new google.maps.InfoWindow({
-                     content: createInfoWindowContent(highlightedPlace)
-                 });
-
-                 highlightedMarker.addListener('click', () => {
-                     if (currentInfoWindow) {
-                         currentInfoWindow.close();
-                     }
-                     currentInfoWindow = highlightedInfoWindow;
-                     highlightedInfoWindow.open(map, highlightedMarker);
-                     // 클릭된 호텔 카드 맨 위로 이동
-                     moveCardToTop(highlightedPlace.place_id);
-                 });
-
-                 markers.push(highlightedMarker);
-             }
-
-             results.forEach(hotel => {
-                 if (hotel.place_id !== highlightedPlace.place_id) { // 일치하는 항목은 제외
-                     const hotelCard = createHotelCard(hotel, false);
-                     hotelListDiv.appendChild(hotelCard);
-
-                     // 주변 호텔에 마커 추가
-                     const marker = new google.maps.Marker({
-                         position: hotel.geometry.location,
-                         map: map,
-                         title: hotel.name
-                     });
-
-                     const infoWindow = new google.maps.InfoWindow({
-                         content: createInfoWindowContent(hotel)
-                     });
-
-                     marker.addListener('click', () => {
-                         if (currentInfoWindow) {
-                             currentInfoWindow.close();
-                         }
-                         currentInfoWindow = infoWindow;
-                         infoWindow.open(map, marker);
-                         // 클릭된 호텔 카드 맨 위로 이동
-                         moveCardToTop(hotel.place_id);
-                     });
-
-                     markers.push(marker);
-                 }
-             });
-
-             // 검색 결과가 없을 때의 처리
-             if (results.length === 0 && !highlightedPlace) {
-                 hotelListDiv.innerHTML = '<p>No nearby hotels found.</p>';
-             }
-         } else {
-             console.error('Nearby search failed: ', status);
-             alert('Nearby search failed: ' + status);
-         }
-     });
- }
-
- function clearMarkers() {
-     markers.forEach(marker => marker.setMap(null));
-     markers = [];
-     if (currentInfoWindow) {
-         currentInfoWindow.close();
-         currentInfoWindow = null;
-     }
- }
-
- function createHotelCard(hotel, isHighlighted) {
-     // 가격을 랜덤으로 생성
-     const randomPrice = getRandomPrice(50000, 300000);
-
-     const card = document.createElement('div');
-     card.classList.add('card', 'mb-3');
-     card.style.maxWidth = '900px';
-     card.style.height = '300px';
-     card.dataset.placeId = hotel.place_id; // 카드에 place_id를 데이터 속성으로 추가
-
-     card.innerHTML = `
-         <div class="row g-0" style="height: 100%;">
-             <div class="col-md-4" style="height: 100%;">
-                 ${hotel.photos ? `<img src="${hotel.photos[0].getUrl()}" class="img-fluid rounded-start responsive-image" alt="${hotel.name}" style="height: 100%; object-fit: cover;">` : ''}
-             </div>
-             <div class="col-md-8">
-                 <div class="card-body">
-                     <h5 class="card-title" style="font-weight:bold; font-size:30px;">${hotel.name}</h5>
-                     <p class="card-text" style="font-size:15px;">
-                         ${hotel.vicinity}
-                     </p>
-                     <p class="card-text">
-                         ${getRatingStars(hotel.rating)}
-                         <br><br><br><br>
-                         ${hotel.rating || '0'}/5
-                     </p>
-                     <p class="text-body-secondary" style="float:right;">Price: ${randomPrice.toLocaleString()}</p>
-                 </div>
-             </div>
-         </div>
-     `;
-
-     card.addEventListener('click', () => {
-         window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.name)}`, '_blank');
-     });
-
-     if (isHighlighted) {
-         card.style.border = '2px solid blue'; // 강조된 카드에 스타일 적용
-     }
-
-     return card;
- }
-
- function createInfoWindowContent(place) {
-     return `
-         ${place.photos ? `<img src="${place.photos[0].getUrl()}" alt="${place.name}" style="width: 100%; height: 150px; object-fit: cover; margin-bottom: 10px;">` : ''}
-         <h6>${place.name}</h6>
-         <p>Address: ${place.formatted_address || place.vicinity}</p>
-         <p>${place.rating}/5</p>
-         <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}" target="_blank">Hotel Details</a>
-     `;
- }
-
- function getPriceString(priceLevel) {
-     switch (priceLevel) {
-         case 1:
-             return '₩0 - ₩50,00';
-         case 2:
-             return '₩51,000 - ₩161,600';
-         case 3:
-             return '₩101,000 - ₩150,000';
-         case 4:
-             return '₩151,000 - ₩200,000';
-         case 5:
-             return '₩201,000 - ₩250,000';
-             case 6:
-             return '251,000 +';
-         default:
-             return 'N/A';
-     }
- }
-
- function getRatingStars(rating) {
-     if (rating >= 5) {
-         return `<img src="../static/html/hotels/img/star/star5.png" alt="${rating}" style="width:125px;height:25px;">`;
-     } else if (rating >= 4) {
-         return `<img src="../static/html/hotels/img/star/star4.png" alt="${rating}" style="width:95px;height:25px;">`;
-     } else if (rating >= 3) {
-         return `<img src="../static/html/hotels/img/star/star3.png" alt="${rating}" style="width:70px;height:25px;">`;
-     } else if (rating >= 2) {
-         return `<img src="../static/html/hotels/img/star/star2.png" alt="${rating}" style="width:50px;height:25px;">`;
-     } else if (rating >= 1) {
-         return `<img src="../static/html/hotels/img/star/star1.png" alt="${rating}" style="width:25px;height:25px;">`;
-     } else {
-         return '';
-     }
- }
-
- // 카드 리스트에서 특정 ID의 카드를 맨 위로 이동
- function moveCardToTop(placeId) {
-     const hotelListDiv = document.getElementById('hotel-list');
-     const card = hotelListDiv.querySelector(`[data-place-id="${placeId}"]`);
-     if (card) {
-         hotelListDiv.prepend(card); // 카드 리스트의 가장 상단으로 이동
-     }
- }
-
- document.addEventListener('DOMContentLoaded', initMap);
-
-
-    const checkboxes = document.querySelectorAll('.rating');
-
-
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            // Uncheck all checkboxes except the one that was clicked
-            checkboxes.forEach(cb => {
-                if (cb !== checkbox) {
-                    cb.checked = false;
-                }
-            });
-        });
-    });
-
-    const checkboxes1 = document.querySelectorAll('.price');
-    checkboxes1.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            checkboxes1.forEach(cb => {
-                if (cb !== checkbox) {
-                    cb.checked = false;
-                }
-            });
-        });
-    });
-
-
-    const hotels = [
-         { name: '호텔 A', rating: 2.5 },
-    { name: '호텔 B', rating: 3.0 },
-    { name: '호텔 C', rating: 3.5 },
-    { name: '호텔 D', rating: 4.0 },
-    { name: '호텔 E', rating: 4.5 },
-    { name: '호텔 F', rating: 4.8 },
-    { name: '호텔 G', rating: 5.0 },
-      ];
-
-function filterHotelsByRating(star) {
-    // 선택한 별점 이상이고 다음 별점 미만인 호텔을 필터링
-    const filteredHotels = hotels.filter(hotel => {
-        return hotel.rating >= star && hotel.rating < star + 1;
-    });
-    displayHotels(filteredHotels);
-}
-
-function displayHotels(hotelList) {
-    const hotelListDiv = document.getElementById('hotelList');
-    hotelListDiv.innerHTML = ''; // 기존 내용을 지웁니다
-
-    hotelList.forEach(hotel => {
-        const hotelDiv = document.createElement('div');
-        hotelDiv.textContent = `${hotel.name} - ${hotel.rating}성`;
-        hotelListDiv.appendChild(hotelDiv);
-    });
-}
-</script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJmWcT4VLac8E7KNO0HS0uP43Bn-IewbU&callback=initMap&libraries=places&v=weekly"
         defer>
 
 </script>
+
 <script>
-    var promise = fetch("https://test.api.amadeus.com/v1/security/oauth2/token", {
-      body: "grant_type=client_credentials&client_id=7pygXkuxGN6Vfo8WoJeRHnpJM8SWZtlP&client_secret=M9uW6JX4XYjQfu7f",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      method: "POST"
-    })
-    .then(res => res.json())
-    .then(data => {
-      var token = data.access_token;
+    function initMap() {
+         const map = new google.maps.Map(document.getElementById("map"), {
+             center: { lat: 37.5665, lng: 126.9780 }, // Seoul 중심좌표
+             zoom: 12,
+         });
 
-      // 액세스 토큰을 이용한 API 요청
-      fetch("https://test.api.amadeus.com/v2/reference-data/urls/checkin-links?airline=IB", {
-        headers: {
-          Authorization: "Bearer " + token
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-      })
-      .catch(error => console.error('Error:', error));
-    })
-    .catch(error => console.error('Error:', error));
-
+         fetch('/api/locations')
+             .then(response => response.json())
+             .then(data => {
+                 data.forEach(location => {
+                     const geocoder = new google.maps.Geocoder();
+                     geocoder.geocode({ 'address': location.address }, function(results, status) {
+                         if (status === 'OK') {
+                             new google.maps.Marker({
+                                 map: map,
+                                 position: results[0].geometry.location,
+                                 title: location.name
+                             });
+                         } else {
+                             console.error('Geocode was not successful for the following reason: ' + status);
+                         }
+                     });
+                 });
+             });
+     }
 </script>
+
+
 
 
 

@@ -1,11 +1,14 @@
 package yayeogi.Green3.service;
 
 import yayeogi.Green3.DTO.HotelDTO;
+import yayeogi.Green3.DTO.HotelReviewsDTO;
 import yayeogi.Green3.entity.Hotel;
+import yayeogi.Green3.entity.HotelReview;
 import yayeogi.Green3.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import yayeogi.Green3.repository.HotelReviewRepository;
 
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialException;
@@ -26,6 +29,9 @@ public class HotelService {
     @Autowired
     private HotelRepository hotelRepository;
 
+    @Autowired
+    private HotelReviewRepository hotelReviewRepository;
+
 
     // Country와 Location에 따라 호텔을 검색
     public List<HotelDTO> getHotelsByCountryAndLocation(Integer country, Integer location) {
@@ -34,7 +40,8 @@ public class HotelService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-    public List<HotelDTO> getHotelsDetail(Integer hotelId){
+
+    public List<HotelDTO> getHotelsDetail(Integer hotelId) {
         List<Hotel> hotels = hotelRepository.findByHotelId(hotelId);
         return hotels.stream()
                 .map(this::convertToDTO)
@@ -199,6 +206,7 @@ public class HotelService {
         hotel.setHotelImg5(hotelDTO.getHotelImg5());
         return hotel;
     }
+
     private String convertImageToBase64(Blob blob) {
         try {
             if (blob != null) {
@@ -227,6 +235,7 @@ public class HotelService {
             return null;
         }
     }
+
     public List<HotelDTO> getRandomHotels(Integer count) {
         List<HotelDTO> allHotels = hotelRepository.findAll().stream()
                 .map(hotel -> {
@@ -274,6 +283,49 @@ public class HotelService {
         return allHotels.stream()
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<HotelReviewsDTO> getHotelReviews(Integer hotelId) {
+        // 호텔 ID로 호텔 리뷰 목록을 가져옴
+        List<HotelReview> hotelReviews = hotelReviewRepository.findByHotelId(Long.valueOf(hotelId));
+
+        // 가져온 리뷰 목록을 DTO로 변환하여 반환
+        return hotelReviews.stream()
+                .map(this::convertToHotelReviewsDTO)
+                .collect(Collectors.toList());
+    }
+
+    private HotelReviewsDTO convertToHotelReviewsDTO(HotelReview hotelReview) {
+        HotelReviewsDTO dto = new HotelReviewsDTO();
+        dto.setReview_id(hotelReview.getReviewId());
+        dto.setEmail(hotelReview.getEmail());
+        dto.setRating(hotelReview.getRating());
+        dto.setReviews(hotelReview.getReviewText());
+        dto.setUse_check(hotelReview.getUseCheck());
+        dto.setHotel_id(hotelReview.getHotel().getHotelId());
+
+        return dto;
+    }
+
+    public double getAverageRating(Long hotelId) {
+        List<HotelReview> reviews = hotelReviewRepository.findByHotelId(hotelId);
+
+        if (reviews.isEmpty()) {
+            return 0.0;
+        }
+
+        double sum = 0.0;
+        for (HotelReview review : reviews) {
+            sum += review.getRating();
+        }
+
+        return sum / reviews.size();
+    }
+
+    public List<Hotel> searchHotelsByCityOrName(String query) {
+        // query를 이용하여 DB에서 검색합니다.
+        return hotelRepository.findByCityOrNameContaining(query);
     }
 }
 
