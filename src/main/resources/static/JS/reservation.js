@@ -81,39 +81,56 @@ function displayBookingDetails() {
     `;
 }
 
-document.getElementById('bookNowButton').addEventListener('click', async function(e) {
-    e.preventDefault(); // 버튼 클릭 시 페이지 새로 고침 방지
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadData();
 
-    // 사용자의 로그인 상태를 확인하기 위한 API 호출
-    const checkLoginResponse = await fetch('/api/check-login');
-    const checkLoginResult = await checkLoginResponse.json();
+    document.getElementById('bookNowButton').addEventListener('click', async function(e) {
+        e.preventDefault(); // 버튼 클릭 시 페이지 새로 고침 방지
 
-    const userLoggedIn = checkLoginResult.loggedIn; // 로그인 상태 여부
+        // 사용자의 로그인 상태를 확인하기 위한 API 호출
+        const checkLoginResponse = await fetch('/api/check-login');
+        const checkLoginResult = await checkLoginResponse.json();
 
-    if (!userLoggedIn) {
-        // 로그인 페이지로 리디렉션
-        window.location.href = '/paymentlogin';
-        return;
-    }
+        const userLoggedIn = checkLoginResult.loggedIn; // 로그인 상태 여부
 
-    const queryParams = new URLSearchParams({
-        departureAirport: getQueryParam('departureAirport'),
-        arrivalAirport: getQueryParam('arrivalAirport'),
-        departureTime: getQueryParam('departureTime'),
-        arrivalTime: getQueryParam('arrivalTime'),
-        price: getQueryParam('price'),
-        carrierCode: getQueryParam('carrierCode'),
-        returnDepartureAirport: getQueryParam('returnDepartureAirport'),
-        returnArrivalAirport: getQueryParam('returnArrivalAirport'),
-        returnDepartureTime: getQueryParam('returnDepartureTime'),
-        returnArrivalTime: getQueryParam('returnArrivalTime'),
-        returnPrice: getQueryParam('returnPrice'),
-        returnCarrierCode: getQueryParam('returnCarrierCode')
+        if (!userLoggedIn) {
+            // 로그인 페이지로 리디렉션
+            window.location.href = '/paymentlogin';
+            return;
+        }
+
+        const formData = {
+            departureDate: document.getElementById('departureDate').value,
+            departureTime: document.getElementById('departureTime').value,
+            arrivalTime: document.getElementById('arrivalTime').value,
+            returnDate: document.getElementById('returnDate').value,
+            returnDepartureTime: document.getElementById('returnDepartureTime').value,
+            returnArrivalTime: document.getElementById('returnArrivalTime').value,
+            email: document.getElementById('email').value
+        };
+
+        try {
+            const reservationResponse = await fetch('/reservations', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            const reservationResult = await reservationResponse.json();
+
+            console.log('예약 응답:', reservationResult); // 응답 로그
+
+            if (reservationResult.success) {
+                alert('예약이 완료되었습니다.');
+                window.location.href = '/reservation-confirmation'; // 예약 확인 페이지로 이동
+            } else {
+                alert('예약 중 오류가 발생했습니다.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('예약 중 오류가 발생했습니다.');
+        }
     });
-
-    // 결제 페이지로 이동
-    window.location.href = `/payment?${queryParams.toString()}`;
 });
 
-// 페이지 로드 시 데이터 로드
-document.addEventListener('DOMContentLoaded', loadData);

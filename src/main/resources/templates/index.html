@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<div th:replace="header :: header"></div>
+<div th:replace="~{header :: header}"></div>
 
 <h1>항공편 검색</h1>
 <div id="spinner" class="spinner-container" style="display: none;">
@@ -70,7 +70,7 @@
     <a href="/reservation-confirmation" class="reservation-button">예약 확인</a>
 </div>
 
-<div th:replace="footer :: footer"></div>
+<div th:replace="~{footer :: footer}"></div>
 
 <script src="/js/index.js"></script>
 
