@@ -139,12 +139,5 @@ public class HotelController {
         return "detail"; // 반환할 View 이름 (예: hotel-details.html)
     }
 
-    @GetMapping("/api/hotels/search")
-    public List<Hotel> searchHotels(@RequestParam("query") String query) {
-        // query에 해당하는 호텔 정보를 DB에서 조회합니다.
-        List<Hotel> searchResult = hotelService.searchHotelsByCityOrName(query);
-        return searchResult;
-    }
-
 
 }

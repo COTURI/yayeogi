@@ -323,9 +323,5 @@ public class HotelService {
         return sum / reviews.size();
     }
 
-    public List<Hotel> searchHotelsByCityOrName(String query) {
-        // query를 이용하여 DB에서 검색합니다.
-        return hotelRepository.findByCityOrNameContaining(query);
     }
-}
 

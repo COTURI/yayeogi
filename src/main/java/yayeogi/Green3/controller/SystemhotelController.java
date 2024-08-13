@@ -15,8 +15,9 @@ public class SystemhotelController {
     private SystemService systemService;
 
     @GetMapping("/api/hotel-statistics")
-    public Double getHotelStatistics(@RequestParam("checkinDate") String checkinDate) {
+    public Integer getHotelStatistics(@RequestParam("checkinDate") String checkinDate) {
         LocalDate date = LocalDate.parse(checkinDate);
         return systemService.getAveragePriceByCheckinDate(date);
     }
+
 }
