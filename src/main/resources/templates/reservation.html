@@ -14,91 +14,105 @@
 </header>
 
 <main>
-    <div class="reservation-container">
-        <!-- 예약 요약 -->
-        <div id="booking-details" class="reservation-summary">
-            <!-- JavaScript에서 채워질 내용 -->
-        </div>
+    <!-- 예약 요약 -->
+    <div class="reservation-summary" id="booking-details">
+        <label for="departureDate">출국일:</label>
+        <input type="date" id="departureDate" name="departureDate" required>
 
-        <!-- 예약자 정보 -->
-        <div class="passenger-info">
-            <h2>예약자 정보</h2>
-            <label for="firstName">영문 이름(First Name):</label>
-            <input type="text" id="firstName" name="firstName" required>
+        <label for="departureTime">출발 시간:</label>
+        <input type="time" id="departureTime" name="departureTime" required>
 
-            <label for="lastName">영문 성(Last Name):</label>
-            <input type="text" id="lastName" name="lastName" required>
+        <label for="arrivalTime">도착 시간:</label>
+        <input type="time" id="arrivalTime" name="arrivalTime" required>
 
-            <label for="countryCode">국가/지역 번호:</label>
-            <select id="countryCode" name="countryCode" required>
+        <label for="returnDate">귀국일 (선택):</label>
+        <input type="date" id="returnDate" name="returnDate">
+
+        <label for="returnDepartureTime">귀국일 출발 시간 (선택):</label>
+        <input type="time" id="returnDepartureTime" name="returnDepartureTime">
+
+        <label for="returnArrivalTime">귀국일 도착 시간 (선택):</label>
+        <input type="time" id="returnArrivalTime" name="returnArrivalTime">
+    </div>
+
+    <!-- 예약자 정보 -->
+    <div class="passenger-info">
+        <h2>예약자 정보</h2>
+        <label for="firstName">영문 이름(First Name):</label>
+        <input type="text" id="firstName" name="firstName" required>
+
+        <label for="lastName">영문 성(Last Name):</label>
+        <input type="text" id="lastName" name="lastName" required>
+
+        <label for="countryCode">국가/지역 번호:</label>
+        <select id="countryCode" name="countryCode" required>
+            <option value="">선택해 주세요</option>
+            <option value="+82">대한민국 (+82)</option>
+            <option value="+1">미국 (+1)</option>
+            <option value="+44">영국 (+44)</option>
+            <!-- 다른 국가/지역 번호 추가 -->
+        </select>
+
+        <label for="phoneNumber">전화번호:</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" required>
+
+        <label for="email">이메일 주소:</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+
+    <!-- 탑승객 정보 -->
+    <div class="passenger-details">
+        <h2>탑승객 정보</h2>
+        <div class="passenger">
+            <h3>탑승객 1: 성인</h3>
+            <p>[주의] 탑승객 정보는 반드시 여권에 나와 있는 정보와 일치해야 합니다. 대한민국 국적 여행객의 경우 국내 항공편 이용 시에도 여권을 소지하지 않으신 경우 항공기 탑승이 제한됩니다.</p>
+
+            <label for="paxFirstName">영문 이름 & 영문 중간 이름:</label>
+            <input type="text" id="paxFirstName" name="paxFirstName" required>
+
+            <label for="paxLastName">영문 성(Last Name):</label>
+            <input type="text" id="paxLastName" name="paxLastName" required>
+
+            <label for="dob">생년월일:</label>
+            <input type="date" id="dob" name="dob" required>
+
+            <label for="nationality">국적:</label>
+            <select id="nationality" name="nationality" required>
                 <option value="">선택해 주세요</option>
-                <option value="+82">대한민국 (+82)</option>
-                <option value="+1">미국 (+1)</option>
-                <option value="+44">영국 (+44)</option>
-                <!-- 다른 국가/지역 번호 추가 -->
+                <option value="KR">대한민국</option>
+                <option value="US">미국</option>
+                <option value="GB">영국</option>
+                <!-- 기타 국가 추가 -->
             </select>
 
-            <label for="phoneNumber">전화번호:</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" required>
+            <label for="passportNumber">여권 번호:</label>
+            <input type="text" id="passportNumber" name="passportNumber" required>
 
-            <label for="email">이메일 주소:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="passportIssueCountry">여권 발행 국가/지역:</label>
+            <select id="passportIssueCountry" name="passportIssueCountry" required>
+                <option value="">선택해 주세요</option>
+                <option value="KR">대한민국</option>
+                <option value="US">미국</option>
+                <option value="GB">영국</option>
+                <!-- 기타 국가 추가 -->
+            </select>
+
+            <label for="passportExpiryDate">여권 만료일:</label>
+            <input type="date" id="passportExpiryDate" name="passportExpiryDate" required>
         </div>
-
-        <!-- 탑승객 정보 -->
-        <div class="passenger-details">
-            <h2>탑승객 정보</h2>
-            <div class="passenger">
-                <h3>탑승객 1: 성인</h3>
-                <p>[주의] 탑승객 정보는 반드시 여권에 나와 있는 정보와 일치해야 합니다. 대한민국 국적 여행객의 경우 국내 항공편 이용 시에도 여권을 소지하지 않으신 경우 항공기 탑승이 제한됩니다.</p>
-
-                <label for="paxFirstName">영문 이름 & 영문 중간 이름:</label>
-                <input type="text" id="paxFirstName" name="paxFirstName" required>
-
-                <label for="paxLastName">영문 성(Last Name):</label>
-                <input type="text" id="paxLastName" name="paxLastName" required>
-
-                <label for="dob">생년월일:</label>
-                <input type="date" id="dob" name="dob" required>
-
-                <label for="nationality">국적:</label>
-                <select id="nationality" name="nationality" required>
-                    <option value="">선택해 주세요</option>
-                    <option value="KR">대한민국</option>
-                    <option value="US">미국</option>
-                    <option value="GB">영국</option>
-                    <!-- 기타 국가 추가 -->
-                </select>
-
-                <label for="passportNumber">여권 번호:</label>
-                <input type="text" id="passportNumber" name="passportNumber" required>
-
-                <label for="passportIssueCountry">여권 발행 국가/지역:</label>
-                <select id="passportIssueCountry" name="passportIssueCountry" required>
-                    <option value="">선택해 주세요</option>
-                    <option value="KR">대한민국</option>
-                    <option value="US">미국</option>
-                    <option value="GB">영국</option>
-                    <!-- 기타 국가 추가 -->
-                </select>
-
-                <label for="passportExpiryDate">여권 만료일:</label>
-                <input type="date" id="passportExpiryDate" name="passportExpiryDate" required>
-            </div>
-        </div>
-
-        <!-- 약관 동의 -->
-        <div class="terms-and-conditions">
-            <h2>약관 동의</h2>
-            <p>
-                <input type="checkbox" id="terms" name="terms" required>
-                <label for="terms">저는 <a href="/terms" target="_blank">이용 약관</a> 및 <a href="/privacy" target="_blank">개인정보 보호 정책</a>에 동의합니다.</label>
-            </p>
-        </div>
-
-        <!-- 예약 버튼 -->
-        <a href="#" class="book-now-button" id="bookNowButton">예약하기</a>
     </div>
+
+    <!-- 약관 동의 -->
+    <div class="terms-and-conditions">
+        <h2>약관 동의</h2>
+        <p>
+            <input type="checkbox" id="terms" name="terms" required>
+            <label for="terms">저는 <a href="/terms" target="_blank">이용 약관</a> 및 <a href="/privacy" target="_blank">개인정보 보호 정책</a>에 동의합니다.</label>
+        </p>
+    </div>
+
+    <!-- 예약하기 버튼 -->
+    <a href="#" class="book-now-button" id="bookNowButton">예약하기</a>
 </main>
 
 </body>
