@@ -90,10 +90,18 @@
             background-color: #0056b3;
         }
 
-        #salesChart {
+        #salesChart, #regionSalesChart {
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
         }
     </style>
 </head>
@@ -102,78 +110,127 @@
     <img src="../static/html/layout/logo2.png" height="65" width="200"/>
 
     <ul>
-        <li><a href="#"><i class="fas fa-chart-line"></i> 월별 매출</a></li>
-        <li><a href="#"><i class="fas fa-map-marker-alt"></i> 지역별 매출</a></li>
-        <li><a href="#">예약내역</a></li>
-        <li><a href="#"></a></li>
+        <li><a href="#" data-view="monthly-sales"><i class="fas fa-chart-line"></i> 월별 매출</a></li>
+        <li><a href="#" data-view="region-sales"><i class="fas fa-map-marker-alt"></i> 지역별 매출</a></li>
+        <li><a href="#" data-view="reservation"><i class="fas fa-calendar-alt"></i> 예약내역</a></li>
     </ul>
 </div>
 <div class="main-content">
-    <h2>월별 매출</h2>
-    <div class="filter">
-        <select id="monthSelect">
-            <option value="1">1월</option>
-            <option value="2">2월</option>
-            <option value="3">3월</option>
-            <option value="4">4월</option>
-            <option value="5">5월</option>
-            <option value="6">6월</option>
-            <option value="7">7월</option>
-            <option value="8">8월</option>
-            <option value="9">9월</option>
-            <option value="10">10월</option>
-            <option value="11">11월</option>
-            <option value="12">12월</option>
-        </select>
-        <button onclick="updateChart()">검색</button>
+    <!-- 월별 매출 화면 -->
+    <div id="monthly-sales" class="view active">
+        <h2>월별 매출</h2>
+        <div class="filter">
+            <select id="monthSelect">
+                <option value="1">1월</option>
+                <option value="2">2월</option>
+                <option value="3">3월</option>
+                <option value="4">4월</option>
+                <option value="5">5월</option>
+                <option value="6">6월</option>
+                <option value="7">7월</option>
+                <option value="8">8월</option>
+                <option value="9">9월</option>
+                <option value="10">10월</option>
+                <option value="11">11월</option>
+                <option value="12">12월</option>
+            </select>
+            <button onclick="updateChart()">검색</button>
+        </div>
+        <canvas id="salesChart"></canvas>
     </div>
-    <canvas id="salesChart"></canvas>
+
+    <!-- 지역별 매출 화면 -->
+    <div id="region-sales" class="view">
+        <h2>지역별 매출</h2>
+        <div class="filter">
+            <!-- 필터나 다른 UI 요소 추가 가능 -->
+        </div>
+        <canvas id="regionSalesChart"></canvas>
+    </div>
+
+    <!-- 예약 내역 화면 -->
+    <div id="reservation" class="view">
+        <h2>예약 내역</h2>
+        <!-- 예약 내역 표시 -->
+    </div>
 </div>
+
 <script src="scripts.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+
       const currentMonth = new Date().getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
       document.getElementById('monthSelect').value = currentMonth;
+        // 기본 월별 매출 차트 설정
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const regionCtx = document.getElementById('regionSalesChart').getContext('2d');
 
-      const ctx = document.getElementById('salesChart').getContext('2d');
-      let salesChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-              labels: ['호텔'],
-              datasets: [{
-                  label: '평균 매출',
-                  data: [0], // 초기 데이터는 빈 값으로 설정
-                  backgroundColor: 'rgba(255, 193, 7, 1)'
-              }]
-          },
-          options: {
-              scales: {
-                  y: {
-                      beginAtZero: true
-                  }
-              }
-          }
-      });
+        const salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['호텔'],
+                datasets: [{
+                    label: '평균 매출',
+                    data: [0], // 초기 데이터는 빈 값으로 설정
+                    backgroundColor: 'rgba(255, 193, 7, 1)'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
 
-      function updateChart() {
-          const month = document.getElementById('monthSelect').value;
-          const year = new Date().getFullYear(); // 현재 연도 가져오기
-          const checkinDate = `${year}-${month.padStart(2, '0')}-01`; // 해당 월의 첫 날
+        const regionSalesChart = new Chart(regionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['서울', '부산', '대구'], // 예시 지역
+                datasets: [{
+                    label: '지역별 매출',
+                    data: [0, 0, 0], // 초기 데이터는 빈 값으로 설정
+                    backgroundColor: 'rgba(54, 162, 235, 1)'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
 
-          fetch(`/api/hotel-statistics?checkinDate=${checkinDate}`)
-              .then(response => response.json())
-              .then(data => {
-                  salesChart.data.datasets[0].data = [data]; // 가져온 평균 매출 데이터로 업데이트
-                  salesChart.update();
-              })
-              .catch(error => console.error('Error fetching data:', error));
-      }
+        // 메뉴 클릭 시 화면 전환
+        const menuItems = document.querySelectorAll('.sidebar a');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const view = this.getAttribute('data-view');
+                document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+                document.getElementById(view).classList.add('active');
+            });
+        });
 
-      document.querySelector('button').addEventListener('click', updateChart);
-      updateChart(); // 페이지 로드 시 초기 통계 업데이트
-  });
+        function updateChart() {
+            const month = document.getElementById('monthSelect').value;
+            const year = new Date().getFullYear(); // 현재 연도 가져오기
+            const checkinDate = `${year}-${month.padStart(2, '0')}-01`; // 해당 월의 첫 날
 
+            fetch(`/api/hotel-statistics?checkinDate=${checkinDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    salesChart.data.datasets[0].data = [data]; // 가져온 평균 매출 데이터로 업데이트
+                    salesChart.update();
+                })
+                .catch(error => console.error('데이터 가져오기 오류:', error));
+        }
 
+        document.querySelector('button').addEventListener('click', updateChart);
+        updateChart(); // 페이지 로드 시 초기 통계 업데이트
+    });
 </script>
 
 </body>

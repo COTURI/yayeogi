@@ -20,6 +20,6 @@ public class Green3Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		// 애플리케이션 시작 시 saveHotel() 메서드를 호출하여 데이터베이스에 호텔 정보를 저장
-		hotelService.saveHotel();
+		/*hotelService.saveHotel();*/
 	}
 }
