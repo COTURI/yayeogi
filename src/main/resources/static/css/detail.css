@@ -1,0 +1,314 @@
+  .hotel-image {
+    width: 1920px;
+    height: 500px;
+    position: relative; /* 자식 요소의 절대 위치 설정을 위한 설정 */
+  }
+
+  .hotel-image img {
+    object-fit: cover; /* 이미지 비율 유지 */
+    position: absolute; /* 절대 위치 지정 */
+  }
+
+  .hotel-imgMain1 {
+    width: 940px;
+    height: 500px;
+    top: 0; /* 기준 위치 */
+    left: 0; /* 기준 위치 */
+  }
+
+  .hotel-image1 {
+    width: 600px;
+    height: 298px;
+    top: 0px; /* 조정된 위치 */
+    left:945px ; /* 기준 위치 */
+  }
+
+  .hotel-image2 {
+    width: 297px;
+    height: 198px;
+    top: 303px;
+    left: 945px; /* 조정된 위치 */
+  }
+
+  .hotel-image3 {
+    width: 564px;
+    height: 205px;
+    top: 0; /* 기준 위치 */
+    left:1550px; /* 기준 위치 */
+  }
+
+  .hotel-image4 {
+    width: 564px;
+    height: 290px;
+    top: 210px; /* 기준 위치 */
+    left: 1550px; /* 기준 위치 */
+  }
+
+  .hotel-image5 {
+    width: 298px;
+    height: 198px;
+    top: 303px;
+    left:1247px; /* 조정된 위치 */
+  }
+
+
+.hotel-info {
+    width: 1920px;
+    height: 200px;
+    font-size:48px;
+    font-color:#161616;
+    font-weight:bold;
+    /* 추가 스타일 */
+}
+
+.hotel-pay{
+    font-size:32px;
+    font-color:#161616;
+    float:right;
+
+
+}
+
+.hotel-address {
+    width: 620px;
+    height: 24px;
+    font-size: 16px;
+    color: #161616;
+}
+.main-content{
+ width: 1200px;
+    margin: 0 auto;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+}
+
+.rating-value {
+    font-size: 48px;
+    font-weight: bold;
+    color: #161616;
+    width: 70px;
+    height: 60px;
+
+}
+
+.rating-max {
+    width: 16px;
+    height: 20px;
+    color: #626971;
+    font-size: 16px;
+      padding-top: 20px;
+}
+.guest-reviews {
+    width: 1200px;
+    height: 50px;
+    font-size:40px;
+    margin: 0 auto;
+     /* 모든 자식 요소를 중앙으로 정렬 */
+}
+
+.reviews-container {
+    text-align: center; /* 모든 자식 요소를 중앙으로 정렬 */
+    margin: 20px 0; /* 상하 여백 추가 */
+}
+
+.reviews-container ul {
+    list-style-type: none; /* 기본 리스트 스타일 제거 */
+    padding: 0; /* 기본 패딩 제거 */
+    margin: 0; /* 기본 마진 제거 */
+}
+
+.review-item {
+    margin: 10px 0; /* 각 리뷰 아이템의 상하 여백 추가 */
+    display: flex; /* 플렉스박스 사용 */
+    justify-content: center; /* 중앙 정렬 */
+}
+
+.review {
+    display: flex; /* 플렉스박스 사용 */
+    align-items: center; /* 수직 중앙 정렬 */
+    border: 1px solid #ddd; /* 테두리 스타일 */
+    border-radius: 8px; /* 테두리 모서리 둥글게 */
+    padding: 15px; /* 내부 여백 추가 */
+    max-width: 1200px; /* 최대 너비 설정 */
+    height: 100px;
+    background-color: #f9f9f9; /* 배경색 설정 */
+    gap: 10px; /* 요소 사이 간격 설정 */
+}
+
+.review-name {
+    flex: 0.5; /* 이름 요소의 비율을 1로 설정 */
+    font-weight: bold; /* 굵은 글씨 */
+    text-align: left; /* 왼쪽 정렬 */
+}
+
+.review-rating {
+    flex: 0.3; /* 별점 요소의 비율을 0.7로 설정 */
+    font-style: italic; /* 이탤릭체로 표시 */
+    text-align: center; /* 중앙 정렬 */
+    display: flex; /* 플렉스박스 사용 */
+    align-items: center; /* 수직 중앙 정렬 */
+    margin-right:40px;
+}
+
+.review-rating img {
+    width: 140px; /* 별 이미지의 너비 설정 */
+    height: 60px; /* 별 이미지의 높이 설정 */
+    margin-right: 2px; /* 별 이미지 사이의 간격 */
+}
+
+.review-text {
+    flex: 1.8; /* 리뷰 텍스트 요소의 비율을 1.5로 설정 */
+    font-style: italic; /* 이탤릭체로 표시 */
+    text-align: left; /* 왼쪽 정렬 */
+}
+
+.location-container {
+    width: 1200px;
+    height: 800px;
+    /* 위치 관련 스타일 */
+}
+
+.location-description {
+    width: 1200px;
+    height: 50px;
+    font-size:40px;
+    margin-top:120px;
+}
+
+.google-map {
+    width: 1200px;
+    height: 500px;
+    /* 구글 맵 관련 스타일 */
+}
+
+.check-header {
+    width: 1200px;
+    height: 50px;
+    /* margin-left: 18%; */
+    font-size: 40px;
+    color: #161616;
+    margin-top:120px;
+}
+
+.check-info {
+    width: 1200px;
+    height: 150px;
+    display: flex;
+margin-top:20px;
+}
+
+.check-details {
+    width: 1200px;
+    height: 80px;
+   /*  margin: 16px; */
+    display: flex;
+    justify-content: space-between;
+}
+
+.check-in-container {
+    width: 450px;
+    height: 80px;
+    margin-left:120px;
+
+}
+.check-out-container {
+    width: 450px;
+    height: 80px;
+    margin-left:20px;
+}
+
+.check-in-label,
+.check-out-label {
+    font-size: 24px;
+    color:#161616;
+}
+
+.check-in-time,
+.check-out-time {
+    font-size: 28px;
+    color: #161616;
+}
+
+.check-icon {
+    width: 72px;
+    height: 72px;
+    font-size: 30px;
+}
+
+.clock-icon {
+    /* 시계 아이콘 관련 스타일 */
+}
+
+.hotel-description {
+width:1200px;
+height:600px;
+font-size:40px;
+font-color:#161616;
+margin-top:120px;
+    /* 호텔 설명 관련 스타일 */
+}
+  .detail-image {
+    width: 1060px;
+    height: 270px;
+    position: relative; /* 자식 요소의 절대 위치 설정을 위한 설정 */
+  }
+  .detail-image img {
+       object-fit: cover; /* 이미지 비율 유지 */
+       position: absolute; /* 절대 위치 지정 */
+     }
+
+     .detail-imgMain1 {
+       width: 580px;
+       height: 270px;
+       top: 0; /* 기준 위치 */
+       left: 0; /* 기준 위치 */
+     }
+
+     .detail-image1 {
+       width: 366px;
+       height: 155px;
+       top: 0px; /* 조정된 위치 */
+       left:587px ; /* 기준 위치 */
+     }
+
+     .detail-image2 {
+       width: 185px;
+       height: 110px;
+       top: 160px;
+       left: 587px; /* 조정된 위치 */
+     }
+
+     .detail-image3 {
+       width: 220px;
+       height: 125px;
+       top: 0; /* 기준 위치 */
+       left:960px; /* 기준 위치 */
+
+     }
+
+     .detail-image4 {
+       width: 220px;
+       height: 140px;
+       top: 130px; /* 기준 위치 */
+       left: 960px; /* 기준 위치 */
+     }
+
+     .detail-image5 {
+       width: 175px;
+       height: 110px;
+       top: 160px;
+       left: 778px; /* 조정된 위치 */
+     }
+
+.hotelname-detail{
+font-size:24px;
+font-color:#161616;
+margin-top:32px;
+}
+.hotel-detail1{
+font-size:16px;
+font-color:#626971;
+}
