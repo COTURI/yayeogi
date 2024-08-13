@@ -1,15 +1,24 @@
 package yayeogi.Green3.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import yayeogi.Green3.DTO.HotelDTO;
 import yayeogi.Green3.entity.Hotel;
 import yayeogi.Green3.repository.HotelRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class HotelService {
@@ -17,68 +26,254 @@ public class HotelService {
     @Autowired
     private HotelRepository hotelRepository;
 
-    public void saveHotel() {
+
+    // Country와 Location에 따라 호텔을 검색
+    public List<HotelDTO> getHotelsByCountryAndLocation(Integer country, Integer location) {
+        List<Hotel> hotels = hotelRepository.findByCountryAndLocation(country, location);
+        return hotels.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    public List<HotelDTO> getHotelsDetail(Integer hotelId){
+        List<Hotel> hotels = hotelRepository.findByHotelId(hotelId);
+        return hotels.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
+    }
+
+    // 모든 호텔 정보 가져오기
+    public List<HotelDTO> getAllHotels() {
+        return hotelRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    // 특정 국가의 호텔 정보 가져오기
+    public List<HotelDTO> getHotelsByCountry(Integer country) {
+        return hotelRepository.findByCountry(country)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    // 특정 위치의 호텔 정보 가져오기
+    public List<HotelDTO> getHotelsByLocation(Integer location) {
         try {
-            Hotel hotel = Hotel.builder()
-                    .hotelName("오리엔스호텔앤레지던스")
-                    .hotelDetail("오리엔스 호텔 & 레지던스 명동은 충무로역(지하철 3호선 및 4호선) 4번 출구에서 도보로 3분 거리에 위치하여 편리한 입지를 자랑하고, 취사가 가능한 우아한 객실, 피트니스 센터, 비즈니스 센터를 보유하고 있습니다.\n" +
-                            "\n" +
-                            "리셉션 데스크는 환전 서비스를 제공합니다. 각 객실에 간이 주방, 소파, 평면 케이블 TV가 있습니다. 전용 욕실에는 욕조, 샤워 시설, 무료 세면도구가 구비되어 있습니다.,;;")
-                    .checkinTime(1500)
-                    .checkoutTime(1200)
-                    .country(82)
-                    .location(2)
-                    .price(102400)
-                    .hotelMainImg(loadImage("C:/Users/Manic-063/Desktop/t/third/img/oriens1.png"))
-                    .hotelImg1(loadImage("C:/Users/Manic-063/Desktop/t/third/img/oriens2.png"))
-                    .hotelImg2(loadImage("C:/Users/Manic-063/Desktop/t/third/img/oriens3.png"))
-                    .hotelImg3(loadImage("C:/Users/Manic-063/Desktop/t/third/img/oriens4.png"))
-                    .hotelImg4(loadImage("C:/Users/Manic-063/Desktop/t/third/img/oriens5.png"))
-                    .hotelImg5(loadImage("C:/Users/Manic-063/Desktop/t/third/img/oriens6.png"))
-                    .address("삼일대로2길 50, 중구, 서울, 04627, 대한민국")
-                    .build();
-
-            hotelRepository.save(hotel);
-        } catch (IOException e) {
-            e.printStackTrace(); // 개발 중에는 표준 오류 스트림으로 출력
+            return hotelRepository.findByLocation(location)
+                    .stream()
+                    .map(this::convertToDTO)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();  // 로그에 출력
+            throw new RuntimeException("Error fetching hotels by location", e);
         }
     }
 
-    public List<Hotel> getAllHotels() {
-        return hotelRepository.findAll(); // 모든 호텔을 반환
-    }
-    public Hotel getHotelById(int id) {
-        Optional<Hotel> hotel = hotelRepository.findById((long) id);
-        return hotel.orElse(null); // 또는 Optional 처리 방식에 맞게 처리
+    // 호텔 정보 생성
+    public HotelDTO createHotel(HotelDTO hotelDTO) throws SQLException {
+        Hotel hotel = convertToEntity(hotelDTO);
+        Hotel savedHotel = hotelRepository.save(hotel);
+        return convertToDTO(savedHotel);
     }
 
-    // 호텔 업데이트
-    public void updateHotel(Hotel hotel) {
-        if (hotelRepository.existsById(Long.valueOf(hotel.getHotelId()))) {
-            hotelRepository.save(hotel);
-        } else {
-            throw new IllegalArgumentException("Hotel not found with id: " + hotel.getHotelId());
+    // 호텔 ID로 호텔 정보 가져오기
+    public HotelDTO getHotelById(Integer id) {
+        Hotel hotel = hotelRepository.findById(Long.valueOf(id))
+                .orElseThrow(() -> new RuntimeException("Hotel not found with id: " + id));
+        return convertToDTO(hotel);
+    }
+
+    // 호텔 정보 업데이트
+    @Transactional
+    public HotelDTO updateHotel(Integer id, HotelDTO hotelDTO) {
+        Hotel hotel = hotelRepository.findById(Long.valueOf(id))
+                .orElseThrow(() -> new RuntimeException("Hotel not found with id: " + id));
+
+        // DTO의 데이터를 Entity에 업데이트
+        hotel.setCheckinTime(hotelDTO.getCheckinTime());
+        hotel.setCheckoutTime(hotelDTO.getCheckoutTime());
+        hotel.setCountry(hotelDTO.getCountry());
+        hotel.setHotelDetail(hotelDTO.getHotelDetail());
+        hotel.setHotelMainImg(hotelDTO.getHotelMainImg());
+        hotel.setHotelImg1(hotelDTO.getHotelImg1());
+        hotel.setHotelImg2(hotelDTO.getHotelImg2());
+        hotel.setHotelImg3(hotelDTO.getHotelImg3());
+        hotel.setHotelImg4(hotelDTO.getHotelImg4());
+        hotel.setHotelImg5(hotelDTO.getHotelImg5());
+        hotel.setHotelName(hotelDTO.getHotelName());
+        hotel.setLocation(hotelDTO.getLocation());
+        hotel.setPrice(hotelDTO.getPrice());
+        hotel.setAddress(hotelDTO.getAddress());
+
+        Hotel updatedHotel = hotelRepository.save(hotel);
+        return convertToDTO(updatedHotel);
+    }
+
+    // 호텔 정보 삭제
+    @Transactional
+    public void deleteHotel(Long id) {
+        if (!hotelRepository.existsById(id)) {
+            throw new RuntimeException("Hotel not found with id: " + id);
+        }
+        hotelRepository.deleteById(id);
+    }
+
+    // 호텔 이미지를 파일로 저장
+    public void saveHotelImages(Long hotelId, String basePath) throws SQLException, IOException {
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new RuntimeException("Hotel not found"));
+
+        // Blob 배열로 이미지 저장
+        Blob[] imageBlobs = {
+                hotel.getHotelMainImg(),
+                hotel.getHotelImg1(),
+                hotel.getHotelImg2(),
+                hotel.getHotelImg3(),
+                hotel.getHotelImg4(),
+                hotel.getHotelImg5()
+        };
+
+        for (int i = 0; i < imageBlobs.length; i++) {
+            Blob imageBlob = imageBlobs[i];
+            if (imageBlob != null) {
+                String filePath = basePath + "/hotel_" + hotelId + "_img" + (i + 1) + ".jpg";
+                saveBlobToFile(imageBlob, filePath);
+            }
         }
     }
 
-    // 호텔 검색
-    public List<Hotel> searchHotels(String searchTerm) {
-        return hotelRepository.findByHotelNameContainingIgnoreCase(searchTerm);
-    }
+    // Blob을 파일로 저장하는 메서드
+    private void saveBlobToFile(Blob blob, String filePath) throws SQLException, IOException {
+        try (InputStream inputStream = blob.getBinaryStream();
+             FileOutputStream outputStream = new FileOutputStream(filePath)) {
 
-    // 호텔 삭제
-    public void deleteHotel(int id) {
-        if (hotelRepository.existsById((long) id)) {
-            hotelRepository.deleteById((long) id);
-        } else {
-            throw new IllegalArgumentException("Hotel not found with id: " + id);
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
         }
     }
 
+    private HotelDTO convertToDTO(Hotel hotel) {
+        HotelDTO dto = new HotelDTO();
+        dto.setHotelId(hotel.getHotelId());
+        dto.setHotelName(hotel.getHotelName());
+        dto.setAddress(hotel.getAddress());
+        dto.setPrice(hotel.getPrice());
+        dto.setCheckinTime(hotel.getCheckinTime());
+        dto.setCheckoutTime(hotel.getCheckoutTime());
+        dto.setCountry(hotel.getCountry());
+        dto.setLocation(hotel.getLocation());
+        dto.setHotelDetail(hotel.getHotelDetail());
+        dto.setHotelMainImgBase64(convertImageToBase64(hotel.getHotelMainImg()));
+        dto.setHotelImg1Base64(convertImageToBase64(hotel.getHotelImg1()));
+        dto.setHotelImg2Base64(convertImageToBase64(hotel.getHotelImg2()));
+        dto.setHotelImg3Base64(convertImageToBase64(hotel.getHotelImg3()));
+        dto.setHotelImg4Base64(convertImageToBase64(hotel.getHotelImg4()));
+        dto.setHotelImg5Base64(convertImageToBase64(hotel.getHotelImg5()));
+
+        // 나머지 필드 설정
+        return dto;
+    }
 
 
-    private byte[] loadImage(String filePath) throws IOException {
-        File file = new File(filePath);
-        return Files.readAllBytes(file.toPath()); // 이미지 파일을 바이트 배열로 변환
+    private Hotel convertToEntity(HotelDTO hotelDTO) throws SQLException {
+        Hotel hotel = new Hotel();
+        hotel.setHotelId(hotelDTO.getHotelId());  // 필드 이름과 타입에 맞게 설정
+        hotel.setHotelName(hotelDTO.getHotelName());
+        hotel.setAddress(hotelDTO.getAddress());
+        hotel.setPrice(hotelDTO.getPrice());
+        // Blob 타입이 아닌 Base64 문자열을 Blob으로 변환하는 로직 추가 필요
+        hotel.setHotelMainImg(convertBase64ToBlob(hotelDTO.getHotelMainImgBase64()));
+        hotel.setHotelDetail(hotelDTO.getHotelDetail());
+        hotel.setCheckinTime(hotelDTO.getCheckinTime());
+        hotel.setCheckoutTime(hotelDTO.getCheckoutTime());
+        hotel.setCountry(hotelDTO.getCountry());
+        hotel.setLocation(hotelDTO.getLocation());
+        hotel.setHotelImg1(hotelDTO.getHotelImg1());
+        hotel.setHotelImg2(hotelDTO.getHotelImg2());
+        hotel.setHotelImg3(hotelDTO.getHotelImg3());
+        hotel.setHotelImg4(hotelDTO.getHotelImg4());
+        hotel.setHotelImg5(hotelDTO.getHotelImg5());
+        return hotel;
+    }
+    private String convertImageToBase64(Blob blob) {
+        try {
+            if (blob != null) {
+                byte[] bytes = blob.getBytes(1, (int) blob.length());
+                return Base64.getEncoder().encodeToString(bytes);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  // 예외 처리
+        }
+        return null;
+    }
+
+    private Blob convertBase64ToBlob(String base64) throws SerialException, SQLException {
+        byte[] imageBytes = Base64.getDecoder().decode(base64);
+        return new SerialBlob(imageBytes);
+    }
+
+
+    // Blob을 Base64로 변환하는 메서드
+    private String convertBlobToBase64(Blob blob) {
+        try (InputStream inputStream = blob.getBinaryStream()) {
+            byte[] imageBytes = inputStream.readAllBytes();
+            return Base64.getEncoder().encodeToString(imageBytes);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<HotelDTO> getRandomHotels(Integer count) {
+        List<HotelDTO> allHotels = hotelRepository.findAll().stream()
+                .map(hotel -> {
+                    try {
+                        // Hotel 엔티티를 HotelDTO로 변환
+                        HotelDTO hotelDTO = new HotelDTO();
+                        hotelDTO.setHotelId(hotel.getHotelId());
+                        hotelDTO.setHotelName(hotel.getHotelName());
+                        hotelDTO.setHotelDetail(hotel.getHotelDetail());
+                        hotelDTO.setHotelMainImg(hotel.getHotelMainImg());
+                        hotelDTO.setHotelImg1(hotel.getHotelImg1());
+                        hotelDTO.setHotelImg2(hotel.getHotelImg2());
+                        hotelDTO.setHotelImg3(hotel.getHotelImg3());
+                        hotelDTO.setHotelImg4(hotel.getHotelImg4());
+                        hotelDTO.setHotelImg5(hotel.getHotelImg5());
+                        hotelDTO.setCheckinState(hotel.getCheckinState());
+                        hotelDTO.setCheckoutState(hotel.getCheckoutState());
+                        hotelDTO.setCheckinTime(hotel.getCheckinTime());
+                        hotelDTO.setCheckoutTime(hotel.getCheckoutTime());
+                        hotelDTO.setCountry(hotel.getCountry());
+                        hotelDTO.setLocation(hotel.getLocation());
+                        hotelDTO.setPrice(hotel.getPrice());
+                        hotelDTO.setAddress(hotel.getAddress());
+
+                        // Base64 변환 처리
+                        if (hotel.getHotelMainImg() != null) {
+                            Blob blob = hotel.getHotelMainImg();
+                            InputStream inputStream = blob.getBinaryStream();
+                            byte[] imageBytes = inputStream.readAllBytes();
+                            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                            hotelDTO.setHotelMainImgBase64(base64Image);
+                        }
+                        return hotelDTO;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                })
+                .collect(Collectors.toList());
+
+        // 무작위로 섞기
+        Collections.shuffle(allHotels);
+
+        // 최대 count 개수만큼 선택
+        return allHotels.stream()
+                .limit(count)
+                .collect(Collectors.toList());
     }
 }
+

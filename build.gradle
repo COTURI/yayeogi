@@ -33,9 +33,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework:spring-web'
-	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+
 
 
 
@@ -55,6 +53,7 @@ dependencies {
 	implementation 'com.amadeus:amadeus-java:9.0.0'
 	implementation 'com.google.code.gson:gson:2.11.0'
 
+	
 
 }
 
