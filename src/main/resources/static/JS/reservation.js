@@ -1,5 +1,3 @@
-// reservation.js
-
 let airlines = {};
 let airports = {};
 
@@ -82,6 +80,40 @@ function displayBookingDetails() {
         <p><strong>항공사:</strong> ${airlines[returnCarrierCode] || '정보 없음'}</p>
     `;
 }
+
+document.getElementById('bookNowButton').addEventListener('click', async function(e) {
+    e.preventDefault(); // 버튼 클릭 시 페이지 새로 고침 방지
+
+    // 사용자의 로그인 상태를 확인하기 위한 API 호출
+    const checkLoginResponse = await fetch('/api/check-login');
+    const checkLoginResult = await checkLoginResponse.json();
+
+    const userLoggedIn = checkLoginResult.loggedIn; // 로그인 상태 여부
+
+    if (!userLoggedIn) {
+        // 로그인 페이지로 리디렉션
+        window.location.href = '/paymentlogin';
+        return;
+    }
+
+    const queryParams = new URLSearchParams({
+        departureAirport: getQueryParam('departureAirport'),
+        arrivalAirport: getQueryParam('arrivalAirport'),
+        departureTime: getQueryParam('departureTime'),
+        arrivalTime: getQueryParam('arrivalTime'),
+        price: getQueryParam('price'),
+        carrierCode: getQueryParam('carrierCode'),
+        returnDepartureAirport: getQueryParam('returnDepartureAirport'),
+        returnArrivalAirport: getQueryParam('returnArrivalAirport'),
+        returnDepartureTime: getQueryParam('returnDepartureTime'),
+        returnArrivalTime: getQueryParam('returnArrivalTime'),
+        returnPrice: getQueryParam('returnPrice'),
+        returnCarrierCode: getQueryParam('returnCarrierCode')
+    });
+
+    // 결제 페이지로 이동
+    window.location.href = `/payment?${queryParams.toString()}`;
+});
 
 // 페이지 로드 시 데이터 로드
 document.addEventListener('DOMContentLoaded', loadData);
