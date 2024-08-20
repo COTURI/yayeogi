@@ -52,7 +52,7 @@ public class Hotel implements Serializable {
     @Column(name = "hotel_img5", columnDefinition = "LONGBLOB")
     private Blob hotelImg5;
 
-    @Column(name = "checkin_state", columnDefinition = "TINYINT DEFAULT 0")
+    @Column(name = "checkin_state",     columnDefinition = "TINYINT DEFAULT 0")
     private Integer checkinState;
 
     @Column(name = "checkout_state", columnDefinition = "TINYINT DEFAULT 1")
@@ -74,10 +74,10 @@ public class Hotel implements Serializable {
     private String price;
 
     @Column(name = "checkin_date")
-    private LocalDate checkinDate;
+    private String checkinDate;
 
     @Column(name = "checkout_date")
-    private LocalDate checkoutDate;
+    private String checkoutDate;
 
     @Column(name = "address", length = 255, nullable = false)
     private String address;

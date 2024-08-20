@@ -48,6 +48,7 @@ width:750px;
 
  .card-body {
      max-height: 250px; /* 카드 내용의 최대 높이 설정 */
+
  }
  .gmp-map{
  width:580px;

@@ -1,5 +1,5 @@
 package yayeogi.Green3.service;
-
+/*
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import yayeogi.Green3.repository.SystemRepository;
@@ -18,3 +18,4 @@ public class SystemService {
 
     // 필요한 경우 다른 통계 계산 로직 추가
 }
+*/

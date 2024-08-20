@@ -1,5 +1,5 @@
 package yayeogi.Green3.repository;
-
+/*
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,3 +14,4 @@ public interface SystemRepository extends JpaRepository<HotelReservation, Intege
     @Query("SELECT AVG(h.hotel.price) FROM HotelReservation h WHERE h.checkinDate = :checkinDate")
     Double findAveragePriceByCheckinDate(@Param("checkinDate") LocalDate checkinDate);
 }
+*/

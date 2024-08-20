@@ -65,9 +65,17 @@
     font-size:32px;
     font-color:#161616;
     float:right;
-
-
+   display: flex;
+    align-items: center;
 }
+.pay-btn{
+margin-left:10px;
+background-color:#05203C;
+border-radius:10px;
+color:white;
+font-size:24px;
+}
+
 
 .hotel-address {
     width: 620px;

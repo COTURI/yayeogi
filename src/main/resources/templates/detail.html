@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
@@ -16,14 +17,17 @@
     <header>
         <div class="left-section">
             <button type="button" class="btn logo-button">
-                <img src="/html/layout/LOGO.png" alt="YAYEOGI 로고">
+                <img src="/html/layout/logo2.png" alt="YAYEOGI 로고">
             </button>
             &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <p>
             <div class="menu">
                 <button type="button" class="btn btn-info">항공권</button>
-                <button type="button" class="btn btn-info">호텔</button>
-            </div>
+
+            <button type="button" class="btn btn-info" onclick="window.location.href='http://localhost:8080/hotels/main'">호텔</button>
+
+
+        </div>
         </div>
         </p>
         <div class="auth">
@@ -63,7 +67,14 @@
     </div>
     <!-- rating DB연결해서 값 불러와서 평균내기 -->
 
-    <span class="hotel-pay"><span th:text="￦+${hotel.price}"> </span> <button> 결제 </button> </span>
+    <span class="hotel-pay">
+            <span class="search-date">
+          <label>
+              <input type="date" value="2024-07-31" class="date-input" size=30>
+              <input type="date" class="date-input" value="2024-08-01">
+                </label>
+                </span>
+        <span th:text="￦+${hotel.price}"> </span> <button class="pay-btn"> 결제 </button> </span>
 
 
     <div class="guest-reviews" style="margin-top:120px;">투숙객 후기</div> <!-- DB에 후기들 작성해서 값 불러오기-->

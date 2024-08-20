@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yayeogi.Green3.repository.HotelReviewRepository;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialException;
@@ -20,7 +21,7 @@ import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +33,8 @@ public class HotelService {
     @Autowired
     private HotelReviewRepository hotelReviewRepository;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     // Country와 Location에 따라 호텔을 검색
     public List<HotelDTO> getHotelsByCountryAndLocation(Integer country, Integer location) {
@@ -323,9 +326,19 @@ public class HotelService {
         return sum / reviews.size();
     }
 
-    public List<Hotel> searchHotelsByCityOrName(String query) {
-        // query를 이용하여 DB에서 검색합니다.
-        return hotelRepository.findByCityOrNameContaining(query);
+    public List<Map<String, Object>> searchHotels(String address) {
+        // SQL 쿼리와 입력 값 출력해보기 (디버깅용)
+
+
+        String sql = "SELECT * FROM hotels WHERE address LIKE CONCAT('%', ?, '%')";
+        System.out.println("Executing query for address: " + sql);
+        List<Map<String, Object>> result = jdbcTemplate.queryForList(sql, address);
+        System.out.println("Query result: " + result);
+
+        return result;
     }
+
+
+
 }
 

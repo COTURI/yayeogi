@@ -2,6 +2,7 @@ package yayeogi.Green3.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.ModelAndView;
 import yayeogi.Green3.DTO.HotelDTO;
 import yayeogi.Green3.DTO.HotelReviewsDTO;
 import yayeogi.Green3.entity.Hotel;
@@ -15,6 +16,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/hotels")
@@ -139,12 +141,31 @@ public class HotelController {
         return "detail"; // 반환할 View 이름 (예: hotel-details.html)
     }
 
-    @GetMapping("/api/hotels/search")
-    public List<Hotel> searchHotels(@RequestParam("query") String query) {
-        // query에 해당하는 호텔 정보를 DB에서 조회합니다.
-        List<Hotel> searchResult = hotelService.searchHotelsByCityOrName(query);
-        return searchResult;
-    }
 
+
+   @GetMapping("/searchResult")
+   public String searchResult(
+           @RequestParam("address") String address,
+           @RequestParam("checkin_date") String checkinDate,
+           @RequestParam("checkout_date") String checkoutDate,
+           Model model) {
+
+       List<Map<String, Object>> hotels = hotelService.searchHotels(address);
+
+       // 데이터 확인용 로그 추가
+       System.out.println("Hotels found: " + hotels);
+
+       model.addAttribute("address", address);
+       model.addAttribute("checkinDate", checkinDate);
+       model.addAttribute("checkoutDate", checkoutDate);
+       model.addAttribute("hotels", hotels); // 뷰에서 사용될 데이터 추가
+
+       return "searchResult";
+   }
+    @GetMapping("/hotels")
+    public List<Map<String, Object>> getHotels(@RequestParam("address") String address) {
+        List<Map<String, Object>> hotels = hotelService.searchHotels(address);
+        return hotelService.searchHotels(address);
+    }
 
 }
