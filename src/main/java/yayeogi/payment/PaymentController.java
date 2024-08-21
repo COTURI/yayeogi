@@ -167,14 +167,13 @@ public class PaymentController {
 
             // 결제 성공 메시지를 세션에 저장
             session.setAttribute("alertMessage", "결제가 성공적으로 완료되었습니다!");
-            return "redirect:/"; //
+            return "redirect:/confirmation"; //
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("alertMessage", "결제 처리 중 오류 발생");
             return "redirect:/error";
         }
     }
-
 
     @GetMapping("/cancel")
     public String cancelPayment() {

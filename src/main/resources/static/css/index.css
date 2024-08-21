@@ -13,6 +13,7 @@ h1 {
     padding: 20px;
     text-align: center;
     font-size: 24px;
+    margin: 0;
 }
 
 /* 검색 컨테이너 스타일 */
@@ -33,13 +34,14 @@ h1 {
     align-items: center;
 }
 
-/* 각 검색 필드 스타일 */
+/* 검색 폼 그룹 스타일 */
 .search-form-group {
     flex: 1;
     min-width: 180px;
     position: relative;
 }
 
+/* 검색 폼 레이블 스타일 */
 .search-form-group label {
     display: block;
     margin-bottom: 5px;
@@ -47,6 +49,7 @@ h1 {
     color: #555;
 }
 
+/* 검색 폼 입력 필드 스타일 */
 .search-form-group input {
     width: 100%;
     padding: 10px;
@@ -57,6 +60,7 @@ h1 {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+/* 검색 입력 필드 포커스 스타일 */
 .search-form-group input:focus {
     border-color: #007bff;
     box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
@@ -85,8 +89,31 @@ h1 {
     outline: none;
 }
 
+/* 예약 확인 버튼 스타일 */
+.reservation-button {
+    padding: 12px 20px;
+    border: none;
+    background-color: #28a745; /* 초록색 배경 */
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none; /* 링크의 기본 밑줄 제거 */
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.reservation-button:hover {
+    background-color: #218838; /* 더 어두운 초록색 배경 */
+    transform: translateY(-2px);
+}
+
+.reservation-button:focus {
+    outline: none;
+}
+
 /* 자동완성 제안 리스트 스타일 */
-.suggestions {
+.suggestions-container {
     position: absolute;
     top: calc(100% + 5px);
     left: 0;
@@ -102,109 +129,96 @@ h1 {
 }
 
 .suggestion-item {
-    padding: 12px;
+    padding: 8px;
     cursor: pointer;
-    transition: background-color 0.2s;
 }
 
 .suggestion-item:hover {
-    background-color: #f1f1f1;
+    background-color: #f0f0f0;
 }
 
-.results-container {
+/* 이미지 스타일 */
+.main-images {
     max-width: 1200px;
     margin: 20px auto;
-    display: none; /* 기본적으로 숨김 처리 */
-}
-
-/* 결과 섹션 컨테이너 스타일 */
-.results-section-container {
     display: flex;
     justify-content: space-between;
     gap: 20px;
 }
 
-/* 결과 섹션 스타일 */
-.results-section {
-    flex: 1;
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.main-image {
+    width: 100%;
+    max-width: 700px;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* 항공편 결과 스타일 */
-.flight-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* 라디오 버튼 스타일 */
-.flight-radio {
-    margin-right: 12px;
-}
-
-/* 페이지네이션 컨트롤 스타일 */
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.pagination button {
-    padding: 8px 16px;
-    margin: 0 4px;
-    border: 1px solid #007bff;
-    background-color: #ffffff;
-    color: #007bff;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s, color 0.3s, transform 0.2s;
-}
-
-.pagination button.active {
-    background-color: #007bff;
-    color: #ffffff;
-}
-
-.pagination button:hover {
-    background-color: #e9ecef;
-    color: #0056b3;
-    transform: translateY(-2px);
-}
-
-.pagination button:disabled {
-    background-color: #ddd;
-    color: #666;
-    cursor: not-allowed;
-}
-
-/* 예약하기 버튼 스타일 */
-.book-button {
-    display: block;
-    width: 200px;
+/* FAQ 섹션 스타일 */
+.faq-container {
+    max-width: 1200px;
     margin: 20px auto;
-    padding: 12px;
-    border: none;
-    background-color: #28a745;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s, transform 0.2s;
-    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-.book-button:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
+/* FAQ 열 스타일 */
+.faq-column {
+    width: 48%;
+    box-sizing: border-box;
+}
+
+/* FAQ 항목 스타일 */
+.faq-item {
+    margin-bottom: 20px;
+}
+
+/* FAQ 질문 스타일 */
+.faq-question {
+    cursor: pointer;
+    padding: 15px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none; /* 링크의 기본 밑줄 제거 */
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: left;
+    display: block;
+    transition: background-color 0.2s;
+}
+
+.faq-question:hover {
+    background-color: #0056b3;
+}
+
+/* FAQ 답변 스타일 */
+.faq-answer {
+    display: none; /* 기본적으로 숨김 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-top: 5px;
+}
+
+/* FAQ 답변 표시 */
+.faq-toggle:checked ~ .faq-answer {
+    display: block;
+}
+
+/* 숨기기 위한 체크박스 스타일 */
+.faq-toggle {
+    display: none;
+}
+
+/* 버튼 컨테이너 스타일 */
+.button-container {
+    text-align: center;
+    margin-top: 20px;
 }
 
 /* 스피너 컨테이너 스타일 */
@@ -221,10 +235,15 @@ h1 {
     z-index: 1000;
 }
 
+/* 스피너 스타일 */
 .spinner {
-    border: 8px solid rgba(0, 0, 0, 0.1);
+    display: none; /* 기본적으로 숨김 */
+}
+
+.spinner-icon {
+    border: 8px solid #f3f3f3;
     border-radius: 50%;
-    border-top: 8px solid #007bff;
+    border-top: 8px solid #3498db;
     width: 50px;
     height: 50px;
     animation: spin 1s linear infinite;
@@ -234,50 +253,3 @@ h1 {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-#footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px;
-            font-weight: 400;
-            font-size: 12px;
-            color: black;
-            background-color: whitesmoke;
-            z-index: 2;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-
-
-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-        }
-
-.book-button {
-            background-color: #008CBA;
-        }
-
-.reservation-button {
-            background-color: #f44336;
-            text-align: center;
-            padding: 10px 20px;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
-        }
-
-.button-container {
-            text-align: center;
-            margin-top: 20px;
-        }

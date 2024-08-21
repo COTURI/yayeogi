@@ -1,88 +1,94 @@
 package yayeogi.Flight;
 
-import com.amadeus.Params;
 import com.amadeus.Amadeus;
+import com.amadeus.Params;
 import com.amadeus.exceptions.ResponseException;
 import com.amadeus.resources.FlightOfferSearch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 
 @Service
 public class FlightSearchService {
 
-    private final Logger logger = LoggerFactory.getLogger(FlightSearchService.class);
-    private final Amadeus amadeus;
-    private final Gson gson;
+    @Value("${amadeus.api.key}")
+    private String apiKey;
 
-    public FlightSearchService(@Value("${amadeus.api.key}") String apiKey,
-                               @Value("${amadeus.api.secret}") String apiSecret) {
-        this.amadeus = Amadeus.builder(apiKey, apiSecret).build();
-        this.gson = new GsonBuilder().create();
+    @Value("${amadeus.api.secret}")
+    private String apiSecret;
+
+    private final TokenService tokenService;
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Autowired
+    public FlightSearchService(TokenService tokenService) {
+        this.tokenService = tokenService;
     }
 
-    private String formatDate(String date) {
-        // 날짜 형식 변환 로직 추가
+    public String searchFlightsAsString(String origin, String destination, String departureDate,
+                                        String returnDate, int adults) {
         try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date parsedDate = inputFormat.parse(date);
-            return outputFormat.format(parsedDate);
-        } catch (ParseException e) {
-            logger.error("날짜 형식 변환 오류: {}", e.getMessage());
-            throw new IllegalArgumentException("날짜 형식이 올바르지 않습니다.");
-        }
-    }
+            // 액세스 토큰을 얻습니다.
+            String accessToken = tokenService.getAccessToken();
+            System.out.println("Access Token: " + accessToken); // 로그로 토큰 확인
 
-    public String searchFlightsAsString(String origin, String destination, String departureDate, String returnDate, int adults) {
-        if (origin == null || destination == null || departureDate == null) {
-            throw new IllegalArgumentException("Origin, destination, and departureDate cannot be null");
-        }
+            // API 요청 URL 구성
+            String url = "https://test.api.amadeus.com/v2/shopping/flight-offers?" +
+                    "originLocationCode=" + origin +
+                    "&destinationLocationCode=" + destination +
+                    "&departureDate=" + departureDate +
+                    "&returnDate=" + (returnDate != null ? returnDate : "") +
+                    "&adults=" + adults +
+                    "&max=50";
 
-        String formattedDepartureDate = formatDate(departureDate);
-        String formattedReturnDate = returnDate != null ? formatDate(returnDate) : null;
+            // 요청 헤더 구성
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + accessToken);
+            headers.set("Content-Type", "application/json");
 
-        try {
-            logger.info("Requesting outbound flights...");
-            FlightOfferSearch[] outboundOffers = amadeus.shopping.flightOffersSearch.get(
-                    Params.with("originLocationCode", origin)
-                            .and("destinationLocationCode", destination)
-                            .and("departureDate", formattedDepartureDate)
-                            .and("adults", adults)
-                            .and("max", 50)
-            );
+            HttpEntity<String> entity = new HttpEntity<>(headers);
 
-            FlightOfferSearch[] inboundOffers = null;
-            if (formattedReturnDate != null) {
-                logger.info("Requesting inbound flights...");
-                inboundOffers = amadeus.shopping.flightOffersSearch.get(
-                        Params.with("originLocationCode", destination)
-                                .and("destinationLocationCode", origin)
-                                .and("departureDate", formattedReturnDate)
-                                .and("adults", adults)
-                                .and("max", 50)
-                );
+            // REST API 호출
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return response.getBody();
+            } else {
+                // 디버깅을 위해 상태 코드와 응답 본문 출력
+                System.out.println("Response Status Code: " + response.getStatusCode());
+                System.out.println("Response Body: " + response.getBody());
+                throw new RuntimeException("Failed to get flight offers. Status code: " + response.getStatusCode());
             }
-
-            // 결과를 JSON 문자열로 변환
-            String outboundJson = gson.toJson(outboundOffers);
-            String inboundJson = gson.toJson(inboundOffers != null ? inboundOffers : new FlightOfferSearch[0]);
-
-            // 결과를 JSON 문자열로 조합
-            return "{\"outboundDeparture\": " + outboundJson + ", \"inboundReturn\": " + inboundJson + "}";
-        } catch (ResponseException e) {
-            logger.error("API 호출 실패: {}", e.getMessage());
-            throw new RuntimeException("API 호출 실패: " + e.getMessage(), e);
         } catch (Exception e) {
-            logger.error("예기치 않은 오류 발생: {}", e.getMessage());
-            throw new RuntimeException("예기치 않은 오류 발생: " + e.getMessage(), e);
+            e.printStackTrace();
+            return "{}"; // 빈 JSON 객체 반환
+        }
+    }
+
+    // URL 인코딩 메서드 추가
+    private String encodeURIComponent(String value) {
+        try {
+            return java.net.URLEncoder.encode(value, "UTF-8").replace("+", "%20");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return value;
         }
     }
 }
