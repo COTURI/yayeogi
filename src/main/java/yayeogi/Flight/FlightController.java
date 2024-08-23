@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-
 @RestController
 @RequestMapping("/flights")
 public class FlightController {
@@ -22,22 +21,41 @@ public class FlightController {
         this.flightSearchService = flightSearchService;
     }
 
-    @GetMapping
-    public ResponseEntity<String> searchFlights(
+    @GetMapping("/search")
+    public ResponseEntity<Object> searchFlights(
             @RequestParam String origin,
             @RequestParam String destination,
             @RequestParam String departureDate,
             @RequestParam(required = false) String returnDate,
             @RequestParam int adults) {
 
+        // 검증 로직 추가
+        if (adults < 1 || adults >= 10) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse("adults 파라미터는 1 이상 10 미만이어야 합니다."));
+        }
+
         try {
-            // FlightSearchService를 사용하여 비행기 검색
+            // flightSearchService 호출 (currency 파라미터 제거)
             String result = flightSearchService.searchFlightsAsString(origin, destination, departureDate, returnDate, adults);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             // 예외 처리
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("{\"error\": \"검색 중 오류 발생: " + e.getMessage() + "\"}");
+                    .body(new ErrorResponse("검색 중 오류 발생: " + e.getMessage()));
+        }
+    }
+
+    // ErrorResponse 클래스를 사용하여 구조화된 오류 응답 반환
+    private static class ErrorResponse {
+        private final String error;
+
+        public ErrorResponse(String error) {
+            this.error = error;
+        }
+
+        public String getError() {
+            return error;
         }
     }
 }

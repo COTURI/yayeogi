@@ -30,7 +30,7 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping("/reservation-confirmation")
+    @GetMapping("/confirmation")
     public String getReservationConfirmation(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {

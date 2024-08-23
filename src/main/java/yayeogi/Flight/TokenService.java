@@ -39,7 +39,7 @@ public class TokenService {
                 return jsonResponse.path("access_token").asText();
             } catch (Exception e) {
                 e.printStackTrace();
-                return "";
+                throw new RuntimeException("Failed to parse access token response.");
             }
         } else {
             throw new RuntimeException("Failed to obtain access token. Status code: " + response.getStatusCode());
