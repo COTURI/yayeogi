@@ -14,7 +14,6 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
         }
-
         .sidebar {
             background-color: #343a40;
             padding: 20px;
@@ -22,54 +21,44 @@
             min-height: 100vh;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
-
         .sidebar h1, .sidebar li a {
             color: white;
             text-decoration: none;
         }
-
         .sidebar img {
             display: block;
             margin: 0 auto 20px;
         }
-
         .sidebar ul {
             list-style: none;
             padding: 0;
         }
-
         .sidebar li {
             margin: 20px 0;
             color: white;
         }
-
         .sidebar li a {
             display: block;
             padding: 10px 15px;
             border-radius: 5px;
             transition: background-color 0.3s;
         }
-
         .sidebar li a:hover {
             background-color: #495057;
         }
-
         .main-content {
             flex-grow: 1;
             padding: 40px;
         }
-
         .main-content h2 {
             color: #343a40;
             margin-bottom: 20px;
         }
-
         .filter {
             margin-bottom: 20px;
             display: flex;
             align-items: center;
         }
-
         .filter select, .filter button {
             padding: 10px;
             border: 1px solid #ced4da;
@@ -77,7 +66,6 @@
             margin-right: 10px;
             font-size: 16px;
         }
-
         .filter button {
             background-color: #007bff;
             color: white;
@@ -85,21 +73,17 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-
         .filter button:hover {
             background-color: #0056b3;
         }
-
         #salesChart, #regionSalesChart {
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
         }
-
         .view {
             display: none;
         }
-
         .view.active {
             display: block;
         }
@@ -108,7 +92,6 @@
 <body>
 <div class="sidebar">
     <img src="../static/html/layout/logo2.png" height="65" width="200"/>
-
     <ul>
         <li><a href="#" data-view="monthly-sales"><i class="fas fa-chart-line"></i> 월별 매출</a></li>
         <li><a href="#" data-view="region-sales"><i class="fas fa-map-marker-alt"></i> 지역별 매출</a></li>
@@ -158,20 +141,16 @@
 <script src="scripts.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-
-      const currentMonth = new Date().getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
-      document.getElementById('monthSelect').value = currentMonth;
-        // 기본 월별 매출 차트 설정
-        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
         const regionCtx = document.getElementById('regionSalesChart').getContext('2d');
 
-        const salesChart = new Chart(ctx, {
+        const salesChart = new Chart(salesCtx, {
             type: 'bar',
             data: {
                 labels: ['호텔'],
                 datasets: [{
                     label: '평균 매출',
-                    data: [0], // 초기 데이터는 빈 값으로 설정
+                    data: [0], // 초기 데이터
                     backgroundColor: 'rgba(255, 193, 7, 1)'
                 }]
             },
@@ -187,10 +166,10 @@
         const regionSalesChart = new Chart(regionCtx, {
             type: 'bar',
             data: {
-                labels: ['서울', '부산', '대구'], // 예시 지역
+                labels: ['서울', '부산', '대구'], // 지역 이름
                 datasets: [{
                     label: '지역별 매출',
-                    data: [0, 0, 0], // 초기 데이터는 빈 값으로 설정
+                    data: [1200, 800, 600], // 임시 데이터
                     backgroundColor: 'rgba(54, 162, 235, 1)'
                 }]
             },
@@ -203,7 +182,32 @@
             }
         });
 
-        // 메뉴 클릭 시 화면 전환
+        function updateChart() {
+            const month = document.getElementById('monthSelect').value;
+            const year = new Date().getFullYear();
+            const checkinDate = `${year}-${month.padStart(2, '0')}-01`;
+
+            fetch(`/system/average-price?checkinDate=${checkinDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    salesChart.data.datasets[0].data = [data.averagePrice];
+                    salesChart.update();
+                })
+                .catch(error => console.error('월별 매출 데이터 가져오기 오류:', error));
+        }
+
+        function updateRegionSalesChart() {
+            fetch('/system/region-sales?location=1&startDate=2024-01-01&endDate=2024-12-31')
+                .then(response => response.json())
+                .then(data => {
+                    regionSalesChart.data.datasets[0].data = [data.totalSales1, data.totalSales2, data.totalSales3]; // 임시 데이터
+                    regionSalesChart.update();
+                })
+                .catch(error => console.error('지역별 매출 데이터 가져오기 오류:', error));
+        }
+
+        document.querySelector('button').addEventListener('click', updateChart);
+
         const menuItems = document.querySelectorAll('.sidebar a');
         menuItems.forEach(item => {
             item.addEventListener('click', function(e) {
@@ -211,27 +215,20 @@
                 const view = this.getAttribute('data-view');
                 document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
                 document.getElementById(view).classList.add('active');
+                if (view === 'region-sales') {
+                    updateRegionSalesChart();
+                }
             });
         });
 
-        function updateChart() {
-            const month = document.getElementById('monthSelect').value;
-            const year = new Date().getFullYear(); // 현재 연도 가져오기
-            const checkinDate = `${year}-${month.padStart(2, '0')}-01`; // 해당 월의 첫 날
+        // 현재 월 자동 선택
+        const currentMonth = new Date().getMonth() + 1;
+        document.getElementById('monthSelect').value = currentMonth;
 
-            fetch(`/api/hotel-statistics?checkinDate=${checkinDate}`)
-                .then(response => response.json())
-                .then(data => {
-                    salesChart.data.datasets[0].data = [data]; // 가져온 평균 매출 데이터로 업데이트
-                    salesChart.update();
-                })
-                .catch(error => console.error('데이터 가져오기 오류:', error));
-        }
-
-        document.querySelector('button').addEventListener('click', updateChart);
-        updateChart(); // 페이지 로드 시 초기 통계 업데이트
+        // 초기 차트 업데이트
+        updateChart();
+        updateRegionSalesChart(); // 임시 데이터로 초기화
     });
 </script>
-
 </body>
 </html>
