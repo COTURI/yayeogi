@@ -1,7 +1,9 @@
 package yayeogi.Green3.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;  // 추가
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Cookie;  // 수정된 import 문
 import yayeogi.Green3.entity.User;
 import yayeogi.Green3.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,21 +46,31 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(HttpServletRequest request, @ModelAttribute User user, Model model) {
+    public String login(HttpServletRequest request, HttpServletResponse response, @ModelAttribute User user, Model model) {
         try {
             User authenticatedUser = userService.authenticateUser(user.getEmail(), user.getPassword());
             HttpSession session = request.getSession();
             session.setAttribute("user", authenticatedUser);
-            return "index";
+
+            // 쿠키 설정 (선택 사항)
+            Cookie loggedInCookie = new Cookie("loggedin", "true");
+            Cookie usernameCookie = new Cookie("username", authenticatedUser.getEmail());
+            loggedInCookie.setPath("/");
+            usernameCookie.setPath("/");
+            response.addCookie(loggedInCookie);
+            response.addCookie(usernameCookie);
+
+            return "hotelsMain";  // 메인 페이지로 리다이렉트
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "login";
         }
     }
 
+
     @PostMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login";
+        session.invalidate();  // 세션 무효화
+        return "redirect:/login";  // 로그인 페이지로 리다이렉트
     }
 }
