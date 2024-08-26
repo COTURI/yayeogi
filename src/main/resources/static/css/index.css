@@ -18,7 +18,7 @@ h1 {
 
 /* 검색 컨테이너 스타일 */
 .search-container {
-    max-width: 1200px;
+    max-width: 1200px; /* 최대 너비 설정 */
     margin: 20px auto;
     padding: 20px;
     background-color: #ffffff;
@@ -128,10 +128,11 @@ h1 {
     width: 100%;
 }
 
-.suggestion-item {
-    padding: 8px;
-    cursor: pointer;
-}
+ .suggestion-item {
+            cursor: pointer;
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
+        }
 
 .suggestion-item:hover {
     background-color: #f0f0f0;
@@ -139,7 +140,7 @@ h1 {
 
 /* 이미지 스타일 */
 .main-images {
-    max-width: 1200px;
+    max-width: 1200px; /* 최대 너비 설정 */
     margin: 20px auto;
     display: flex;
     justify-content: space-between;
@@ -157,20 +158,20 @@ h1 {
 
 /* FAQ 섹션 스타일 */
 .faq-container {
-    max-width: 1200px;
+    max-width: 1200px; /* 최대 너비 설정 */
     margin: 20px auto;
     padding: 20px;
     background-color: #f8f9fa;
     border: 1px solid #ddd;
     border-radius: 5px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: flex; /* Flexbox 활성화 */
+    flex-wrap: wrap; /* 열이 넘칠 경우 줄바꿈 */
+    gap: 20px; /* 열 간격 설정 */
 }
 
 /* FAQ 열 스타일 */
 .faq-column {
-    width: 48%;
+    flex: 1 1 45%; /* 열 너비를 45%로 설정 */
     box-sizing: border-box;
 }
 
@@ -223,29 +224,34 @@ h1 {
 
 /* 스피너 컨테이너 스타일 */
 .spinner-container {
-    position: fixed;
+    display: none; /* 기본적으로 숨김 */
+    position: fixed; /* 화면 중앙에 위치 */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
+    background: rgba(255, 255, 255, 0.7); /* 반투명 배경 */
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1000; /* 다른 요소 위에 표시 */
 }
 
-/* 스피너 스타일 */
 .spinner {
-    display: none; /* 기본적으로 숨김 */
-}
-
-.spinner-icon {
-    border: 8px solid #f3f3f3;
+    border: 8px solid #f3f3f3; /* 회색 배경 */
+    border-top: 8px solid #3498db; /* 파란색 상단 */
     border-radius: 50%;
-    border-top: 8px solid #3498db;
     width: 50px;
     height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+/* 스피너 아이콘 스타일 */
+.spinner-icon {
+    border: 8px solid #f3f3f3; /* 배경색 */
+    border-radius: 50%;
+    border-top: 8px solid #3498db; /* 스피너 색상 */
+    width: 100%;
+    height: 100%;
     animation: spin 1s linear infinite;
 }
 
@@ -253,3 +259,57 @@ h1 {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+
+/* 결과 컨테이너 스타일 */
+.results-container {
+    display: flex;
+    justify-content: space-between; /* 두 섹션 사이의 여백을 균등하게 배치 */
+    max-width: 1400px; /* 최대 너비 설정 */
+    margin: 20px auto; /* 페이지 중앙에 위치 */
+    padding: 20px; /* 패딩 추가 */
+}
+
+/* 결과 섹션 스타일 */
+.results-section {
+    flex: 1; /* 두 섹션이 같은 너비를 가지도록 설정 */
+    margin: 0 10px; /* 두 섹션 사이에 여백 추가 */
+    padding: 10px; /* 각 섹션의 패딩 설정 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+    background-color: #f9f9f9; /* 배경색 설정 */
+    border-radius: 8px; /* 모서리 둥글게 처리 */
+    position: relative; /* 자식 요소의 위치를 상대적으로 설정 */
+}
+
+.results-section h2 {
+    margin-top: 0; /* 제목의 상단 여백 제거 */
+    font-size: 20px; /* 제목의 폰트 사이즈 조정 */
+}
+/* 결과 리스트 스타일 */
+.results-list {
+    margin-top: 20px; /* 리스트 상단 여백 */
+}
+
+/* 각 항공편 항목 스타일 */
+.flight-item {
+    display: flex;
+    justify-content: space-between; /* 항목 내의 콘텐츠를 양쪽으로 배치 */
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd; /* 구분선 추가 */
+    margin-bottom: 10px; /* 항목 간의 여백 추가 */
+}
+
+.flight-item:last-child {
+    border-bottom: none; /* 마지막 항목의 구분선 제거 */
+}
+
+/* 체크박스 스타일 */
+.flight-item .checkbox {
+    margin-left: auto; /* 체크박스를 오른쪽으로 정렬 */
+}
+
+ #booking-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }

@@ -81,56 +81,69 @@ function displayBookingDetails() {
     `;
 }
 
-document.addEventListener('DOMContentLoaded', async function() {
-    await loadData();
-
-    document.getElementById('bookNowButton').addEventListener('click', async function(e) {
-        e.preventDefault(); // 버튼 클릭 시 페이지 새로 고침 방지
-
-        // 사용자의 로그인 상태를 확인하기 위한 API 호출
-        const checkLoginResponse = await fetch('/api/check-login');
-        const checkLoginResult = await checkLoginResponse.json();
-
-        const userLoggedIn = checkLoginResult.loggedIn; // 로그인 상태 여부
-
-        if (!userLoggedIn) {
-            // 로그인 페이지로 리디렉션
-            window.location.href = '/paymentlogin';
-            return;
-        }
-
-        const formData = {
-            departureDate: document.getElementById('departureDate').value,
-            departureTime: document.getElementById('departureTime').value,
-            arrivalTime: document.getElementById('arrivalTime').value,
-            returnDate: document.getElementById('returnDate').value,
-            returnDepartureTime: document.getElementById('returnDepartureTime').value,
-            returnArrivalTime: document.getElementById('returnArrivalTime').value,
-            email: document.getElementById('email').value
-        };
-
-        try {
-            const reservationResponse = await fetch('/reservations', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-            const reservationResult = await reservationResponse.json();
-
-            console.log('예약 응답:', reservationResult); // 응답 로그
-
-            if (reservationResult.success) {
-                alert('예약이 완료되었습니다.');
-                window.location.href = '/reservation-confirmation'; // 예약 확인 페이지로 이동
-            } else {
-                alert('예약 중 오류가 발생했습니다.');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('예약 중 오류가 발생했습니다.');
-        }
-    });
+async function loadAirlines() {
+    try {
+        const response = await fetch('/json/airlines.json');
+        if (!response.ok) throw new Error('데이터를 불러오는 데 문제가 발생했습니다.');
+        return await response.json();
+    } catch (error) {
+        console.error('데이터 불러오기 오류:', error);
+        return {};
+    }
+}
+document.addEventListener('DOMContentLoaded', async () => {
+    airlines = await loadAirlines();
+    displayBookingDetails();
 });
 
+
+document.addEventListener('DOMContentLoaded', () => {
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const value = urlParams.get(param);
+        return value ? decodeURIComponent(value) : '정보 없음';
+    }
+
+    function displayBookingDetails() {
+        const departureAirport = getQueryParam('departureAirport');
+        const arrivalAirport = getQueryParam('arrivalAirport');
+        const departureTime = getQueryParam('departureTime');
+        const arrivalTime = getQueryParam('arrivalTime') || '정보 없음'; // 기본값 설정
+        const returnDepartureAirport = getQueryParam('returnDepartureAirport');
+        const returnArrivalAirport = getQueryParam('returnArrivalAirport');
+        const returnDepartureTime = getQueryParam('returnDepartureTime');
+        const returnArrivalTime = getQueryParam('returnArrivalTime') || '정보 없음'; // 기본값 설정
+        const price = getQueryParam('price');
+        const returnPrice = getQueryParam('returnPrice');
+        const carrierCode = getQueryParam('carrierCode');
+        const returnCarrierCode = getQueryParam('returnCarrierCode');
+
+        const bookingDetails = `
+            <h2>출발 항공편</h2>
+            <p><strong>출발 공항:</strong> ${departureAirport}</p>
+            <p><strong>도착 공항:</strong> ${arrivalAirport}</p>
+            <p><strong>출발 시간:</strong> ${departureTime}</p>
+            <p><strong>도착 시간:</strong> ${arrivalTime}</p>
+            <p><strong>가격:</strong> ${price} EUR</p>
+            <p><strong>항공사:</strong> ${getAirlineName(carrierCode)}</p>
+
+            <h2>귀국 항공편</h2>
+            <p><strong>출발 공항:</strong> ${returnDepartureAirport}</p>
+            <p><strong>도착 공항:</strong> ${returnArrivalAirport}</p>
+            <p><strong>출발 시간:</strong> ${returnDepartureTime}</p>
+            <p><strong>도착 시간:</strong> ${returnArrivalTime}</p>
+            <p><strong>가격:</strong> ${returnPrice} EUR</p>
+            <p><strong>항공사:</strong> ${getAirlineName(returnCarrierCode)}</p>
+        `;
+
+        document.getElementById('booking-details').innerHTML = bookingDetails;
+    }
+
+    function getAirlineName(code) {
+        const airlines = {}; // 항공사 데이터는 적절히 로드해야 합니다.
+        // airlines 데이터 로드 코드 추가 (예: 서버에서 받아오는 방식)
+        return airlines[code] || '정보 없음';
+    }
+
+    displayBookingDetails();
+});
