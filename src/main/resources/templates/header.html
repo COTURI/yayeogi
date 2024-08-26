@@ -8,93 +8,74 @@
           crossorigin="anonymous">
     <title>YAYEOGI</title>
     <link rel="stylesheet" href="../static/css/header.css">
-    <script>
-        function getCookie(name) {
-            let matches = document.cookie.match(new RegExp(
-                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-            ));
-            return matches ? decodeURIComponent(matches[1]) : undefined;
-        }
-
-        function updateHeader() {
-            const loggedIn = getCookie('loggedin') === 'true';
-            const username = getCookie('username');
-
-            const authSection = document.querySelector('.auth');
-
-            if (loggedIn) {
-                authSection.innerHTML = `
-                    <button type="button" class="btn btn-secondary">
-                        <img src="../static/html/layout/favorite.png" alt="찜"> 찜
-                    </button>
-                    <button type="button" class="btn btn-secondary">
-                        <img src="../static/html/layout/user.png" alt="내정보"> ${username}님
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="logout()">
-                        <img src="../static/html/layout/logout.png" alt="로그아웃"> 로그아웃
-                    </button>
-                `;
-            } else {
-                authSection.innerHTML = `
-                    <button type="button" class="btn btn-secondary" onclick="location.href='/register'">
-                        회원가입
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="location.href='/login'">
-                        로그인
-                    </button>
-                `;
-            }
-        }
-
-        function logout() {
-            // 로그아웃 로직을 서버와 동기화
-            document.cookie = "loggedin=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
-            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
-            location.reload(); // 페이지 새로고침
-        }
-
-        document.addEventListener('DOMContentLoaded', updateHeader);
-    </script>
 </head>
 <body>
 <header th:fragment="header">
-    <div class="header-body">     <!-- header-->
-        <header>
+    <div class="header-body"> <!-- header -->
+        <div class="left-section">
+            <button type="button" class="btn logo-button">
+                <img src="/html/layout/logo2.png" alt="YAYEOGI 로고">
+            </button>
+            &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-            <div class="left-section">
-                <button type="button" class="btn logo-button">
-                    <img src="/html/layout/logo2.png" alt="YAYEOGI 로고" >
-                </button>
-                &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                <p>
-                <div class="menu">
-                    <button type="button" class="btn btn-info">항공권</button>
-                    <button type="button" class="btn btn-info" onclick="window.location.href='http://localhost:8080/hotels/main'">호텔</button>
-                </div>
+            <div class="menu">
+                <button type="button" class="btn btn-info">항공권</button>
+                <button type="button" class="btn btn-info" onclick="window.location.href='http://localhost:8080/hotels/main'">호텔</button>
             </div>
-            </p>
-            <div class="auth">
-                <button type="button" class="btn btn-secondary">
-                    회원가입
-                </button>
-                <button type="button" class="btn btn-secondary">
-                    로그인
-                </button>
-                <!--          <div class="auth">
-                                <button type="button" >
-                                    <img> 찜
-                                </button>
-                                <button type="button" >
-                                    <img> 내정보
-                                </button>
-                                      <button type="button" >
-                                    <img> 로그아웃
-                                </button> -->
+        </div>
 
-            </div>
-        </header>
+        <div class="auth">
+            <button type="button" class="btn btn-secondary" onclick="location.href='/register'">회원가입</button>
+            <button type="button" class="btn btn-secondary" onclick="location.href='/login'">로그인</button>
+        </div>
     </div>
 </header>
+
+<script>
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    function updateHeader() {
+        const loggedIn = getCookie('loggedin') === 'true';
+        const username = getCookie('username');
+
+        const authSection = document.querySelector('.auth');
+
+        if (loggedIn) {
+            authSection.innerHTML = `
+                <button type="button" class="btn btn-secondary">
+                    <img src="../static/html/layout/favorite.png" alt="찜"> 찜
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <img src="../static/html/layout/user.png" alt="내정보"> ${username}님
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="logout()">
+                    <img src="../static/html/layout/logout.png" alt="로그아웃"> 로그아웃
+                </button>
+            `;
+        } else {
+            authSection.innerHTML = `
+                <button type="button" class="btn btn-secondary" onclick="location.href='/register'">
+                    회원가입
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='/login'">
+                    로그인
+                </button>
+            `;
+        }
+    }
+
+    function logout() {
+        document.cookie = "loggedin=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+        document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+        location.reload(); // 페이지 새로고침
+    }
+
+    document.addEventListener('DOMContentLoaded', updateHeader);
+</script>
 </body>
 </html>
