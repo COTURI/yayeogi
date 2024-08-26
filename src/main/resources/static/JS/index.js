@@ -25,13 +25,6 @@ function formatTime(dateInput) {
     return `${hours}:${minutes}`;
 }
 
-// 쿠키에서 값 가져오기
-function getCookie(name) {
-    const matches = document.cookie.match(new RegExp(
-        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-    ));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
-}
 
 // 데이터 로드 함수
 async function loadData() {
