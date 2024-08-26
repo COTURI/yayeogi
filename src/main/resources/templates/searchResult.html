@@ -1,155 +1,128 @@
+
+
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
         <!-- 구글 지도 api에서 호텔 가격 및 상세 정보 확인 필요-->
 <head>
     <meta charset="UTF-8">
     <title>호텔 검색 결과</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="../static/css/hotels.css"/> <!-- css 연결-->
-    <link rel="stylesheet" href="../static/css/header.css"><!-- header css 연결-->
-    <link rel="stylesheet" href="../static/css/searchResult.css"><!-- header css 연결-->
-    <link rel="stylesheet" href="../static/css/map.css"><!-- map css 연결-->
+    <link rel="stylesheet" type="text/css" href="/css/hotels.css"/> <!-- css 연결-->
+    <link rel="stylesheet" href="/css/header.css"><!-- header css 연결-->
+    <link rel="stylesheet" href="/css/searchResult.css"><!-- header css 연결-->
+    <link rel="stylesheet" href="/css/map.css"><!-- map css 연결-->
 
 </head>
 
 
 <body>
-<div class="header-body">     <!-- header-->
-    <header>
+<div th:replace="header :: header"></div>
 
-        <div class="left-section">
-            <button type="button" class="btn logo-button">
-                <img src="../static/html/layout/LOGO.png" alt="YAYEOGI 로고" >
-            </button>
-            &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-            <p>
-            <div class="menu">
-                <button type="button" class="btn btn-info">항공권</button>
-                <button type="button" class="btn btn-info">호텔</button>
-            </div>
-        </div>
-        </p>
-        <div class="auth">
-            <button type="button" class="btn btn-secondary">
-                회원가입
-            </button>
-            <button type="button" class="btn btn-secondary">
-                로그인
-            </button>
-            <!--          <div class="auth">
-                            <button type="button" >
-                                <img> 찜
-                            </button>
-                            <button type="button" >
-                                <img> 내정보
-                            </button>
-                                  <button type="button" >
-                                <img> 로그아웃
-                            </button> -->
-
-        </div>
-    </header>
-</div>
 <main id="hotels_search_page" >
 
 <div class="search_form">
     <div class="search-bar" style="margin-top:20px;"> <!--검색창-->
         <label>
-            <input type="text"  id="city" placeholder="목적지 또는 호텔명을 입력하십시오." size=60 required>
-            <input type="date"  id="checkInDate" value="2024-07-31" size=30 required>
-            <input type="date"  id="checkOutDate" value="2024-08-01" required>
-            <select id="guest-button" style="width:250px;">
-                <option>성인 2명, 객실 1개</option>
-            </select>
-            <button type="submit" id="searchBtn" class="btn btn-primary" onclick="performSearch()">검색 버튼</button>
+
+            <input type="text"  id="address" placeholder="목적지 또는 호텔명을 입력하십시오." size=60 required value="${address}">
+            <input type="date"  id="checkin_date" value="${checkin_date}" size=30 required >
+            <input type="date"  id="checkout_date" value="${checkout_date}" required>
+            <span style="background-color:white;width:150px;height:44px; border-radius:5px; display:inline-block;">
+                            <label for="guests" style="width:50px;color:black;float:left; margin-right:40px; margin-top:10px;">성인 :</label>
+
+                            <select id="guests" >
+                            </select>
+
+                            </span>
+            <button type="button" id="searchBtn" class="btn btn-primary" onclick="performSearch()">검색 버튼</button>
         </label>
     </div>
 </div>
     <div class="main-container" style="display: flex; height:1000px;">
 <div style="width:280px;height:500px; margin-left:30px;margin-top:20px;">       <!-- 조건창 - 별점 -->
-    <h4 style="font-size:18px;font-weight:bold;">별점</h4>
+    <h4 style="font-size:18px;font-weight:bold;">평점</h4>
     <div class="form-check">
         <input class="form-check-input rating" type="checkbox" value="5" id="rating5" onclick="filterHotelsByRating(5)">
         <label class="form-check-label" for="rating5" style="font-size:15px;">
-            5개
-            <img src="../static/html/hotels/img/star/star5.png" alt="star5" style="width:125px;height25px;">
+            5점
+            <img src="/html/hotels/img/star/star5.png" alt="star5" style="width:125px;height25px;">
         </label>
         </div>
         <div class="form-check">
         <input class="form-check-input rating" type="checkbox" value="4" id="rating4"  onclick="filterHotelsByRating(4)">
         <label class="form-check-label" for="rating4" style="font-size:15px;">
-            4개
-            <img src="../static/html/hotels/img/star/star4.png" alt="star4" style="margin-left:6px;width:95px;height25px;">
+            4점
+            <img src="/html/hotels/img/star/star4.png" alt="star4" style="margin-left:6px;width:95px;height25px;">
         </label>
             </div>
             <div class="form-check">
         <input class="form-check-input rating" type="checkbox" value="3" id="rating3"  onclick="filterHotelsByRating(3)">
         <label class="form-check-label" for="rating3" style="font-size:15px;">
-            3개
-            <img src="../static/html/hotels/img/star/star3.png" alt="star3" style="margin-left:7px;width:70px;height25px;">
+            3점
+            <img src="/html/hotels/img/star/star3.png" alt="star3" style="margin-left:7px;width:70px;height25px;">
         </label>
             </div>
     <div class="form-check">
         <input class="form-check-input rating" type="checkbox" value="2" id="rating2"  onclick="filterHotelsByRating(2)">
         <label class="form-check-label" for="rating2" style="font-size:15px;">
-            2개
-            <img src="../static/html/hotels/img/star/star2.png" alt="star2" style="margin-left:5px;width:50px;height25px;">
+            2점
+            <img src="/html/hotels/img/star/star2.png" alt="star2" style="margin-left:5px;width:50px;height25px;">
         </label>
     </div>
     <div class="form-check">
         <input class="form-check-input rating" type="checkbox" value="1" id="rating1"  onclick="filterHotelsByRating(1)">
         <label class="form-check-label" for="rating1" style="font-size:15px;">
-            1개
-            <img src="../static/html/hotels/img/star/star1.png" alt="star1" style="margin-left:7px;width:25px;height25px;">
+            1점
+            <img src="/html/hotels/img/star/star1.png" alt="star1" style="margin-left:7px;width:25px;height25px;">
         </label>
     </div>
     <div class="form-check">
         <input class="form-check-input rating" type="checkbox" value="0" id="rating0"  onclick="filterHotelsByRating(0)">
         <label class="form-check-label" for="rating0" style="font-size:15px;">
-            0개
+            0점
         </label>
     </div>
 
         <h4 style="font-size:18px;font-weight:bold;margin-top:20px;">가격</h4> <!--  가격 조건창 -->
-        <div class="form-check">
-            <input class="form-check-input price" type="checkbox" value="" id="price1">
+        <div class="form-check" id="">
+            <input class="form-check-input price" type="checkbox"   id="price1">
             <label class="form-check-label" for="price1" style="font-size:15px;">
                ￦0 - ￦50,000
 
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input price" type="checkbox" value="" id="price2">
+            <input class="form-check-input price" type="checkbox"   id="price2">
             <label class="form-check-label" for="price2" style="font-size:15px;">
                 ￦51,000 - ￦100,000
 
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input price" type="checkbox" value="" id="price3">
+            <input class="form-check-input price" type="checkbox"  id="price3">
             <label class="form-check-label" for="price3" style="font-size:15px;">
                 ￦101,000 - ￦150,000
 
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input price" type="checkbox" value="" id="price4">
+            <input class="form-check-input price" type="checkbox"   id="price4">
             <label class="form-check-label" for="price4" style="font-size:15px;">
                 ￦151,000 - ￦200,000
 
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input price" type="checkbox" value="" id="price5">
+            <input class="form-check-input price" type="checkbox"  id="price5">
             <label class="form-check-label" for="price5" style="font-size:15px;">
                 ￦201,000 - ￦250,000
 
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input price" type="checkbox" value="" id="price6">
+            <input class="form-check-input price" type="checkbox"  id="price6">
             <label class="form-check-label" for="price6" style="font-size:15px;" >
                 ￦251,000 +
             </label>
@@ -158,7 +131,7 @@
     <div class="card-container" style="overflow-y:auto; height:1000px; width:950px;" >                <!-- 목록 -->
         <div class="card mb-3" style="max-width: 900px; height: 300px;border:none;">
             <div class="row g-0" style="height: 100%;"> <!-- 행 높이도 100%로 설정 -->
-                <div id="hotel-list"></div>
+                <div id="hotel-list" style="margin-top:10px;"></div>
             </div>
         </div>
 
@@ -174,55 +147,213 @@
 
 </main>
 
-<div class="footer-body"  style="height : auto;  min-height: 10%;">       <!-- footer-->
-    <div class="container" id="footer">
-        <hr>
-        <div class="footer-box">
-            <div class="gray_subtext">
-                    <span>
-                        (주)YAYEOGI | 대표이사: 홍길동 | 사업자 등록번호: 000-00-000000 | 통신판매업신고: 야여기-0000호 | 메일: help@yayeogi.com
-                        <br>관광사업자 등록번호: 제2022-05호 | 주소: 서울 강남구 테헤란로 000길 00 | 호스팅서비스 제공자: 주식회사 YAYEOGI
-                        <br>고객센터: 1644-1346 (오전 9시 - 익일 새벽 3시)
-                        <br>(주)GOING은 통신판매 중개자로서 통신판매의 당사자가 아니며 상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.
-                        <br>(주)GOING이 소유/운영/관리하는 웹사이트 및 앱 내의 상품/판매자/이벤트 정보, 디자인 및 화면의 구성, UI를 포함하여 일체의 콘텐츠에 대한 무단 복제, 배포, 방송 또는 전송, 스크래핑 등의 행위는 저작권법 및 콘텐츠산업 진흥법 등 관련 법령에 의하여 엄격히 금지됩니다.
-                    </span>
-            </div>
-        </div>
-        <hr>
-    </div>
-</div>
+<div th:replace="footer :: footer"></div>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJmWcT4VLac8E7KNO0HS0uP43Bn-IewbU&callback=initMap&libraries=places&v=weekly"
         defer>
 
 </script>
-
 <script>
-    function initMap() {
-         const map = new google.maps.Map(document.getElementById("map"), {
-             center: { lat: 37.5665, lng: 126.9780 }, // Seoul 중심좌표
-             zoom: 12,
-         });
+    let map;
+    let geocoder;
 
-         fetch('/api/locations')
-             .then(response => response.json())
-             .then(data => {
-                 data.forEach(location => {
-                     const geocoder = new google.maps.Geocoder();
-                     geocoder.geocode({ 'address': location.address }, function(results, status) {
-                         if (status === 'OK') {
-                             new google.maps.Marker({
-                                 map: map,
-                                 position: results[0].geometry.location,
-                                 title: location.name
-                             });
-                         } else {
-                             console.error('Geocode was not successful for the following reason: ' + status);
-                         }
-                     });
-                 });
-             });
-     }
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 37.5665, lng: 126.9780 },
+            zoom: 12,
+        });
+        geocoder = new google.maps.Geocoder();
+    }
+
+    function placeMarkersOnMap(hotels) {
+        const infoWindow = new google.maps.InfoWindow();
+
+        hotels.forEach(hotel => {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': hotel.address }, function(results, status) {
+                if (status === 'OK') {
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location,
+                        title: hotel.name
+                    });
+
+                    marker.addListener('click', () => {
+                        infoWindow.setContent(`
+                            <div style="max-width: 300px;">
+                                <img src="data:image/png;base64,${hotel.hotelMainImgBase64}" style="width: 100%; height: auto; margin-bottom:20px;" alt="${hotel.name}">
+                                <h5 style="margin-top:10px; font-weight:bold;">${hotel.hotelName}</h5>
+                                <p>${hotel.address}</p>
+                                <a href="/hotels/detail/${hotel.hotelId}" style="float:right;"> 상세 정보</a>
+                            </div>
+                        `);
+                        infoWindow.open(map, marker);
+                    });
+                } else {
+                    console.error('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        });
+    }
+function setupPriceCheckboxes() {
+    document.querySelectorAll('.price').forEach(checkbox => {
+        // Set data-price attribute for each price checkbox
+        const priceRanges = {
+            'price1': 50000,
+            'price2': 100000,
+            'price3': 150000,
+            'price4': 200000,
+            'price5': 250000,
+            'price6': Infinity
+        };
+        checkbox.dataset.price = priceRanges[checkbox.id] || 0;
+    });
+}
+
+
+function performSearch() {
+    const address = document.getElementById('address').value;
+    const checkinDate = document.getElementById('checkin_date').value;
+    const checkoutDate = document.getElementById('checkout_date').value;
+    const guests = document.getElementById('guests').value;
+
+    if (!address || !checkinDate || !checkoutDate) {
+        alert('주소, 체크인 날짜 및 체크아웃 날짜를 모두 입력해 주세요.');
+        return;
+    }
+
+    // URL 업데이트
+    const searchUrl = `/hotels/searchResult?address=${encodeURIComponent(address)}&checkin_date=${encodeURIComponent(checkinDate)}&checkout_date=${encodeURIComponent(checkoutDate)}&guests=${encodeURIComponent(guests)}`;
+    history.pushState(null, '', searchUrl);
+
+    fetch(`/hotels?address=${encodeURIComponent(address)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const selectedPriceRanges = Array.from(document.querySelectorAll('.price:checked'))
+                .map(checkbox => checkbox.getAttribute('data-price'))
+                .map(range => range.split('-').map(Number));
+
+            const isPriceInRange = (price) => {
+                if (selectedPriceRanges.length === 0) return true;
+                return selectedPriceRanges.some(([min, max]) => price >= min && price <= max);
+            };
+
+            const filteredData = data.filter(hotel => hotel.address.includes(address) && isPriceInRange(hotel.price));
+
+            const hotelList = document.getElementById('hotel-list');
+            hotelList.innerHTML = '';
+
+            if (filteredData.length > 0) {
+                filteredData.forEach(hotel => {
+                    const card = document.createElement('div');
+                    card.className = 'card mb-3';
+                    card.style.maxWidth = '900px';
+                    card.style.border = 'none';
+                    card.innerHTML = `
+                       <a href="/hotels/detail?id=${hotel.hotelId}&checkin_date=${checkinDate}&checkout_date=${checkoutDate}" target="_blank">
+                            <div class="row g-0" style="height: 100%; border: 1px solid gray; border-radius: 8px;">
+                                <div class="col-md-4">
+                                    <img src="data:image/png;base64,${hotel.hotelMainImgBase64}" class="img-fluid rounded-start" alt="${hotel.hotelName}" style="width:280px;height: 290px; object-fit: cover;">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title" style="font-weight:bold; font-size:30px;">${hotel.hotelName}</h5>
+                                        <p class="card-text" style="font-size:15px;">${hotel.address}</p>
+                                        <p class="text-body-secondary" style="float:right; margin-top:100px; font-size:28px; font-weight:bold;">￦${hotel.price}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                    hotelList.appendChild(card);
+                });
+
+                placeMarkersOnMap(filteredData);
+
+                if (filteredData.length > 0) {
+                    geocodeAddress(filteredData[0].address);
+                }
+            } else {
+                hotelList.innerHTML = '<p style="font-size:18px; color:gray;">검색 결과가 없습니다. 다른 검색어를 시도해 보세요.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching hotels:', error);
+            alert('호텔 정보를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.');
+        });
+}
+
+function setupPriceCheckboxes() {
+    document.querySelectorAll('.price').forEach(checkbox => {
+        checkbox.dataset.price = checkbox.value;
+    });
+}
+
+
+
+    function geocodeAddress(address) {
+        geocoder.geocode({ address: address }, (results, status) => {
+            if (status === 'OK') {
+                const location = results[0].geometry.location;
+                map.setCenter(location);
+                map.setZoom(15);
+                new google.maps.Marker({
+                    map: map,
+                    position: location
+                });
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupPriceCheckboxes();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const address = urlParams.get('address') || '';
+    const checkinDate = urlParams.get('checkin_date') || '';
+    const checkoutDate = urlParams.get('checkout_date') || '';
+    const guests = parseInt(urlParams.get('guests'), 10) || 1;
+
+    document.getElementById('address').value = address;
+    document.getElementById('checkin_date').value = checkinDate;
+    document.getElementById('checkout_date').value = checkoutDate;
+
+    const guestsSelect = document.getElementById('guests');
+    initializeSelect(guestsSelect, 1, 20, guests);
+
+    if (address) {
+        performSearch();
+    }
+});
+
+    function initializeSelect(selectElement, minValue, maxValue, defaultValue) {
+        for (let i = minValue; i <= maxValue; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            selectElement.appendChild(option);
+        }
+        selectElement.value = defaultValue; // Set default value
+    }
+
+    function adjustValue(selectElement, increment) {
+        const currentIndex = selectElement.selectedIndex;
+        if (increment && currentIndex < selectElement.options.length - 1) {
+            selectElement.selectedIndex = currentIndex + 1;
+        } else if (!increment && currentIndex > 0) {
+            selectElement.selectedIndex = currentIndex - 1;
+        }
+    }
+ document.getElementById('checkin_date').setAttribute('min', new Date().toISOString().split('T')[0]);
+    document.getElementById('checkout_date').setAttribute('min', new Date().toISOString().split('T')[0]);
 </script>
+
 
 
 

@@ -50,6 +50,12 @@ dependencies {
 
 
 
+	compileOnly 'org.projectlombok:lombok:1.18.26'
+	annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+
+
+
 	implementation 'org.json:json:20240205'
 	implementation 'com.amadeus:amadeus-java:9.0.0'
 	implementation 'com.google.code.gson:gson:2.11.0'

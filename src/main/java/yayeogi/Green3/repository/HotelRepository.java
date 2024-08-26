@@ -18,7 +18,12 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
     List<Hotel> findByHotelId(Integer hotelId);
 
     @Query("SELECT h FROM Hotel h WHERE LOWER(h.address) LIKE LOWER(CONCAT('%', :address, '%'))")
+    List<Hotel> findByAddressContainingIgnoreCase(@Param("address") String address);
+
+
+    @Query("SELECT h FROM Hotel h WHERE LOWER(h.address) LIKE LOWER(CONCAT('%', :address, '%'))")
             List<Hotel> findByAddressContainingIgnoreCase(@Param("address") String address);
+
 
   /*  @Query("SELECT h FROM Hotel h WHERE " +
             "(:address IS NULL OR h.address LIKE %:address%) AND " +

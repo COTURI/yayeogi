@@ -25,7 +25,7 @@
 
     background-size: cover;
     background-position: center;
-    weight:1920px;
+    width:1920px;
     height: 550px;
     display: flex;
     align-items: center;
@@ -33,7 +33,7 @@
     position: relative;
 }
 .overlay {                      /* 검색창 큰틀 */
-    weight:1200px;
+    width:1200px;
     background-color:  #05203C;
     color: white;
     padding: 20px;
@@ -66,16 +66,46 @@ h1 {
     border-radius: 5px;
     flex: 1;
 }
+.search-date {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    display: flex; /* Flexbox 사용 */
+    gap: 10px; /* 입력 필드 간의 간격 */
+    align-items: center; /* 수직 정렬 */
+    margin-right:30px;
+    background-color:#EFF3F8;
+}
+.search-date:hover {
+    background-color: #e6e6e6; /* 호버 시 배경색 변경 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 효과 확대 */
+}
 
+.date-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 150px; /* 입력 필드 너비 조정 */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* 내부 그림자 */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* 테두리 색상과 그림자 변화에 부드러운 전환 효과 */
+    font-size:18px;
 
-.search-bar-check button {  /* 검색버튼*/
+}
+
+.date-input:focus {
+    border-color: #66afe9; /* 포커스 시 테두리 색상 */
+    box-shadow: 0 0 8px rgba(102, 175, 233, 0.6); /* 포커스 시 그림자 효과 */
+    outline: none; /* 기본 포커스 아웃라인 제거 */
+}
+
+.search-bar-check submit {  /* 검색버튼*/
     padding: 10px 20px;
     background-color: #0066cc;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-
+ display: flex;
 }
 
 .filters {              /* 인기필터 */
@@ -340,3 +370,39 @@ h1 {
 .panel-content{
 font-size:15px;
 }
+   .search-bar .custom-select {
+                           padding: 10px;
+                           border: 1px solid #ccc;
+                           cursor: pointer;
+                           user-select: none;
+                           background-color: white;
+                           position: relative;
+                           width: 200px;
+                           z-index: 1; /* 추가: 드롭다운 메뉴보다 앞쪽에 위치하도록 z-index 추가 */
+                       }
+        .dropdown-content {
+            display: none; /* 기본적으로 숨김 */
+            position: absolute;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            z-index: 1;
+        }
+
+        .dropdown-content div {
+            margin-bottom: 10px;
+        }
+
+        .dropdown-content button {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 5px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .dropdown-content .apply-button {
+            text-align: center;
+        }

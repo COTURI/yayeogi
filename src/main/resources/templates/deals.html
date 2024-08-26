@@ -13,30 +13,13 @@
 
 </head>
 <body>
-<div class="header-body"> <!-- header-->
-    <header>
-        <div class="left-section">
-            <button type="button" class="btn logo-button">
-                <img src="/html/layout/LOGO.png" alt="YAYEOGI 로고">
-            </button>
-            &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <div class="menu">
-                <button type="button" class="btn btn-info">항공권</button>
-                <button type="button" class="btn btn-info">호텔</button>
-            </div>
-        </div>
-        <div class="auth">
-            <button type="button" class="btn btn-secondary">회원가입</button>
-            <button type="button" class="btn btn-secondary">로그인</button>
-        </div>
-    </header>
-</div>
+<div th:replace="header :: header"></div>
 
 <main id="hotels_search_page">
     <section class="hotels_search_form">
         <div class="background_image">
             <img src="/html/hotels/img/vacation.png" width="2160px;" height="1700px;"  style="margin-top:300px;" alt="background">
-            <div class="deals_title">
+            <div class="deals_title" style="margin-left:-120px;">
                 <strong>인기 호텔 특가 상품</strong>
             </div>
             <div class="deals_content">
@@ -44,10 +27,10 @@
             </div>
 
             <!-- 첫 번째 줄 -->
-            <div class="title-card2">
+            <div class="title-card2" style="margin-left:-120px;">
                 <!-- 반복되는 카드 (첫 번째 줄) -->
                 <div class="card product_img_size1" th:each="hotel, iterStat : ${hotels}" th:if="${iterStat.index < 3}">
-                    <a th:href="@{/hotels/{id}(id=${hotel.hotelId})}" style="background:#ffffff;border-radius:15px;">
+                    <a th:href="@{/hotels/detail/{id}(id=${hotel.hotelId})}" style="background:#ffffff;border-radius:15px;">
                         <img th:src="'data:image/png;base64,' + ${hotel.hotelMainImgBase64}" class="card-img-top product_img_size1" alt="${hotel.hotelName}">
                         <div class="card-body" style="border-bottom: solid 1px #afb0b3; height:120px;">
                             <h5 class="product_title">
@@ -67,10 +50,10 @@
 
 
             <!-- 두 번째 줄 (여백 조정) -->
-            <div class="title-card2" style="margin-top: 1000px;">
+            <div class="title-card2" style="margin-top: 1000px;margin-left:-120px;" >
                 <!-- 반복되는 카드 (두 번째 줄) -->
                 <div class="card product_img_size1" th:each="hotel, iterStat : ${hotels}" th:if="${iterStat.index >= 3 and iterStat.index < 6}">
-                    <a th:href="@{/hotels/{id}(id=${hotel.hotelId})}" style="background:#ffffff;border-radius:15px;">
+                    <a th:href="@{/hotels/detail/{id}(id=${hotel.hotelId})}" style="background:#ffffff;border-radius:15px;">
                         <img th:src="'data:image/png;base64,' + ${hotel.hotelMainImgBase64}" class="card-img-top product_img_size1" alt="${hotel.hotelName}">
                         <div class="card-body" style="border-bottom: solid 1px #afb0b3; height:120px;">
                             <h5 class="product_title">
@@ -88,26 +71,6 @@
     </section>
 </main>
 
-<div class="footer-body"> <!-- footer-->
-    <div class="content">
-        <!-- Your main content goes here -->
-    </div>
-
-    <div class="container" id="footer">
-        <hr>
-        <div class="footer-box">
-            <div class="gray_subtext">
-                    <span>
-                        (주)YAYEOGI | 대표이사: 홍길동 | 사업자 등록번호: 000-00-000000 | 통신판매업신고: 야여기-0000호 | 메일: help@yayeogi.com
-                        <br>관광사업자 등록번호: 제2022-05호 | 주소: 서울 강남구 테헤란로 000길 00 | 호스팅서비스 제공자: 주식회사 YAYEOGI
-                        <br>고객센터: 1644-1346 (오전 9시 - 익일 새벽 3시)
-                        <br>(주)GOING은 통신판매 중개자로서 통신판매의 당사자가 아니며 상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.
-                        <br>(주)GOING이 소유/운영/관리하는 웹사이트 및 앱 내의 상품/판매자/이벤트 정보, 디자인 및 화면의 구성, UI를 포함하여 일체의 콘텐츠에 대한 무단 복제, 배포, 방송 또는 전송, 스크래핑 등의 행위는 저작권법 및 콘텐츠산업 진흥법 등 관련 법령에 의하여 엄격히 금지됩니다.
-                    </span>
-            </div>
-        </div>
-        <hr>
-    </div>
-</div>
+<div th:replace="footer :: footer"></div>
 </body>
 </html>

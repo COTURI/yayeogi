@@ -24,7 +24,7 @@ public class HotelReview {
     @Column(name = "rating", nullable = false)
     private Integer rating;
 
-    @Column(name = "reviews", length = 150, nullable = false)
+    @Column(name = "reviews", length = 550, nullable = false)
     private String reviewText;
 
     @Column(name = "use_check", columnDefinition = "TINYINT DEFAULT 0")

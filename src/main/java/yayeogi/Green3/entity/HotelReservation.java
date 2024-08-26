@@ -31,8 +31,6 @@ public class HotelReservation {
     @Column(name = "guest_adult", columnDefinition = "INT(2) DEFAULT 2")
     private Integer guestAdult;
 
-    @Column(name = "guest_kid", columnDefinition = "INT(2) DEFAULT 0")
-    private Integer guestKid;
 
     @Column(name = "rooms", columnDefinition = "INT(2) DEFAULT 1")
     private Integer rooms;

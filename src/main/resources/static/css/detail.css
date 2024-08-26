@@ -1,5 +1,5 @@
   .hotel-image {
-    width: 1920px;
+    width: 1500px;
     height: 500px;
     position: relative; /* 자식 요소의 절대 위치 설정을 위한 설정 */
   }
@@ -10,45 +10,45 @@
   }
 
   .hotel-imgMain1 {
-    width: 940px;
+    width: 880px;
     height: 500px;
     top: 0; /* 기준 위치 */
     left: 0; /* 기준 위치 */
   }
 
   .hotel-image1 {
-    width: 600px;
+    width: 540px;
     height: 298px;
     top: 0px; /* 조정된 위치 */
-    left:945px ; /* 기준 위치 */
+    left:885px ; /* 기준 위치 */
   }
 
   .hotel-image2 {
-    width: 297px;
+    width: 268px;
     height: 198px;
     top: 303px;
-    left: 945px; /* 조정된 위치 */
+    left: 885px; /* 조정된 위치 */
   }
 
   .hotel-image3 {
-    width: 564px;
+    width: 470px;
     height: 205px;
     top: 0; /* 기준 위치 */
-    left:1550px; /* 기준 위치 */
+    left:1430px; /* 기준 위치 */
   }
 
   .hotel-image4 {
-    width: 564px;
+    width: 470px;
     height: 290px;
     top: 210px; /* 기준 위치 */
-    left: 1550px; /* 기준 위치 */
+    left: 1430px; /* 기준 위치 */
   }
 
   .hotel-image5 {
-    width: 298px;
+    width: 269px;
     height: 198px;
     top: 303px;
-    left:1247px; /* 조정된 위치 */
+    left:1157px; /* 조정된 위치 */
   }
 
 
@@ -65,9 +65,17 @@
     font-size:32px;
     font-color:#161616;
     float:right;
-
-
+   display: flex;
+    align-items: center;
 }
+.pay-btn{
+margin-left:10px;
+background-color:#05203C;
+border-radius:10px;
+color:white;
+font-size:24px;
+}
+
 
 .hotel-address {
     width: 620px;
@@ -124,6 +132,7 @@
     margin: 10px 0; /* 각 리뷰 아이템의 상하 여백 추가 */
     display: flex; /* 플렉스박스 사용 */
     justify-content: center; /* 중앙 정렬 */
+
 }
 
 .review {
@@ -133,6 +142,7 @@
     border-radius: 8px; /* 테두리 모서리 둥글게 */
     padding: 15px; /* 내부 여백 추가 */
     max-width: 1200px; /* 최대 너비 설정 */
+    min-width:1200px;
     height: 100px;
     background-color: #f9f9f9; /* 배경색 설정 */
     gap: 10px; /* 요소 사이 간격 설정 */
@@ -142,6 +152,8 @@
     flex: 0.5; /* 이름 요소의 비율을 1로 설정 */
     font-weight: bold; /* 굵은 글씨 */
     text-align: left; /* 왼쪽 정렬 */
+    width:240px;
+    min-width:240px;
 }
 
 .review-rating {
@@ -151,6 +163,8 @@
     display: flex; /* 플렉스박스 사용 */
     align-items: center; /* 수직 중앙 정렬 */
     margin-right:40px;
+    width:140px;
+    min-width:140px;
 }
 
 .review-rating img {
