@@ -1,15 +1,10 @@
 let airports = {};
 let airlines = {};
 
-
-// 유로를 원화로 변환하는 함수
 function convertEuroToWon(euroAmount) {
     const exchangeRate = 1500; // 원화 환율 (예시)
     let wonAmount = euroAmount * exchangeRate;
-
-    // 백의 자리에서 버림을 위해 100으로 나눈 후, Math.floor를 사용하여 소수점 제거
     wonAmount = Math.floor(wonAmount / 1000) * 1000;
-
     return wonAmount; // 소수점 없이 원화로 변환
 }
 
@@ -33,10 +28,9 @@ async function loadData() {
 
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
-    const value = decodeURIComponent(urlParams.get(param));
-    return value || '정보 없음';
+    const value = urlParams.get(param);
+    return value ? decodeURIComponent(value) : '정보 없음';
 }
-
 function getAirlineName(code) {
     return airlines[code] || '정보 없음';
 }
@@ -78,11 +72,23 @@ function displayBookingDetails() {
 
     document.getElementById('booking-details').innerHTML = bookingDetails;
 }
-
 function proceedToPayment() {
-    const params = new URLSearchParams(window.location.search);
-    const queryString = params.toString();
-    window.location.href = `reservation?${queryString}`;
+    const params = new URLSearchParams({
+        departureAirport: getQueryParam('departureAirport'),
+        arrivalAirport: getQueryParam('arrivalAirport'),
+        departureTime: getQueryParam('departureTime'),
+        arrivalTime: getQueryParam('arrivalTime'),
+        price: getQueryParam('price'),
+        carrierCode: getQueryParam('carrierCode'),
+        returnDepartureAirport: getQueryParam('returnDepartureAirport'),
+        returnArrivalAirport: getQueryParam('returnArrivalAirport'),
+        returnDepartureTime: getQueryParam('returnDepartureTime'),
+        returnArrivalTime: getQueryParam('returnArrivalTime'),
+        returnPrice: getQueryParam('returnPrice'),
+        returnCarrierCode: getQueryParam('returnCarrierCode')
+    });
+
+    window.location.href = `reservation?${params.toString()}`;
 }
 
 document.addEventListener('DOMContentLoaded', async () => {

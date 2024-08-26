@@ -15,25 +15,13 @@
 
 <main>
     <!-- 예약 요약 -->
-    <div class="reservation-summary" id="booking-details">
-        <label for="departureDate">출국일:</label>
-        <input type="date" id="departureDate" name="departureDate" required>
 
-        <label for="departureTime">출발 시간:</label>
-        <input type="time" id="departureTime" name="departureTime" required>
-
-        <label for="arrivalTime">도착 시간:</label>
-        <input type="time" id="arrivalTime" name="arrivalTime" required>
-
-        <label for="returnDate">귀국일 (선택):</label>
-        <input type="date" id="returnDate" name="returnDate">
-
-        <label for="returnDepartureTime">귀국일 출발 시간 (선택):</label>
-        <input type="time" id="returnDepartureTime" name="returnDepartureTime">
-
-        <label for="returnArrivalTime">귀국일 도착 시간 (선택):</label>
-        <input type="time" id="returnArrivalTime" name="returnArrivalTime">
-    </div>
+        <div class="reservation-container">
+            <!-- 예약 상세 정보 -->
+            <div id="booking-details" class="booking-details">
+                <!-- JavaScript에서 예약 정보를 동적으로 삽입합니다. -->
+            </div>
+        </div>
 
     <!-- 예약자 정보 -->
     <div class="passenger-info">
@@ -112,7 +100,7 @@
     </div>
 
     <!-- 예약하기 버튼 -->
-    <a href="#" class="book-now-button" id="bookNowButton">예약하기</a>
+    <a href="/payment" class="book-now-button" id="bookNowButton">예약하기</a>
 </main>
 
 </body>

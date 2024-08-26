@@ -8,55 +8,6 @@
     <link rel="stylesheet" href="/css/header.css">
     <script src="/js/index.js" defer></script>
 
-
-    <script>
-        function getCookie(name) {
-            let matches = document.cookie.match(new RegExp(
-                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-            ));
-            return matches ? decodeURIComponent(matches[1]) : undefined;
-        }
-
-        function updateHeader() {
-            const loggedIn = getCookie('loggedin') === 'true';
-            const username = getCookie('username');
-
-            const authSection = document.querySelector('.auth');
-
-            if (loggedIn) {
-                authSection.innerHTML =
-                    <button type="button" class="btn btn-secondary">
-                        <img src="../static/html/layout/favorite.png" alt="찜"> 찜
-                    </button>
-                    <button type="button" class="btn btn-secondary">
-                        <img src="../static/html/layout/user.png" alt="내정보"> ${username}님
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="logout()">
-                        <img src="../static/html/layout/logout.png" alt="로그아웃"> 로그아웃
-                    </button>
-                ;
-            } else {
-                authSection.innerHTML =
-                    <button type="button" class="btn btn-secondary" onclick="location.href='register'">
-                        회원가입
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="location.href='login'">
-                        로그인
-                    </button>
-                ;
-            }
-        }
-
-        function logout() {
-            // 로그아웃 로직을 서버와 동기화
-            document.cookie = "loggedin=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
-            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
-            location.reload(); // 페이지 새로고침
-        }
-
-        document.addEventListener('DOMContentLoaded', updateHeader);
-    </script>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.faq-question').forEach(button => {
@@ -67,27 +18,12 @@
 </head>
 <body>
 
-<div class="header-body">
-    <header>
-        <div class="left-section">
-            <button type="button" class="btn logo-button">
-                <img src="/images/LOGO.png" alt="야여기 로고">
-            </button>
-            <div class="menu">
-                <button type="button" class="btn btn-info">항공권</button>
-                <button type="button" class="btn btn-info">호텔</button>
-            </div>
-        </div>
-        <div class="auth">
-            <!-- 인증 관련 버튼 -->
-        </div>
-    </header>
-</div>
+<div th:replace="header :: header"></div>
 
 <h1>항공편 검색</h1>
 
-<div id="spinner" class="spinner" style="display: none;">
-    <div class="spinner-icon"></div>
+<div id="spinner-container" class="spinner-container">
+    <div class="spinner"></div>
 </div>
 
 <div class="search-container">
@@ -118,26 +54,29 @@
     </form>
 </div>
 
-<div class="results-container" id="results-container" style="display: none;">
-    <div class="results-section-container">
-        <div class="results-section" id="outbound-flights">
-            <h2>출발 항공편</h2>
-            <div id="pagination-outbound" class="pagination"></div>
+<div id="results-container" class="results-container" style="display: none;">
+    <div id="outbound-flights" class="results-section">
+        <h2>출국 항공편</h2>
+        <!-- 출국 항공편 결과가 여기에 표시됩니다 -->
+        <div id="outbound-flights-list" class="results-list">
+            <!-- 출국 항공편 데이터 항목 -->
         </div>
-        <div class="results-section" id="inbound-flights">
-            <h2>귀국 항공편</h2>
-            <div id="pagination-inbound" class="pagination"></div>
+        <div id="pagination-outbound"></div>
+    </div>
+    <div id="inbound-flights" class="results-section">
+        <h2>귀국 항공편</h2>
+        <!-- 귀국 항공편 결과가 여기에 표시됩니다 -->
+        <div id="inbound-flights-list" class="results-list">
+            <!-- 귀국 항공편 데이터 항목 -->
         </div>
+        <div id="pagination-inbound"></div>
     </div>
 </div>
-
-<button id="book-button" class="book-button" style="display: none;">예약하기</button>
+<button id="book-button" disabled>예약하기</button>
 
 <div class="button-container">
     <a href="/confirmation" class="reservation-button">예약 확인</a>
 </div>
-
-
 
 <div class="main-images">
     <img src="/images/main1.jpg" alt="여행 이미지 1" class="main-image">
