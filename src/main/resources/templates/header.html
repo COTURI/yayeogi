@@ -58,25 +58,43 @@
 </head>
 <body>
 <header th:fragment="header">
-<div class="header-body">
-    <header>
-        <div class="left-section">
-            <button type="button" class="btn logo-button">
-                <img src="../static/html/layout/logo2.png" height="65"
-                                                               width="358"/>
+    <div class="header-body">     <!-- header-->
+        <header>
 
-            </button>
-            &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <div class="menu">
-                <button type="button" class="btn btn-info">항공권</button>
-                <button type="button" class="btn btn-info">호텔</button>
+            <div class="left-section">
+                <button type="button" class="btn logo-button">
+                    <img src="/html/layout/logo2.png" alt="YAYEOGI 로고" >
+                </button>
+                &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                <p>
+                <div class="menu">
+                    <button type="button" class="btn btn-info">항공권</button>
+                    <button type="button" class="btn btn-info" onclick="window.location.href='http://localhost:8080/hotels/main'">호텔</button>
+                </div>
             </div>
-        </div>
-        <div class="auth">
-            <!-- 로그인 상태에 따라 이 부분이 동적으로 변경됩니다. -->
-        </div>
-    </header>
-</div>
+            </p>
+            <div class="auth">
+                <button type="button" class="btn btn-secondary">
+                    회원가입
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    로그인
+                </button>
+                <!--          <div class="auth">
+                                <button type="button" >
+                                    <img> 찜
+                                </button>
+                                <button type="button" >
+                                    <img> 내정보
+                                </button>
+                                      <button type="button" >
+                                    <img> 로그아웃
+                                </button> -->
+
+            </div>
+        </header>
+    </div>
 </header>
 </body>
 </html>

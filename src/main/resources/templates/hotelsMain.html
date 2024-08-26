@@ -32,43 +32,7 @@
 </style>
 
 <body>
-<div class="header-body">     <!-- header-->
-    <header>
-
-        <div class="left-section">
-            <button type="button" class="btn logo-button">
-                <img src="/html/layout/logo2.png" alt="YAYEOGI 로고" >
-            </button>
-            &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-            <p>
-            <div class="menu">
-                <button type="button" class="btn btn-info">항공권</button>
-            <button type="button" class="btn btn-info" onclick="window.location.href='http://localhost:8080/hotels/main'">호텔</button>
-            </div>
-        </div>
-        </p>
-        <div class="auth">
-            <button type="button" class="btn btn-secondary">
-                회원가입
-            </button>
-            <button type="button" class="btn btn-secondary">
-                로그인
-            </button>
-            <!--          <div class="auth">
-                            <button type="button" >
-                                <img> 찜
-                            </button>
-                            <button type="button" >
-                                <img> 내정보
-                            </button>
-                                  <button type="button" >
-                                <img> 로그아웃
-                            </button> -->
-
-        </div>
-    </header>
-</div>
+<div th:replace="header :: header"></div>
 
 <main id="hotels_search_page">
     <section class="hotels_search_form">
@@ -78,19 +42,28 @@
             <!--검색창 백그라운드 이미지-->
             <div class="search_from_box" style="margin-top:200px;">
                 <h1 style="font-weight: bold;font-family:Impact,Charcoal,sans-serif; ">마음에 꼭 드는 호텔을 찾아보세요.</h1>
-                <div class="overlay" style="width:1030px;"> <!--검색창 틀-->
+                <div class="overlay" style="width:1200px;"> <!--검색창 틀-->
 
                     <form id="searchForm" method="GET" action="/hotels/searchResult" class="search-bar" accept-charset="UTF-8">
                         <label>
-                            <input type="text" id="address" name="address" placeholder="검색하고자 하는 도시를 입력해주세요." size=60 required>
-                            <input type="date" id="checkin_date" name="checkin_date"  size=30 required>
-                            <input type="date" id="checkout_date" name="checkout_date"  required>
-
+                            <input type="text" id="address" name="address" style="float:left;width:569px;" placeholder="검색하고자 하는 도시를 입력해주세요." size=70 >
+                            <input type="date" id="checkin_date" style="margin-left:10px;width:148px;" name="checkin_date"  size=30 >
+                            <input type="date" id="checkout_date" style="width:148px;" name="checkout_date"  >
+                            <span style="background-color:white;width:150px;height:44px; border-radius:5px; display:inline-block;">
+                            <label for="guests" style="width:50px;color:black;float:left; margin-right:40px; margin-top:10px;">성인 :</label>
+                           <!-- <button type="button" id="decrement-guests">-</button>-->
+                            <select id="guests" name="guests">
+                            </select>
+                         <!--   <button type="button" id="increment-guests">+</button>-->
+                            </span>
                         </label>
 
 
+
+
+
                     <div class="search-bar-check">  <!--호텔 검색버튼-->
-                            <button type="submit" id="searchBtn" class="btn btn-primary" onclick="performSearch()">검색</button>
+                            <button type="submit" id="searchBtn" class="btn btn-primary" onclick="performSearch()" style="height:44px;margin-top:7px;"> 호텔 검색</button>
                         </div>
                     </form>
 
@@ -102,10 +75,15 @@
                         <label><input type="checkbox"> 4성급</label>
                         <label><input type="checkbox"> 3성급</label>
                     </div>
+
                 </div>
+
             </div>
 
         </div>
+
+        </section>
+    <section class="hotels_search_form" style="margin-left:-90px;">
         <div class="event-banner">  <!--배너-->
             <span class="banner" >
                 <a href="http://localhost:8080/hotels/deals">   <!--배너 클릭시 이동 주소-->
@@ -265,27 +243,7 @@
 
     </section>
 </main>
-<div class="footer-body">       <!-- footer-->
-    <div class="content">
-        <!-- Your main content goes here -->
-    </div>
-
-    <div class="container" id="footer">
-        <hr>
-        <div class="footer-box">
-            <div class="gray_subtext">
-                    <span>
-                        (주)YAYEOGI | 대표이사: 홍길동 | 사업자 등록번호: 000-00-000000 | 통신판매업신고: 야여기-0000호 | 메일: help@yayeogi.com
-                        <br>관광사업자 등록번호: 제2022-05호 | 주소: 서울 강남구 테헤란로 000길 00 | 호스팅서비스 제공자: 주식회사 YAYEOGI
-                        <br>고객센터: 1644-1346 (오전 9시 - 익일 새벽 3시)
-                        <br>(주)GOING은 통신판매 중개자로서 통신판매의 당사자가 아니며 상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.
-                        <br>(주)GOING이 소유/운영/관리하는 웹사이트 및 앱 내의 상품/판매자/이벤트 정보, 디자인 및 화면의 구성, UI를 포함하여 일체의 콘텐츠에 대한 무단 복제, 배포, 방송 또는 전송, 스크래핑 등의 행위는 저작권법 및 콘텐츠산업 진흥법 등 관련 법령에 의하여 엄격히 금지됩니다.
-                    </span>
-            </div>
-        </div>
-        <hr>
-    </div>
-</div>
+<div th:replace="footer :: footer"></div>
 <script>
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -475,13 +433,22 @@
     }
 </script>
 
-
+<script>
 function performSearch() {
+
 const address = encodeURIComponent(document.getElementById('address').value);
 const checkinDate = encodeURIComponent(document.getElementById('checkin_date').value);
 const checkoutDate = encodeURIComponent(document.getElementById('checkout_date').value);
+const guests = encodeURIComponent(document.getElementById('guests').value);
 
-const url = `http://localhost:8080/hotels/searchResult?address=${address}&checkin_date=${checkinDate}&checkout_date=${checkoutDate}`;
+if (!address || !checkinDate || !checkoutDate) {
+        alert('주소, 체크인 날짜 및 체크아웃 날짜를 모두 입력해 주세요.');
+         event.preventDefault();
+        return; // 검색 요청을 보내지 않습니다
+    }
+
+
+const url = `http://localhost:8080/hotels/searchResult?address=${address}&checkin_date=${checkinDate}&checkout_date=${checkoutDate}&guests=${guests}`;
 
 console.log(`Request URL: ${url}`);
 
@@ -500,7 +467,38 @@ window.location.href = url; // 페이지 리디렉션을 통해 데이터를 전
 console.error('Error fetching search results:', error);
 });
 }
+    document.getElementById('checkin_date').setAttribute('min', new Date().toISOString().split('T')[0]);
+    document.getElementById('checkout_date').setAttribute('min', new Date().toISOString().split('T')[0]);
+</script>
 
+<script>
+    function initializeSelect(selectElement, minValue, maxValue, defaultValue) {
+               for (let i = minValue; i <= maxValue; i++) {
+                   const option = document.createElement('option');
+                   option.value = i;
+                   option.textContent = i;
+                   selectElement.appendChild(option);
+               }
+               selectElement.value = defaultValue; // Set default value
+           }
+  const guestsSelect = document.getElementById('guests');
+ initializeSelect(guestsSelect, 1, 20, 2); // Guest options from 1 to 20, default 2
+      function adjustValue(selectElement, increment) {
+            const currentIndex = selectElement.selectedIndex;
+            if (increment && currentIndex < selectElement.options.length - 1) {
+                selectElement.selectedIndex = currentIndex + 1;
+            } else if (!increment && currentIndex > 0) {
+                selectElement.selectedIndex = currentIndex - 1;
+            }
+        }
 
+      // Event listeners for Guest adjustments
+        document.getElementById('increment-guests').addEventListener('click', () => {
+            adjustValue(guestsSelect, true);
+        });
+        document.getElementById('decrement-guests').addEventListener('click', () => {
+            adjustValue(guestsSelect, false);
+        });
+</script>
 </body>
 </html>

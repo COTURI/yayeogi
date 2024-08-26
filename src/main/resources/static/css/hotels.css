@@ -25,7 +25,7 @@
 
     background-size: cover;
     background-position: center;
-    weight:1920px;
+    width:1920px;
     height: 550px;
     display: flex;
     align-items: center;
@@ -33,7 +33,7 @@
     position: relative;
 }
 .overlay {                      /* 검색창 큰틀 */
-    weight:1200px;
+    width:1200px;
     background-color:  #05203C;
     color: white;
     padding: 20px;
@@ -98,14 +98,14 @@ h1 {
     outline: none; /* 기본 포커스 아웃라인 제거 */
 }
 
-.search-bar-check button {  /* 검색버튼*/
+.search-bar-check submit {  /* 검색버튼*/
     padding: 10px 20px;
     background-color: #0066cc;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-
+ display: flex;
 }
 
 .filters {              /* 인기필터 */
@@ -370,3 +370,39 @@ h1 {
 .panel-content{
 font-size:15px;
 }
+   .search-bar .custom-select {
+                           padding: 10px;
+                           border: 1px solid #ccc;
+                           cursor: pointer;
+                           user-select: none;
+                           background-color: white;
+                           position: relative;
+                           width: 200px;
+                           z-index: 1; /* 추가: 드롭다운 메뉴보다 앞쪽에 위치하도록 z-index 추가 */
+                       }
+        .dropdown-content {
+            display: none; /* 기본적으로 숨김 */
+            position: absolute;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            z-index: 1;
+        }
+
+        .dropdown-content div {
+            margin-bottom: 10px;
+        }
+
+        .dropdown-content button {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 5px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .dropdown-content .apply-button {
+            text-align: center;
+        }
