@@ -1,9 +1,12 @@
 package yayeogi.Green3.controller;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.ModelAndView;
 import yayeogi.Green3.DTO.HotelDTO;
 import yayeogi.Green3.DTO.HotelReviewsDTO;
+import yayeogi.Green3.DTO.UserDTO;
 import yayeogi.Green3.entity.Hotel;
 import yayeogi.Green3.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/hotels")
@@ -43,7 +47,7 @@ public class HotelController {
     }
 
     @GetMapping("/main")
-    public String getHotels(Model model) {
+    public String getHotels(Integer hotelId,Model model) {
         // 다양한 조건으로 호텔 정보를 가져옴
         List<HotelDTO> hotelsByCountry82 = hotelService.getHotelsByCountry(82);
         List<HotelDTO> hotelsByLocation2 = hotelService.getHotelsByLocation(2);
@@ -65,6 +69,11 @@ public class HotelController {
             }
         });
 
+        if (hotelId != null) {
+            double averageRating = hotelService.getAverageRating(Long.valueOf(hotelId));
+            String formattedRating = String.format("%.1f", averageRating);
+            model.addAttribute("averageRating", formattedRating);
+        }
         // 모델에 추가
         model.addAttribute("hotelsMain", selectedHotels);
         return "hotelsMain"; // Thymeleaf 템플릿 이름
@@ -124,9 +133,20 @@ public class HotelController {
         return "deals"; // 'deals.html' 템플릿을 반환
     }
 
-    @GetMapping("/detail/{id}")
-    public String getHotelById(@PathVariable("id") Integer id, Model model) {
+    @GetMapping("/detail")
+    public String getHotelById(
+            @RequestParam("id") Integer id,
+            @RequestParam("checkin_date") String checkinDate,
+            @RequestParam("checkout_date") String checkoutDate,
+            Model model) {
+
+        // ID로 호텔 정보를 조회합니다.
         HotelDTO hotelDTO = hotelService.getHotelById(id);
+        if (hotelDTO == null) {
+            // 호텔이 없는 경우 처리 (예: 오류 페이지로 리다이렉트)
+            return "error"; // 예시: error.html
+        }
+
         model.addAttribute("hotel", hotelDTO);
 
         List<HotelReviewsDTO> hotelReviews = hotelService.getHotelReviews(id);
@@ -134,10 +154,41 @@ public class HotelController {
 
         // 평균 별점 계산
         double averageRating = hotelService.getAverageRating(Long.valueOf(id));
-        model.addAttribute("averageRating", averageRating); // 모델에 추가
+        String formattedRating = String.format("%.1f", averageRating);
+        model.addAttribute("averageRating", formattedRating);
+
+        // 검색 조건도 모델에 추가
+        model.addAttribute("checkinDate", checkinDate);
+        model.addAttribute("checkoutDate", checkoutDate);
 
         return "detail"; // 반환할 View 이름 (예: hotel-details.html)
     }
 
+
+
+    @GetMapping("/searchResult")
+    public String searchResult(
+            @RequestParam("address") String address,
+            @RequestParam("checkin_date") String checkinDate,
+            @RequestParam("checkout_date") String checkoutDate,
+            Model model) {
+
+        List<Map<String, Object>> hotels = hotelService.searchHotels(address);
+
+        // 데이터 확인용 로그 추가
+        System.out.println("Hotels found: " + hotels);
+
+        model.addAttribute("address", address);
+        model.addAttribute("checkinDate", checkinDate);
+        model.addAttribute("checkoutDate", checkoutDate);
+        model.addAttribute("hotels", hotels); // 뷰에서 사용될 데이터 추가
+
+        return "searchResult";
+    }
+    @GetMapping("/hotels")
+    public List<Map<String, Object>> getHotels(@RequestParam("address") String address) {
+        List<Map<String, Object>> hotels = hotelService.searchHotels(address);
+        return hotelService.searchHotels(address);
+    }
 
 }

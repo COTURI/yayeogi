@@ -45,8 +45,8 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
 
-	implementation 'org.projectlombok:lombok:1.18.24' // 최신 버전으로 교체하세요
-	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	compileOnly 'org.projectlombok:lombok:1.18.26'
+	annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
 
 

@@ -3,12 +3,17 @@ package yayeogi.Green3.service;
 import yayeogi.Green3.DTO.HotelDTO;
 import yayeogi.Green3.DTO.HotelReviewsDTO;
 import yayeogi.Green3.entity.Hotel;
+import yayeogi.Green3.entity.User;
+import yayeogi.Green3.entity.HotelReservation;
 import yayeogi.Green3.entity.HotelReview;
 import yayeogi.Green3.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import yayeogi.Green3.repository.HotelReservationRepository;
 import yayeogi.Green3.repository.HotelReviewRepository;
+import org.springframework.jdbc.core.JdbcTemplate;
+import yayeogi.Green3.repository.UserRepository;
 
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialException;
@@ -17,10 +22,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +38,14 @@ public class HotelService {
     @Autowired
     private HotelReviewRepository hotelReviewRepository;
 
+    @Autowired
+    private HotelReservationRepository reservationRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     // Country와 Location에 따라 호텔을 검색
     public List<HotelDTO> getHotelsByCountryAndLocation(Integer country, Integer location) {
@@ -323,5 +337,56 @@ public class HotelService {
         return sum / reviews.size();
     }
 
+
+    public List<Map<String, Object>> searchHotels(String address) {
+        // SQL 쿼리와 입력 값 출력해보기 (디버깅용)
+
+
+        String sql = "SELECT * FROM hotels WHERE address LIKE CONCAT('%', ?, '%')";
+        System.out.println("Executing query for address: " + sql);
+        List<Map<String, Object>> result = jdbcTemplate.queryForList(sql, address);
+        System.out.println("Query result: " + result);
+
+        return result;
+
     }
 
+    public void createReservation(String email, Integer hotelId, LocalDate checkinDate, LocalDate checkoutDate, Integer guestAdult, Integer guestKid, Integer rooms) {
+        // 호텔과 사용자 엔티티 조회
+        Hotel hotel = hotelRepository.findById(Long.valueOf(hotelId))
+                .orElseThrow(() -> new RuntimeException("호텔을 찾을 수 없습니다."));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        // 예약 가능 여부 확인
+        if (!isAvailable(hotel, checkinDate, checkoutDate)) {
+            throw new RuntimeException("선택한 날짜에 대해 호텔이 예약 가능하지 않습니다.");
+        }
+
+        // HotelReservation 엔티티 인스턴스 생성
+        HotelReservation reservation = HotelReservation.builder()
+                .email(email)
+                .checkinDate(checkinDate)
+                .checkoutDate(checkoutDate)
+                .guestAdult(guestAdult)
+                .hotel(hotel)
+                .user(user)
+                .build();
+
+        // reservation 인스턴스를 데이터베이스에 저장
+        reservationRepository.save(reservation);
+    }
+
+    private boolean isAvailable(Hotel hotel, LocalDate checkinDate, LocalDate checkoutDate) {
+        List<HotelReservation> reservations = reservationRepository.findByHotelAndDateRange(hotel, checkinDate, checkoutDate);
+
+        // 현재 총 객실 수는 1개로 설정
+        int totalRooms = 1;
+
+        // 예약된 객실 수를 계산
+        int reservedRooms = reservations.size(); // 각 예약은 1개의 객실을 차지한다고 가정
+
+        // 예약된 객실 수가 총 객실 수보다 적으면 예약 가능
+        return (totalRooms - reservedRooms) > 0;
+    }
+}
