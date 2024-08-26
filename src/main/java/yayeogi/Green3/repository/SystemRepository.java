@@ -11,7 +11,17 @@ import java.time.LocalDate;
 @Repository
 public interface SystemRepository extends JpaRepository<HotelReservation, Integer> {
 
-    @Query("SELECT AVG(h.hotel.price) FROM HotelReservation h WHERE h.checkinDate = :checkinDate")
+    @Query("SELECT AVG(CAST(h.hotel.price AS double)) " +
+            "FROM HotelReservation h " +
+            "WHERE h.checkinDate = :checkinDate")
     Double findAveragePriceByCheckinDate(@Param("checkinDate") LocalDate checkinDate);
+
+    @Query("SELECT SUM(CAST(h.hotel.price AS double)) " +
+            "FROM HotelReservation h " +
+            "WHERE h.hotel.location = :location " +
+            "AND h.checkinDate BETWEEN :startDate AND :endDate")
+    Double findTotalSalesByLocation(@Param("location") Integer location,
+                                    @Param("startDate") LocalDate startDate,
+                                    @Param("endDate") LocalDate endDate);
 }
 */

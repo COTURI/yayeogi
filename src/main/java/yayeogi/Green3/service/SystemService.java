@@ -12,8 +12,13 @@ public class SystemService {
     @Autowired
     private SystemRepository systemRepository;
 
-    public Double getAveragePriceByCheckinDate(LocalDate checkinDate) {
-        return systemRepository.findAveragePriceByCheckinDate(checkinDate);
+    public Integer getAveragePriceByCheckinDate(LocalDate checkinDate) {
+        Double averagePrice = systemRepository.findAveragePriceByCheckinDate(checkinDate);
+        return averagePrice != null ? averagePrice.intValue() : null;
+    }
+
+    public Double getTotalSalesByLocation(Integer location, LocalDate startDate, LocalDate endDate) {
+        return systemRepository.findTotalSalesByLocation(location, startDate, endDate);
     }
 
     // 필요한 경우 다른 통계 계산 로직 추가

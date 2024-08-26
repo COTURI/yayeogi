@@ -167,6 +167,7 @@ public class HotelController {
 
 
     @GetMapping("/searchResult")
+
    public String searchResult(
            @RequestParam("address") String address,
            @RequestParam("checkin_date") String checkinDate,
@@ -185,6 +186,26 @@ public class HotelController {
 
        return "searchResult";
    }
+
+    public String searchResult(
+            @RequestParam("address") String address,
+            @RequestParam("checkin_date") String checkinDate,
+            @RequestParam("checkout_date") String checkoutDate,
+            Model model) {
+
+        List<Map<String, Object>> hotels = hotelService.searchHotels(address);
+
+        // 데이터 확인용 로그 추가
+        System.out.println("Hotels found: " + hotels);
+
+        model.addAttribute("address", address);
+        model.addAttribute("checkinDate", checkinDate);
+        model.addAttribute("checkoutDate", checkoutDate);
+        model.addAttribute("hotels", hotels); // 뷰에서 사용될 데이터 추가
+
+        return "searchResult";
+    }
+
     @GetMapping("/hotels")
     public List<Map<String, Object>> getHotels(@RequestParam("address") String address) {
         List<Map<String, Object>> hotels = hotelService.searchHotels(address);

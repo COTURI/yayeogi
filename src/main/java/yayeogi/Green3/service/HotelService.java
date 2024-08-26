@@ -337,6 +337,7 @@ public class HotelService {
         return sum / reviews.size();
     }
 
+
     public List<Map<String, Object>> searchHotels(String address) {
         // SQL 쿼리와 입력 값 출력해보기 (디버깅용)
 
@@ -347,6 +348,7 @@ public class HotelService {
         System.out.println("Query result: " + result);
 
         return result;
+
     }
 
     public void createReservation(String email, Integer hotelId, LocalDate checkinDate, LocalDate checkoutDate, Integer guestAdult, Integer guestKid, Integer rooms) {

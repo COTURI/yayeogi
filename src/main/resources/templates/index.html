@@ -3,30 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>항공권 검색</title>
+    <title>야여기 - 항공권 검색</title>
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/header.css">
+    <script src="/js/index.js" defer></script>
 
+
+    <script>
+        function getCookie(name) {
+            let matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+
+        function updateHeader() {
+            const loggedIn = getCookie('loggedin') === 'true';
+            const username = getCookie('username');
+
+            const authSection = document.querySelector('.auth');
+
+            if (loggedIn) {
+                authSection.innerHTML =
+                    <button type="button" class="btn btn-secondary">
+                        <img src="../static/html/layout/favorite.png" alt="찜"> 찜
+                    </button>
+                    <button type="button" class="btn btn-secondary">
+                        <img src="../static/html/layout/user.png" alt="내정보"> ${username}님
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="logout()">
+                        <img src="../static/html/layout/logout.png" alt="로그아웃"> 로그아웃
+                    </button>
+                ;
+            } else {
+                authSection.innerHTML =
+                    <button type="button" class="btn btn-secondary" onclick="location.href='register'">
+                        회원가입
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='login'">
+                        로그인
+                    </button>
+                ;
+            }
+        }
+
+        function logout() {
+            // 로그아웃 로직을 서버와 동기화
+            document.cookie = "loggedin=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+            document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+            location.reload(); // 페이지 새로고침
+        }
+
+        document.addEventListener('DOMContentLoaded', updateHeader);
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.faq-question').forEach(button => {
+                button.addEventListener('click', toggleAnswer);
+            });
+        });
+    </script>
 </head>
 <body>
 
-<div th:replace="header :: header"></div>
+<div class="header-body">
+    <header>
+        <div class="left-section">
+            <button type="button" class="btn logo-button">
+                <img src="/images/LOGO.png" alt="야여기 로고">
+            </button>
+            <div class="menu">
+                <button type="button" class="btn btn-info">항공권</button>
+                <button type="button" class="btn btn-info">호텔</button>
+            </div>
+        </div>
+        <div class="auth">
+            <!-- 인증 관련 버튼 -->
+        </div>
+    </header>
+</div>
 
 <h1>항공편 검색</h1>
-<div id="spinner" class="spinner-container" style="display: none;">
-    <div class="spinner"></div>
+
+<div id="spinner" class="spinner" style="display: none;">
+    <div class="spinner-icon"></div>
 </div>
+
 <div class="search-container">
     <form class="search-form" id="search-form">
         <div class="search-form-group">
             <label for="departure-city">출발 도시</label>
-            <input type="text" id="departure-city" name="departure-city" placeholder="출발 도시" required>
-            <div id="departure-city-suggestions" class="suggestions"></div>
+            <input id="departure-city" type="text" placeholder="출발 도시">
+            <div id="departure-city-suggestions" class="suggestions-container"></div>
         </div>
         <div class="search-form-group">
             <label for="arrival-city">도착 도시</label>
-            <input type="text" id="arrival-city" name="arrival-city" placeholder="도착 도시" required>
-            <div id="arrival-city-suggestions" class="suggestions"></div>
+            <input id="arrival-city" type="text" placeholder="도착 도시">
+            <div id="arrival-city-suggestions" class="suggestions-container"></div>
         </div>
         <div class="search-form-group">
             <label for="departure-date">출발일</label>
@@ -48,31 +122,100 @@
     <div class="results-section-container">
         <div class="results-section" id="outbound-flights">
             <h2>출발 항공편</h2>
-            <!-- 출발 항공편 결과는 여기에 삽입됩니다. -->
-            <div id="pagination-outbound" class="pagination">
-                <!-- 출발 항공편 페이징 버튼은 여기에 삽입됩니다. -->
-            </div>
+            <div id="pagination-outbound" class="pagination"></div>
         </div>
         <div class="results-section" id="inbound-flights">
             <h2>귀국 항공편</h2>
-            <!-- 귀국 항공편 결과는 여기에 삽입됩니다. -->
-            <div id="pagination-inbound" class="pagination">
-                <!-- 귀국 항공편 페이징 버튼은 여기에 삽입됩니다. -->
-            </div>
+            <div id="pagination-inbound" class="pagination"></div>
         </div>
     </div>
 </div>
 
 <button id="book-button" class="book-button" style="display: none;">예약하기</button>
 
-<!-- 예약 확인 버튼 추가 -->
 <div class="button-container">
-    <a href="/reservation-confirmation" class="reservation-button">예약 확인</a>
+    <a href="/confirmation" class="reservation-button">예약 확인</a>
 </div>
 
-<div th:replace="footer :: footer"></div>
 
-<script src="/js/index.js"></script>
+
+<div class="main-images">
+    <img src="/images/main1.jpg" alt="여행 이미지 1" class="main-image">
+    <img src="/images/main2.jpg" alt="여행 이미지 2" class="main-image">
+</div>
+
+<div class="faq-container">
+    <div class="faq-column">
+        <div class="faq-item">
+            <input type="checkbox" id="faq1" class="faq-toggle">
+            <label for="faq1" class="faq-question">야여기는 어떻게 작동하나요?</label>
+            <div class="faq-answer">
+                야여기는 다양한 항공사와 여행사의 항공권, 호텔, 렌터카 가격을 비교해 최저가를 찾는 메타 검색 엔진입니다. 사용자가 입력한 검색 조건에 따라 관련 결과를 제공하며, 링크를 클릭하면 해당 사이트에서 예약을 진행할 수 있습니다.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <input type="checkbox" id="faq2" class="faq-toggle">
+            <label for="faq2" class="faq-question">야여기에서 최저가 항공권을 어떻게 찾을 수 있나요?</label>
+            <div class="faq-answer">
+                야여기는 전 세계의 항공사 및 여행사 데이터를 수집하여 최저가 항공권을 제공합니다. 검색 시 출발지, 도착지, 출발일, 귀국일, 인원수를 입력하면 여러 사이트에서 제공하는 항공권 가격을 비교할 수 있습니다.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <input type="checkbox" id="faq3" class="faq-toggle">
+            <label for="faq3" class="faq-question">지금 어디로 가는 항공권을 예약하는 게 좋은가요?</label>
+            <div class="faq-answer">
+                여행지의 선택은 개인의 취향과 여행 시기에 따라 달라질 수 있습니다. 야여기의 '인기 여행지' 또는 '저렴한 여행지' 섹션을 확인하여 추천 여행지를 찾아보세요.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <input type="checkbox" id="faq4" class="faq-toggle">
+            <label for="faq4" class="faq-question">야여기 사이트에서 항공권을 예약하는 건가요?</label>
+            <div class="faq-answer">
+                야여기는 직접 예약을 진행하지 않습니다. 항공권 검색 결과를 제공하고, 사용자가 선택한 항공사나 여행사 사이트로 이동하여 예약을 진행할 수 있도록 합니다.
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-column">
+        <div class="faq-item">
+            <input type="checkbox" id="faq5" class="faq-toggle">
+            <label for="faq5" class="faq-question">항공권을 예약한 후에는 어떻게 되나요?</label>
+            <div class="faq-answer">
+                예약 후에는 선택한 항공사나 여행사의 확인 이메일을 통해 예약 내용을 확인할 수 있습니다. 이 이메일에는 예약 번호, 항공편 정보, 체크인 방법 등이 포함됩니다.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <input type="checkbox" id="faq6" class="faq-toggle">
+            <label for="faq6" class="faq-question">야여기에서 호텔도 검색할 수 있나요?</label>
+            <div class="faq-answer">
+                네, 야여기에서는 항공권뿐만 아니라 호텔 예약도 지원합니다. 검색 조건을 입력하면 호텔 가격을 비교하고 예약할 수 있는 링크를 제공받을 수 있습니다.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <input type="checkbox" id="faq7" class="faq-toggle">
+            <label for="faq7" class="faq-question">렌터카 상품도 검색할 수 있나요?</label>
+            <div class="faq-answer">
+                네, 야여기는 렌터카 검색 기능도 제공합니다. 여행지와 대여 날짜를 입력하면 다양한 렌터카 옵션을 비교하고 예약할 수 있습니다.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <input type="checkbox" id="faq8" class="faq-toggle">
+            <label for="faq8" class="faq-question">가격 변동 알림이란 무엇인가요?</label>
+            <div class="faq-answer">
+                가격 변동 알림은 사용자가 설정한 항공편, 호텔, 렌터카의 가격이 변동할 때 이메일로 알려주는 기능입니다. 이를 통해 최적의 예약 시점을 놓치지 않을 수 있습니다.
+            </div>
+        </div>
+    </div>
+</div>
+
+<br> <br><br><br><br><br>
+<div th:replace="~{footer :: footer}"></div>
 
 </body>
 </html>

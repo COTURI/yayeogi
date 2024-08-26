@@ -16,8 +16,14 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
     List<Hotel> findByCountry(Integer country);
     List<Hotel> findByLocation(Integer location);
     List<Hotel> findByHotelId(Integer hotelId);
+
     @Query("SELECT h FROM Hotel h WHERE LOWER(h.address) LIKE LOWER(CONCAT('%', :address, '%'))")
     List<Hotel> findByAddressContainingIgnoreCase(@Param("address") String address);
+
+
+    @Query("SELECT h FROM Hotel h WHERE LOWER(h.address) LIKE LOWER(CONCAT('%', :address, '%'))")
+            List<Hotel> findByAddressContainingIgnoreCase(@Param("address") String address);
+
 
   /*  @Query("SELECT h FROM Hotel h WHERE " +
             "(:address IS NULL OR h.address LIKE %:address%) AND " +
@@ -28,5 +34,6 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
                              @Param("checkin_date") String checkin_date,
                              @Param("checkout_date") String checkout_date,
                              @Param("guests") String guests);*/
+
 }
 
