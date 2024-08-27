@@ -60,7 +60,7 @@ public class UserController {
             response.addCookie(loggedInCookie);
             response.addCookie(usernameCookie);
 
-            return "hotelsMain";  // 메인 페이지로 리다이렉트
+            return "/";  // 메인 페이지로 리다이렉트
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "login";
