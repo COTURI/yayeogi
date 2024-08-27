@@ -313,3 +313,37 @@ h1 {
             background-color: #ccc;
             cursor: not-allowed;
         }
+
+ .button-container {
+     text-align: center; /* 텍스트를 중앙 정렬 */
+     margin-top: 20px; /* 위쪽 여백 추가 */
+ }
+
+ /* 예약하기 버튼 스타일 */
+ #book-button {
+     padding: 12px 20px;
+     border: none;
+     background-color: #007bff; /* 파란색 배경 */
+     color: white;
+     border-radius: 8px;
+     cursor: pointer;
+     font-size: 16px;
+     text-align: center;
+     text-decoration: none; /* 링크의 기본 밑줄 제거 */
+     transition: background-color 0.3s, transform 0.2s;
+     display: inline-block; /* 버튼을 inline-block으로 설정 */
+ }
+
+ #book-button:hover {
+     background-color: #0056b3; /* 더 어두운 파란색 배경 */
+     transform: translateY(-2px);
+ }
+
+ #book-button:focus {
+     outline: none;
+ }
+
+ #book-button:disabled {
+     background-color: #ccc; /* 비활성화된 버튼의 배경색 */
+     cursor: not-allowed;
+ }
