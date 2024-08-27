@@ -67,6 +67,18 @@ public class UserController {
         }
     }
 
+    @GetMapping("/mypage")
+    public String showUserPage(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("user", user); // 모델에 user 객체 추가
+            return "mypage"; // 실제 Thymeleaf 템플릿 파일명
+        } else {
+            return "redirect:/login"; // 로그인 페이지로 리다이렉트
+        }
+    }
+
+
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();  // 세션 무효화
