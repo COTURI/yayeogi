@@ -1,66 +1,101 @@
 /* reservation-detail.css */
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f9fafb;
 }
 
 .container {
-    width: 80%;
-    margin: auto;
-    overflow: hidden;
-    padding: 20px;
-    background-color: #fff;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
     text-align: center;
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    font-size: 2rem;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
-    background-color: #fff;
+    margin: 0 auto;
+    background-color: #ffffff;
     border-radius: 8px;
     overflow: hidden;
 }
 
 th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
+    border: 1px solid #e1e8eb;
+    padding: 15px;
 }
 
+/* Center align text in header cells */
 th {
-    background-color: #f2f2f2;
-    color: #333;
-    font-weight: bold;
+    background-color: #3498db;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-align: left; /* Align header text to the left for consistency */
 }
 
+/* Center align text in data cells */
 td {
-    color: #555;
+    color: #2c3e50;
+    font-size: 1rem;
+    text-align: left; /* Align data text to the left for consistency */
 }
 
+/* Alternate row background color */
+tr:nth-child(even) {
+    background-color: #f2f4f8;
+}
+
+/* Button styling */
 .button {
     display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #007bff;
+    padding: 12px 25px;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #3498db;
     border: none;
     border-radius: 5px;
     text-align: center;
     text-decoration: none;
-    margin: 20px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    text-transform: uppercase; /* Make button text uppercase for emphasis */
 }
 
 .button:hover {
-    background-color: #0056b3;
+    background-color: #2980b9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover for a 3D effect */
+}
+
+/* Header and Footer Styling (Assuming they are in separate CSS files) */
+header, footer {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e1e8eb;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+header {
+    border-bottom: 1px solid #3498db;
+}
+
+footer {
+    border-top: 1px solid #3498db;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #7f8c8d;
+    padding: 10px 0;
 }

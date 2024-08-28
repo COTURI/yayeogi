@@ -27,6 +27,9 @@ public class ReservationService {
         return reservationFlightRepository.save(reservationFlight);
     }
 
+    public void cancelReservation(Long id) {
+        reservationFlightRepository.deleteById(id);
+    }
 
     public ReservationFlight findById(Long id) {
         Optional<ReservationFlight> reservation = reservationFlightRepository.findById(id);

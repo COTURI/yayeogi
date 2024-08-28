@@ -74,6 +74,19 @@ public class ReservationController {
         return "reservation-confirmation-flight";
     }
 
+    @PostMapping("/reservation/cancel/{id}")
+    public String cancelReservation(@PathVariable Long id, Model model) {
+        try {
+            reservationService.cancelReservation(id);
+            model.addAttribute("message", "예약이 성공적으로 취소되었습니다.");
+        } catch (Exception e) {
+            model.addAttribute("message", "예약 취소 중 오류가 발생했습니다.");
+            e.printStackTrace();
+        }
+        return "redirect:/confirmation"; // 취소 후 목록 페이지로 리디렉션
+    }
+
+
     @PostMapping("/reservation")
     public String createReservation(@ModelAttribute ReservationFlight reservationFlight, HttpSession session) {
         // 액세스 토큰 확인
