@@ -1,4 +1,4 @@
-/* reservation-confirmation-flight.css */
+/* reservation-detail.css */
 
 body {
     font-family: Arial, sans-serif;
@@ -25,7 +25,6 @@ h1 {
 
 table {
     width: 100%;
-    border: 1px solid #ddd;
     border-collapse: collapse;
     margin: 20px 0;
     background-color: #fff;
@@ -47,14 +46,6 @@ th {
 
 td {
     color: #555;
-}
-
-.alert {
-    padding: 15px;
-    background-color: #f44336;
-    color: white;
-    margin: 15px 0;
-    border-radius: 5px;
 }
 
 .button {

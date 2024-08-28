@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>예약 상세 정보</title>
+    <link rel="stylesheet" href="/css/reservation-detail.css"> <!-- CSS 파일 경로 -->
+    <link rel="stylesheet" href="/css/header.css">
+</head>
+<body>
+
+<div th:replace="header :: header"></div>
+
+
+<div class="container">
+    <h1>예약 상세 정보</h1>
+    <div th:if="${reservation}">
+        <table>
+            <tr>
+                <th>출국일</th>
+                <td th:text="${reservation.departureDate}"></td>
+            </tr>
+            <tr>
+                <th>출발시간</th>
+                <td th:text="${reservation.departureTime}"></td>
+            </tr>
+            <tr>
+                <th>도착시간</th>
+                <td th:text="${reservation.arrivalTime}"></td>
+            </tr>
+            <tr>
+                <th>귀국일</th>
+                <td th:text="${reservation.returnDate}"></td>
+            </tr>
+            <tr>
+                <th>귀국일 출발시간</th>
+                <td th:text="${reservation.returnDepartureTime}"></td>
+            </tr>
+            <tr>
+                <th>귀국일 도착시간</th>
+                <td th:text="${reservation.returnArrivalTime}"></td>
+            </tr>
+            <tr>
+                <th>예약자 이름</th>
+                <td th:text="${reservation.passengerFirstName} + ' ' + ${reservation.passengerLastName}"></td>
+            </tr>
+            <tr>
+                <th>국가/지역 번호</th>
+                <td th:text="${reservation.countryCode}"></td>
+            </tr>
+            <tr>
+                <th>전화번호</th>
+                <td th:text="${reservation.phoneNumber}"></td>
+            </tr>
+            <tr>
+                <th>이메일</th>
+                <td th:text="${reservation.email}"></td>
+            </tr>
+            <tr>
+                <th>탑승객 이름</th>
+                <td th:text="${reservation.paxFirstName} + ' ' + ${reservation.paxLastName}"></td>
+            </tr>
+            <tr>
+                <th>생년월일</th>
+                <td th:text="${reservation.dateOfBirth}"></td>
+            </tr>
+            <tr>
+                <th>국적</th>
+                <td th:text="${reservation.nationality}"></td>
+            </tr>
+            <tr>
+                <th>여권 번호</th>
+                <td th:text="${reservation.passportNumber}"></td>
+            </tr>
+            <tr>
+                <th>여권 발행 국가/지역</th>
+                <td th:text="${reservation.passportIssueCountry}"></td>
+            </tr>
+            <tr>
+                <th>여권 만료일</th>
+                <td th:text="${reservation.passportExpiryDate}"></td>
+            </tr>
+        </table>
+    </div>
+    <a href="/confirmation" class="button">목록으로 돌아가기</a> <!-- 목록 페이지로 돌아가는 버튼 -->
+</div>
+<script src="/js/reservation-detail.js"></script> <!-- JS 파일 경로 -->
+
+<br> <br><br><br><br><br>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

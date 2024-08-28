@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <title>예약 확인</title>
     <link rel="stylesheet" href="/css/reservation-confirmation-flight.css"> <!-- CSS 파일 경로 -->
+    <link rel="stylesheet" href="/css/header.css">
 </head>
 <body>
+
+
+<div th:replace="header :: header"></div>
+
+
 <div class="container">
     <h1>예약 확인</h1>
     <div th:if="${message}" class="alert">
@@ -21,6 +27,7 @@
                 <th>귀국일</th>
                 <th>귀국일 출발시간</th>
                 <th>귀국일 도착시간</th>
+                <th>상세보기</th>
             </tr>
             </thead>
             <tbody>
@@ -31,11 +38,17 @@
                 <td th:text="${reservation.returnDate}"></td>
                 <td th:text="${reservation.returnDepartureTime}"></td>
                 <td th:text="${reservation.returnArrivalTime}"></td>
+                <td><a th:href="@{/reservation-detail/{id}(id=${reservation.reservationFlightId})}" class="button">상세보기</a></td>
             </tr>
             </tbody>
         </table>
     </div>
+
 </div>
 <script src="/js/reservation-confirmation-flight.js"></script> <!-- JS 파일 경로 -->
+
+<br> <br><br><br><br><br>
+<div th:replace="~{footer :: footer}"></div>
+
 </body>
 </html>

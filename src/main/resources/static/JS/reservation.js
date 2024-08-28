@@ -139,6 +139,28 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('booking-details').innerHTML = bookingDetails;
     }
 
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("reservationForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // 기본 폼 제출 동작을 방지합니다
+            const form = event.target;
+            fetch(form.action, {
+                method: form.method,
+                body: new FormData(form),
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                // 응답을 처리합니다
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+
     function getAirlineName(code) {
         const airlines = {}; // 항공사 데이터는 적절히 로드해야 합니다.
         // airlines 데이터 로드 코드 추가 (예: 서버에서 받아오는 방식)
