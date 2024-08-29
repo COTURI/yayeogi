@@ -23,13 +23,16 @@
                 <!-- 로그인된 상태 -->
                 <button type="button" class="btn btn-secondary">
                     <img src="#" alt="내정보"/>
-                    <span th:text="${session.user.name}">유저님</span>
+                    <span th:text="${session.user.name}"></span>
                 </button>
                 <form action="/logout" method="post">
                     <button type="submit" class="btn btn-secondary">
-                        <img src="/html/layout/logout.png" alt="로그아웃"> 로그아웃
+                        <img src="/html/layout/logout.png" alt="로그아웃">
                     </button>
                 </form>
+
+                <a href="/confirmation" class="button">예약 확인 페이지로 이동</a>
+
             </div>
             <div th:if="${session.user == null}">
                 <!-- 비로그인 상태 -->

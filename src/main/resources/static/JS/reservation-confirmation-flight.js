@@ -1,6 +1,4 @@
 document.getElementById('check-reservation-button').addEventListener('click', function () {
-    // 이메일 입력 필드에서 이메일을 가져옴
-    var email = document.getElementById('departure-city').value; // 실제 이메일 입력 필드 ID를 사용
 
     if (email) {
         // 로그인 상태 확인을 위한 AJAX 요청

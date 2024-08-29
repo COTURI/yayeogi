@@ -347,3 +347,25 @@ h1 {
      background-color: #ccc; /* 비활성화된 버튼의 배경색 */
      cursor: not-allowed;
  }
+
+
+.social-media {
+    position: fixed; /* 페이지의 왼쪽에 고정 */
+    top: 20px; /* 상단에서의 거리 설정 */
+    left: 20px; /* 왼쪽에서의 거리 설정 */
+    display: flex; /* 아이콘들을 가로로 나열 */
+    flex-direction: column; /* 세로로 정렬 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+    gap: 10px; /* 아이콘 간의 간격 */
+}
+
+.social-icon {
+    display: inline-block;
+    color: #333;
+    font-size: 24px; /* 아이콘 크기 조정 */
+    transition: color 0.3s;
+}
+
+.social-icon:hover {
+    color: #007bff; /* 아이콘 호버 시 색상 변경 */
+}
