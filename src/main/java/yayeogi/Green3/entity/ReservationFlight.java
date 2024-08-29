@@ -40,10 +40,6 @@ public class ReservationFlight {
     @Column
     private String returnArrivalTime; // 귀국일 도착시간 (선택)
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false, referencedColumnName = "email")
-    private User user; // 예약자와의 연관관계 설정
-
     // 예약자 정보
     @Column(name = "passenger_first_name", nullable = false)
     private String passengerFirstName; // 예약자 영문 이름

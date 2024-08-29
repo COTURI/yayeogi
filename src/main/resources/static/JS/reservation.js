@@ -17,26 +17,6 @@ function decodeURIComponentSafe(encodedUri) {
     }
 }
 
-// 데이터 로드 함수
-async function loadData() {
-    try {
-        const [airportsResponse, airlinesResponse] = await Promise.all([
-            fetch('/json/airports.json'),
-            fetch('/json/airlines.json')
-        ]);
-
-        if (!airportsResponse.ok || !airlinesResponse.ok) {
-            throw new Error('데이터 로드 실패');
-        }
-
-        airports = await airportsResponse.json();
-        airlines = await airlinesResponse.json();
-        displayBookingDetails();
-    } catch (error) {
-        console.error('데이터 로드 오류:', error);
-    }
-}
-
 // 쿼리 파라미터 가져오기
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -45,24 +25,41 @@ function getQueryParam(param) {
     return value || '정보 없음';
 }
 
+// 항공사 데이터 로드
+async function loadAirlines() {
+    try {
+        const response = await fetch('/json/airlines.json');
+        if (!response.ok) throw new Error('데이터를 불러오는 데 문제가 발생했습니다.');
+        return await response.json();
+    } catch (error) {
+        console.error('데이터 불러오기 오류:', error);
+        return {};
+    }
+}
+
 // 예약 상세 정보 표시
 function displayBookingDetails() {
     const departureAirport = getQueryParam('departureAirport');
     const arrivalAirport = getQueryParam('arrivalAirport');
     const departureTime = getQueryParam('departureTime');
     const arrivalTime = getQueryParam('arrivalTime') || '정보 없음';
+    const departureDate = new Date(departureTime).toISOString().split('T')[0]; // YYYY-MM-DD 형식
+    const arrivalDate = new Date(arrivalTime).toISOString().split('T')[0]; // YYYY-MM-DD 형식
     const price = getQueryParam('price');
     const carrierCode = getQueryParam('carrierCode');
     const returnDepartureAirport = getQueryParam('returnDepartureAirport');
     const returnArrivalAirport = getQueryParam('returnArrivalAirport');
     const returnDepartureTime = getQueryParam('returnDepartureTime');
     const returnArrivalTime = getQueryParam('returnArrivalTime') || '정보 없음';
+    const returnDepartureDate = new Date(returnDepartureTime).toISOString().split('T')[0]; // YYYY-MM-DD 형식
+    const returnArrivalDate = new Date(returnArrivalTime).toISOString().split('T')[0]; // YYYY-MM-DD 형식
     const returnPrice = getQueryParam('returnPrice');
     const returnCarrierCode = getQueryParam('returnCarrierCode');
 
     const outboundPriceWon = convertEuroToWon(parseFloat(price));
     const inboundPriceWon = convertEuroToWon(parseFloat(returnPrice));
 
+    // 예약 정보 표시
     document.getElementById('booking-details').innerHTML = `
         <h2>출발 항공편</h2>
         <p><strong>출발 공항:</strong> ${decodeURIComponentSafe(departureAirport)}</p>
@@ -79,93 +76,55 @@ function displayBookingDetails() {
         <p><strong>가격:</strong> ₩${inboundPriceWon}</p>
         <p><strong>항공사:</strong> ${airlines[returnCarrierCode] || '정보 없음'}</p>
     `;
+
+    // 폼의 숨겨진 입력 필드에 예약 정보 추가
+    document.getElementById('departureAirport').value = departureAirport;
+    document.getElementById('arrivalAirport').value = arrivalAirport;
+    document.getElementById('departureTime').value = departureTime;
+    document.getElementById('arrivalTime').value = arrivalTime;
+    document.getElementById('departureDate').value = departureDate;
+    document.getElementById('arrivalDate').value = arrivalDate;
+    document.getElementById('price').value = price;
+    document.getElementById('carrierCode').value = carrierCode;
+    document.getElementById('returnDepartureAirport').value = returnDepartureAirport;
+    document.getElementById('returnArrivalAirport').value = returnArrivalAirport;
+    document.getElementById('returnDepartureTime').value = returnDepartureTime;
+    document.getElementById('returnArrivalTime').value = returnArrivalTime;
+    document.getElementById('returnDepartureDate').value = returnDepartureDate;
+    document.getElementById('returnArrivalDate').value = returnArrivalDate;
+    document.getElementById('returnPrice').value = returnPrice;
+    document.getElementById('returnCarrierCode').value = returnCarrierCode;
+
 }
 
-async function loadAirlines() {
-    try {
-        const response = await fetch('/json/airlines.json');
-        if (!response.ok) throw new Error('데이터를 불러오는 데 문제가 발생했습니다.');
-        return await response.json();
-    } catch (error) {
-        console.error('데이터 불러오기 오류:', error);
-        return {};
-    }
+
+
+function handleFormSubmit(event) {
+    event.preventDefault(); // 기본 폼 제출 동작을 방지합니다
+    const form = event.target;
+    fetch(form.action, {
+        method: form.method,
+        body: new FormData(form),
+    })
+    .then(response => {
+        if (response.redirected) {
+            window.location.href = response.url;
+        } else {
+            return response.json();
+        }
+    })
+    .then(data => {
+        // 응답을 처리합니다
+    })
+    .catch(error => console.error('Error:', error));
 }
-document.addEventListener('DOMContentLoaded', async () => {
-    airlines = await loadAirlines();
-    displayBookingDetails();
-});
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const value = urlParams.get(param);
-        return value ? decodeURIComponent(value) : '정보 없음';
-    }
 
-    function displayBookingDetails() {
-        const departureAirport = getQueryParam('departureAirport');
-        const arrivalAirport = getQueryParam('arrivalAirport');
-        const departureTime = getQueryParam('departureTime');
-        const arrivalTime = getQueryParam('arrivalTime') || '정보 없음'; // 기본값 설정
-        const returnDepartureAirport = getQueryParam('returnDepartureAirport');
-        const returnArrivalAirport = getQueryParam('returnArrivalAirport');
-        const returnDepartureTime = getQueryParam('returnDepartureTime');
-        const returnArrivalTime = getQueryParam('returnArrivalTime') || '정보 없음'; // 기본값 설정
-        const price = getQueryParam('price');
-        const returnPrice = getQueryParam('returnPrice');
-        const carrierCode = getQueryParam('carrierCode');
-        const returnCarrierCode = getQueryParam('returnCarrierCode');
+    document.addEventListener('DOMContentLoaded', async () => {
 
-        const bookingDetails = `
-            <h2>출발 항공편</h2>
-            <p><strong>출발 공항:</strong> ${departureAirport}</p>
-            <p><strong>도착 공항:</strong> ${arrivalAirport}</p>
-            <p><strong>출발 시간:</strong> ${departureTime}</p>
-            <p><strong>도착 시간:</strong> ${arrivalTime}</p>
-            <p><strong>가격:</strong> ${price} EUR</p>
-            <p><strong>항공사:</strong> ${getAirlineName(carrierCode)}</p>
 
-            <h2>귀국 항공편</h2>
-            <p><strong>출발 공항:</strong> ${returnDepartureAirport}</p>
-            <p><strong>도착 공항:</strong> ${returnArrivalAirport}</p>
-            <p><strong>출발 시간:</strong> ${returnDepartureTime}</p>
-            <p><strong>도착 시간:</strong> ${returnArrivalTime}</p>
-            <p><strong>가격:</strong> ${returnPrice} EUR</p>
-            <p><strong>항공사:</strong> ${getAirlineName(returnCarrierCode)}</p>
-        `;
-
-        document.getElementById('booking-details').innerHTML = bookingDetails;
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById("reservationForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // 기본 폼 제출 동작을 방지합니다
-            const form = event.target;
-            fetch(form.action, {
-                method: form.method,
-                body: new FormData(form),
-            })
-            .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else {
-                    return response.json();
-                }
-            })
-            .then(data => {
-                // 응답을 처리합니다
-            })
-            .catch(error => console.error('Error:', error));
-        });
+        airlines = await loadAirlines();
+        displayBookingDetails();
     });
 
-    function getAirlineName(code) {
-        const airlines = {}; // 항공사 데이터는 적절히 로드해야 합니다.
-        // airlines 데이터 로드 코드 추가 (예: 서버에서 받아오는 방식)
-        return airlines[code] || '정보 없음';
-    }
-
-    displayBookingDetails();
-});

@@ -7,15 +7,18 @@
     <link rel="stylesheet" href="/css/reservation.css">
     <link rel="stylesheet" href="/css/header.css">
     <script src="/js/reservation.js" defer></script>
+
+
+
 </head>
 <body>
 
 
 <div th:replace="header :: header"></div>
 
-<header>
+
     <h1>예약 확인</h1>
-</header>
+
 
 <main>
     <!-- 예약 요약 -->
@@ -26,7 +29,28 @@
         </div>
     </div>
 
-    <form id="reservationForm" action="/payment" method="post">
+    <form id="reservationForm" action="/reservation" method="post">
+
+
+        <input type="hidden" id="departureAirport" name="departureAirport">
+        <input type="hidden" id="arrivalAirport" name="arrivalAirport">
+        <input type="hidden" id="departureTime" name="departureTime">
+        <input type="hidden" id="arrivalTime" name="arrivalTime">
+        <input type="hidden" id="price" name="price">
+        <input type="hidden" id="carrierCode" name="carrierCode">
+        <input type="hidden" id="returnDepartureAirport" name="returnDepartureAirport">
+        <input type="hidden" id="returnArrivalAirport" name="returnArrivalAirport">
+        <input type="hidden" id="returnDepartureTime" name="returnDepartureTime">
+        <input type="hidden" id="returnArrivalTime" name="returnArrivalTime">
+        <input type="hidden" id="returnPrice" name="returnPrice">
+        <input type="hidden" id="returnCarrierCode" name="returnCarrierCode">
+        <input type="hidden" id="departureDate" name="departureDate">
+        <input type="hidden" id="arrivalDate" name="arrivalDate">
+        <input type="hidden" id="returnDepartureDate" name="returnDepartureDate">
+        <input type="hidden" id="returnArrivalDate" name="returnArrivalDate">
+        <input type="hidden" id="userId" name="userId" th:value="${username}" required>
+
+
         <!-- 예약자 정보 -->
         <div class="passenger-info">
             <h2>예약자 정보</h2>

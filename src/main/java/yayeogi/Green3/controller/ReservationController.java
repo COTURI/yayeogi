@@ -31,7 +31,6 @@ public class ReservationController {
     @Value("${kakao.redirect.uri}")
     private String kakaoRedirectUri;
 
-
     @Autowired
     private final ReservationService reservationService;
 
@@ -86,62 +85,27 @@ public class ReservationController {
         return "redirect:/confirmation"; // 취소 후 목록 페이지로 리디렉션
     }
 
-
     @PostMapping("/reservation")
-    public String createReservation(@ModelAttribute ReservationFlight reservationFlight, HttpSession session) {
-        // 액세스 토큰 확인
-        String accessToken = (String) session.getAttribute("accessToken");
-        System.out.println("Access Token in Reservation: " + accessToken);
+    public String createReservation(@ModelAttribute ReservationFlight reservationFlight, HttpSession session, Model model) {
+        User authenticatedUser = (User) session.getAttribute("user");
 
+        if (authenticatedUser == null) {
+            model.addAttribute("message", "사용자 정보가 세션에 없습니다. 로그인 상태를 확인해주세요.");
+            return "error";
+        }
+
+        String userId = authenticatedUser.getEmail();
+        reservationFlight.setUserId(userId);
+        System.out.println(userId);
+
+        String accessToken = (String) session.getAttribute("accessToken");
         if (accessToken == null) {
-            // 액세스 토큰이 없으면 카카오 로그인 페이지로 리디렉션
+            session.setAttribute("pendingReservation", reservationFlight);
             return "redirect:/kakao-login";
         }
 
-        try {
-            // 예약 정보를 세션에 저장
-            session.setAttribute("reservationFlight", reservationFlight);
-            // 결제 페이지로 리디렉션
-            return "redirect:/payment";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/error"; // 오류 페이지로 리디렉션
-        }
-    }
-
-
-    private String getAccessTokenFromKakao(String code) {
-        final String kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
-        final String clientId = "96d5a9675bd49db0b20b488725aa076c"; // 카카오 개발자 센터에서 발급받은 Client ID
-        final String redirectUri = "http://localhost:8080/kakao-callback"; // Redirect URI
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/x-www-form-urlencoded");
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", clientId);
-        params.add("redirect_uri", redirectUri);
-        params.add("code", code);
-
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
-        RestTemplate restTemplate = new RestTemplate();
-
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(kakaoTokenUrl, HttpMethod.POST, requestEntity, String.class);
-
-            if (response.getStatusCode() == HttpStatus.OK) {
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode root = mapper.readTree(response.getBody());
-                return root.path("access_token").asText(); // 액세스 토큰 추출
-            } else {
-                // 실패 시 로그 또는 예외 처리
-                return null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        session.setAttribute("reservationFlight", reservationFlight);
+        return "redirect:/payment";
     }
     @GetMapping("/kakao-callback")
     public String kakaoCallback(@RequestParam("code") String code, HttpSession session) throws JsonProcessingException {
@@ -164,16 +128,19 @@ public class ReservationController {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response.getBody());
             String accessToken = root.path("access_token").asText();
-
-            // 액세스 토큰을 세션에 저장
             session.setAttribute("accessToken", accessToken);
-            System.out.println("Access Token Stored: " + accessToken);
 
-            // 예약 페이지로 리디렉션
-            return "redirect:/payment";
+            // 예약 페이지에서 저장된 예약 정보 확인
+            ReservationFlight pendingReservation = (ReservationFlight) session.getAttribute("pendingReservation");
+            if (pendingReservation != null) {
+                session.removeAttribute("pendingReservation");
+                session.setAttribute("reservationFlight", pendingReservation);
+                return "redirect:/payment";
+            }
+
+            return "redirect:/reservation";
         } else {
             return "error"; // 에러 페이지로 리디렉션
         }
     }
-
 }

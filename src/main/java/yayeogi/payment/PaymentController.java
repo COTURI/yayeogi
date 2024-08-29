@@ -45,29 +45,27 @@ public class PaymentController {
     @GetMapping("/kakao-login")
     public String kakaoLogin() {
         String kakaoAuthUrl = "https://kauth.kakao.com/oauth/authorize" +
-                "?client_id=96d5a9675bd49db0b20b488725aa076c" +
-                "&redirect_uri=http://localhost:8080/kakao-callback" +
+                "?client_id=" + kakaoClientId +
+                "&redirect_uri=" + kakaoRedirectUri +
                 "&response_type=code";
         return "redirect:" + kakaoAuthUrl;
     }
 
     @PostMapping("/payment")
-    public ModelAndView handlePayment(HttpSession session, @RequestParam MultiValueMap<String, String> params) {
+    public ModelAndView handlePayment(HttpSession session) {
         String accessToken = (String) session.getAttribute("accessToken");
-        System.out.println("Access Token in Payment: " + accessToken);
+        ReservationFlight reservationFlight = (ReservationFlight) session.getAttribute("reservationFlight");
 
-        if (accessToken == null) {
-            // 액세스 토큰이 없으면 카카오 로그인 페이지로 리디렉션
+        if (accessToken == null || reservationFlight == null) {
             return new ModelAndView("redirect:/kakao-login");
         }
 
-        String paymentUrl = "https://kapi.kakao.com/v1/payment/ready";
         HttpHeaders paymentHeaders = new HttpHeaders();
         paymentHeaders.set("Authorization", "Bearer " + accessToken);
         paymentHeaders.set("Content-Type", "application/x-www-form-urlencoded");
 
         MultiValueMap<String, String> paymentParams = new LinkedMultiValueMap<>();
-        paymentParams.add("cid", "TC0ONETIME");
+        paymentParams.add("cid", "TC0ONETIME"); // 테스트용 CID
         paymentParams.add("partner_order_id", "partner_order_id");
         paymentParams.add("partner_user_id", "partner_user_id");
         paymentParams.add("item_name", "Item");
@@ -83,22 +81,13 @@ public class PaymentController {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            ResponseEntity<String> paymentResponse = restTemplate.exchange(paymentUrl, HttpMethod.POST, paymentEntity, String.class);
-            System.out.println("Payment Response Status: " + paymentResponse.getStatusCode());
-            System.out.println("Payment Response Body: " + paymentResponse.getBody());
-
+            ResponseEntity<String> paymentResponse = restTemplate.exchange(PAYMENT_URL, HttpMethod.POST, paymentEntity, String.class);
             if (paymentResponse.getStatusCode() == HttpStatus.OK) {
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode root = mapper.readTree(paymentResponse.getBody());
                 String redirectUrl = root.path("next_redirect_pc_url").asText();
                 String tid = root.path("tid").asText();
                 session.setAttribute("tid", tid);
-
-                // 예약 정보를 세션에 저장 (선택 사항)
-                ReservationFlight reservationFlight = (ReservationFlight) session.getAttribute("reservationFlight");
-                if (reservationFlight != null) {
-                    reservationService.saveReservationFlight(reservationFlight);
-                }
 
                 return new ModelAndView("redirect:" + redirectUrl);
             } else {
@@ -109,6 +98,7 @@ public class PaymentController {
             return new ModelAndView("error").addObject("error", "결제 요청 중 오류 발생: " + e.getMessage());
         }
     }
+
     @GetMapping("/payment")
     public ModelAndView preparePayment(HttpSession session) {
         ReservationFlight reservationFlight = (ReservationFlight) session.getAttribute("reservationFlight");
@@ -117,6 +107,7 @@ public class PaymentController {
             return new ModelAndView("redirect:/reservation");
         }
 
+        // 결제 요청을 서버에서 자동으로 처리하도록 클라이언트를 준비합니다.
         return new ModelAndView("payment")
                 .addObject("reservationFlight", reservationFlight);
     }
@@ -125,17 +116,19 @@ public class PaymentController {
     public String approvePayment(@RequestParam("pg_token") String pgToken, HttpSession session) {
         String accessToken = (String) session.getAttribute("accessToken");
         String tid = (String) session.getAttribute("tid");
+        ReservationFlight reservationFlight = (ReservationFlight) session.getAttribute("reservationFlight");
 
-        if (accessToken == null || tid == null) {
+        if (accessToken == null || tid == null || reservationFlight == null) {
             return "redirect:/error";
         }
+
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         headers.set("Content-Type", "application/x-www-form-urlencoded");
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("cid", CID);
+        params.add("cid", "TC0ONETIME");
         params.add("tid", tid);
         params.add("partner_order_id", "partner_order_id");
         params.add("partner_user_id", "partner_user_id");
@@ -146,12 +139,12 @@ public class PaymentController {
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(APPROVE_URL, HttpMethod.POST, entity, String.class);
-            System.out.println("Approve Response: " + response.getBody());
-
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response.getBody());
 
             session.setAttribute("alertMessage", "결제가 성공적으로 완료되었습니다!");
+            reservationService.saveReservationFlight(reservationFlight);
+            session.removeAttribute("reservationFlight");
 
             return "redirect:/confirmation";
         } catch (Exception e) {
