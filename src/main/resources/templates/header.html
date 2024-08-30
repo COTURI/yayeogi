@@ -23,7 +23,7 @@
                 <!-- 로그인된 상태 -->
                 <button type="button" class="btn btn-secondary">
                     <img src="#" alt="내정보"/>
-                    <span th:text="${session.user.name}">유저님</span>
+                    <span id="userName" th:text="${session.user.name}">유저님</span>
                 </button>
                 <form action="/logout" method="post">
                     <button type="submit" class="btn btn-secondary">
@@ -44,4 +44,16 @@
     </div>
 </header>
 </body>
+<script>
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const userNameElement = document.getElementById('userName');
+    if (userNameElement) {
+        const userName = userNameElement.textContent.trim();
+        sessionStorage.setItem('userName', userName); // 또는 localStorage.setItem('userName', userName);
+    }
+});
+
+</script>
 </html>

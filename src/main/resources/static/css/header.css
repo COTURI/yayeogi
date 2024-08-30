@@ -73,7 +73,8 @@ header {
     font-family: "Noto Sans KR", sans-serif;
     display: flex;
     flex-direction: column;
-    min-height: 30vh;
+    min-height: 197px;
+    margin-top:120px;
                 }
  .content {
  flex: 1;
@@ -94,6 +95,7 @@ header {
     z-index: 2;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     text-align: left; /* 텍스트를 왼쪽으로 정렬 */
+
 }
 
 .footer-box {

@@ -42,7 +42,7 @@ public class UserController {
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         model.addAttribute("user", new User());
-        return "login";
+        return "/login";
     }
 
     @PostMapping("/login")
@@ -60,10 +60,10 @@ public class UserController {
             response.addCookie(loggedInCookie);
             response.addCookie(usernameCookie);
 
-            return "/";  // 메인 페이지로 리다이렉트
+            return "/index";  // 메인 페이지로 리다이렉트
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "login";
+            return "/error";
         }
     }
 
