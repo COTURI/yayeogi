@@ -32,7 +32,7 @@ public class ReservationFlight {
     private String userId; // 예약자 ID (User 엔티티의 email과 매핑됨)
 
     @Column
-    private LocalDate returnDate; // 귀국일 (선택)
+    private LocalDate returnDepartureDate; // 귀국일 (선택)
 
     @Column
     private String returnDepartureTime; // 귀국일 출발시간 (선택)

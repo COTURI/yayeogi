@@ -10,39 +10,37 @@
     <link rel="stylesheet" href="../static/css/header.css">
 </head>
 <body>
-<header th:fragment="header">
+<header>
     <div class="header-body">
-        <div class="left-section">
-            <button type="button" class="btn logo-button">
-                <img src="/html/layout/logo2.png" alt="YAYEOGI 로고">
-            </button>
-        </div>
-        <div class="auth">
-            <!-- Thymeleaf 조건문을 사용한 버튼 표시 제어 -->
-            <div th:if="${session.user != null}">
-                <!-- 로그인된 상태 -->
-                <button type="button" class="btn btn-secondary">
-                    <img src="#" alt="내정보"/>
-                    <span th:text="${session.user.name}"></span>
+        <div class="header-content">
+            <div class="logo-and-menu">
+                <button type="button" class="btn logo-button">
+                    <img src="/html/layout/logo2.png" alt="YAYEOGI 로고">
                 </button>
-                <form action="/logout" method="post">
-                    <button type="submit" class="btn btn-secondary">
-                        <img src="/html/layout/logout.png" alt="로그아웃">
+                <div class="menu">
+                    <a href="http://localhost:8080/" class="btn btn-primary">항공권</a>
+                    <a href="http://localhost:8080/hotels/main" class="btn btn-primary">호텔</a>
+                </div>
+            </div>
+            <div class="auth">
+                <div th:if="${session.user != null}">
+                    <!-- 로그인된 상태 -->
+                    <button type="button" class="btn btn-outline-primary">
+                        <span th:text="${session.user.name}"></span>
                     </button>
-                </form>
-
-                <a href="/confirmation" class="button">예약 확인 페이지로 이동</a>
-
+                    <form action="/logout" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger">
+                            로그아웃
+                        </button>
+                    </form>
+                    <a href="/confirmation" class="btn btn-outline-secondary">예약 확인</a>
+                </div>
+                <div th:if="${session.user == null}">
+                    <!-- 비로그인 상태 -->
+                    <a href="/register" class="btn btn-outline-primary">회원가입</a>
+                    <a href="/login" class="btn btn-outline-secondary">로그인</a>
+                </div>
             </div>
-            <div th:if="${session.user == null}">
-                <!-- 비로그인 상태 -->
-                <button type="button" class="btn btn-secondary" onclick="location.href='/register'">회원가입</button>
-                <button type="button" class="btn btn-secondary" onclick="location.href='/login'">로그인</button>
-            </div>
-        </div>
-        <div class="menu">
-            <button type="button" class="btn btn-info" onclick="window.location.href='http://localhost:8080/'">항공권</button>
-            <button type="button" class="btn btn-info" onclick="window.location.href='http://localhost:8080/hotels/main'">호텔</button>
         </div>
     </div>
 </header>

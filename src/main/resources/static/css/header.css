@@ -1,118 +1,130 @@
 body {
-
+    margin: 0;
+    font-family: Arial, sans-serif;
 }
 
 header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px 0px;
-
+    justify-content: center; /* 중앙 정렬 */
+    padding: 10px 20px;
+    background-color: #f8f9fa; /* 밝은 배경색 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
 }
-.header-body{
-  width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    font-family: Arial, sans-serif;
-    }
 
+.header-body {
+    width: 1200px;
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 정렬 */
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between; /* 좌우 정렬 */
+    align-items: center;
+}
+
+.logo-and-menu {
+    display: flex;
+    flex-direction: column; /* 로고와 메뉴를 세로로 정렬 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+}
 
 .logo-button {
-    flex: 1;
+    background-color: #ffffff; /* 로고 배경색 하얀색 */
+    border: none; /* 버튼 테두리 제거 */
+    padding: 0; /* 버튼 패딩 제거 */
+    box-shadow: none; /* 버튼 그림자 제거 */
 }
 
 .logo-button img {
-    height: 40px; /* 로고 이미지 높이 조정 */
-    width: auto; /* 비율 유지 */
-}
-
-.menu-container {
-    display: flex;
-    justify-content: center;
-    padding: 0;
-    margin: 0;
+    height: 40px;
+    width: auto;
 }
 
 .menu {
-    display: flex;
+    margin-top: 10px; /* 로고와 메뉴 간 간격 */
 }
 
-.menu button {
+.menu .btn {
     margin: 0 5px;
-    padding: 10px 15px;
-    background-color: #17a2b8; /* 버튼 배경색 조정 */
-    border: none;
+    padding: 10px 20px; /* 버튼의 패딩 증가 */
     border-radius: 5px;
-    cursor: pointer;
-    font-size: 13px;
     color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.menu .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.menu .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
 }
 
 .auth {
-    flex: 1;
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
 }
 
-.auth button {
+.auth .btn {
     margin: 0 5px;
-    padding: 10px 20px;
-    background-color: #6c757d;
-    color: #fff;
-    border: none;
+    padding: 10px 20px; /* 버튼의 패딩 증가 */
+    font-size: 14px;
     border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+    text-decoration: none;
 }
 
-.auth button:hover {
-    background-color: #5a6268;
+.auth .btn-outline-primary {
+    border-color: #007bff;
+    color: #007bff;
+    background-color: transparent; /* 배경색 투명 */
 }
-.footer-body{
-    margin: 0;
-    font-family: "Noto Sans KR", sans-serif;
+
+.auth .btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.auth .btn-outline-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+    background-color: transparent; /* 배경색 투명 */
+}
+
+.auth .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.auth .btn-outline-secondary {
+    border-color: #6c757d; /* 테두리 색상 추가 */
+    color: #6c757d; /* 글자 색상 추가 */
+    background-color: transparent; /* 배경색 투명 */
+}
+
+.auth .btn-outline-secondary:hover {
+    background-color: #6c757d; /* 호버 시 배경색 변경 */
+    color: #fff; /* 호버 시 글자 색상 변경 */
+}
+
+/* 로그인 상태에서 버튼들이 가로로 정렬되도록 수정 */
+.auth div {
     display: flex;
-    flex-direction: column;
-    min-height: 30vh;
-                }
- .content {
- flex: 1;
+    gap: 10px; /* 버튼 간 간격 */
 }
 
-#footer {
-    overflow: hidden;
-    position: relative;
-    bottom: 0;
-    left: 0;
-    max-width: 100%;
-    padding: 20px;
-    font-weight: 400;
-    font-size: 12px;
-    color: black;
-    background-color:#05203C;
-     /*whitesmoke;*/
-    z-index: 2;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    text-align: left; /* 텍스트를 왼쪽으로 정렬 */
+/* 추가 스타일 조정 */
+.auth .btn {
+    font-size: 14px; /* 버튼 폰트 크기 조정 */
+    padding: 10px 20px; /* 버튼 패딩 */
+    border-radius: 5px; /* 버튼 테두리 둥글게 */
 }
 
-.footer-box {
-    max-width: 1200px;
-    margin: 0; /* margin을 0으로 설정하여 왼쪽에 붙이기 */
-    padding: 0; /* padding을 제거하여 왼쪽 정렬을 유지 */
-    text-align: center; /* 텍스트를 왼쪽으로 정렬 */
+.auth .btn-outline-primary,
+.auth .btn-outline-danger,
+.auth .btn-outline-secondary {
+    border-width: 2px; /* 테두리 두께 조정 */
 }
-
-hr {
-    border: none;
-    border-top: 1px solid rgba(0, 0, 0, 0.2);
-    margin: 10px 0;
-}
-
-.gray_subtext {
-    color: white;
-    /*#555;*/
-    line-height: 1.6;
-    text-align: left; /* 텍스트를 왼쪽으로 정렬 */
-}
-
