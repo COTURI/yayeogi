@@ -157,6 +157,8 @@ public class HotelPaymentController {
         }
     }
 
+
+
     @GetMapping("/HotelCancel")
     public String cancelPayment() {
         return "payment-cancelled";
