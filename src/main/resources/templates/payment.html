@@ -3,10 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Login</title>
+    <title>Payment</title>
+    <script>
+        window.onload = function() {
+            // 결제 요청을 서버 측에서 자동으로 처리하도록 폼을 자동으로 제출합니다
+            var form = document.createElement('form');
+            form.setAttribute('method', 'POST');
+            form.setAttribute('action', '/payment');
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
 </head>
 <body>
-<h1>Payment Login</h1>
-<a href="/paymentlogin">Log in with Kakao</a>
+<p>결제 요청을 처리하고 있습니다...</p>
 </body>
 </html>

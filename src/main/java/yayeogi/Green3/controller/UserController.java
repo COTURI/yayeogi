@@ -32,7 +32,7 @@ public class UserController {
     public String registerUser(@ModelAttribute User user, Model model) {
         try {
             userService.registerNewUser(user);
-            return "redirect:/register?success";
+            return "redirect:/";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "signUp";
@@ -71,6 +71,6 @@ public class UserController {
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();  // 세션 무효화
-        return "redirect:/login";  // 로그인 페이지로 리다이렉트
+        return "redirect:/";  // 로그인 페이지로 리다이렉트
     }
 }

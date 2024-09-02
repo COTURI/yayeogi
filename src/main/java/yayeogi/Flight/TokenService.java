@@ -26,23 +26,26 @@ public class TokenService {
     public String getAccessToken() {
         String tokenUrl = "https://test.api.amadeus.com/v1/security/oauth2/token";
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Basic " + java.util.Base64.getEncoder().encodeToString((apiKey + ":" + apiSecret).getBytes()));
+
+        // Base64 인코딩된 인증 정보 생성
+        String auth = apiKey + ":" + apiSecret;
+        String encodedAuth = java.util.Base64.getEncoder().encodeToString(auth.getBytes());
+        headers.set("Authorization", "Basic " + encodedAuth);
         headers.set("Content-Type", "application/x-www-form-urlencoded");
 
         HttpEntity<String> entity = new HttpEntity<>("grant_type=client_credentials", headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, entity, String.class);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            try {
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, entity, String.class);
+            if (response.getStatusCode() == HttpStatus.OK) {
                 JsonNode jsonResponse = objectMapper.readTree(response.getBody());
                 return jsonResponse.path("access_token").asText();
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException("Failed to parse access token response.");
+            } else {
+                throw new RuntimeException("Failed to obtain access token. Status code: " + response.getStatusCode());
             }
-        } else {
-            throw new RuntimeException("Failed to obtain access token. Status code: " + response.getStatusCode());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to obtain access token. Error: " + e.getMessage());
         }
     }
 }

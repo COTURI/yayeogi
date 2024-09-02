@@ -146,6 +146,7 @@ public class PaymentController {
             reservationService.saveReservationFlight(reservationFlight);
             session.removeAttribute("reservationFlight");
 
+
             return "redirect:/confirmation";
         } catch (Exception e) {
             e.printStackTrace();
