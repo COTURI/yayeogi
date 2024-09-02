@@ -26,6 +26,7 @@ function formatTime(dateInput) {
 }
 
 
+
 // 데이터 로드 함수
 async function loadData() {
     if (Object.keys(airports).length > 0 && Object.keys(airlines).length > 0) {

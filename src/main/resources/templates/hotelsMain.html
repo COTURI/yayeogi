@@ -15,7 +15,8 @@
     <link rel="stylesheet" href="/css/footer.css">
 
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <style>
     .hotel-card {
@@ -31,6 +32,27 @@
     height: auto;
     border-radius: 4px;
 }
+
+.social-media {
+    position: fixed; /* 페이지의 왼쪽에 고정 */
+    top: 20px; /* 상단에서의 거리 설정 */
+    left: 20px; /* 왼쪽에서의 거리 설정 */
+    display: flex; /* 아이콘들을 가로로 나열 */
+    flex-direction: column; /* 세로로 정렬 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+    gap: 10px; /* 아이콘 간의 간격 */
+}
+
+.social-icon {
+    display: inline-block;
+    color: #333;
+    font-size: 24px; /* 아이콘 크기 조정 */
+    transition: color 0.3s;
+}
+
+.social-icon:hover {
+    color: #007bff; /* 아이콘 호버 시 색상 변경 */
+}
 </style>
 
 <body>
@@ -38,8 +60,8 @@
 
 <main id="hotels_search_page">
     <section class="hotels_search_form">
-        <div class="background_image">
-            <img src="/html/hotels/img/vacation.png" width="2150px;" height="550px;" style="position: relative;" alt="background">
+        <div class="background_image" >
+            <img src="/html/hotels/img/vacation.png" width="1920px;" height="615px;" style="position: relative;" alt="background">
 
             <!--검색창 백그라운드 이미지-->
             <div class="search_from_box" style="margin-top:200px;">
@@ -71,11 +93,11 @@
 
 
 
-                    <div class="filters">   <!--필터 설정-->
+                    <div class="filters">
                         <label>인기 필터:</label>
-                        <label><input type="checkbox"> 무료 취소</label>
-                        <label><input type="checkbox"> 4성급</label>
-                        <label><input type="checkbox"> 3성급</label>
+                        <label><input class="rating" type="checkbox" id="rating5" data-rating ="5" value="5"> 5성급</label>
+                        <label><input class="rating" type="checkbox" id="rating4" data-rating ="4" value="4"> 4성급</label>
+                        <label><input class="rating" type="checkbox" id="rating3" data-rating ="3" value="3"> 3성급</label>
                     </div>
 
                 </div>
@@ -242,106 +264,132 @@
 
 
 
-
     </section>
 </main>
+<div class="social-media">
+    <a href="https://www.facebook.com" class="social-icon" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://twitter.com" class="social-icon" aria-label="Twitter" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+    <a href="https://www.instagram.com" class="social-icon" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+    <a href="https://github.com/COTURI/yayeogi" class="social-icon" aria-label="GitHub" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
+</div>
+
+
 <div th:replace="footer :: footer"></div>
 <script>
 
-    document.addEventListener('DOMContentLoaded', () => {
-        // 기본 위치 코드를 설정하여 페이지 로드 시 호텔 정보를 가져옴
-        const defaultLocationCode = 2; // 서울의 위치 코드
+    var today = new Date();
 
-        // 페이지 로드 시 기본 위치의 호텔을 가져옴
-        fetchHotelsByLocation(defaultLocationCode);
+  // 오늘 날짜를 'YYYY-MM-DD' 형식으로 변환합니다.
+  var todayDate = today.toISOString().split('T')[0];
 
-        // 지역 버튼에 대한 클릭 이벤트 설정
-        const buttons = document.querySelectorAll('.kor_area_button');
-        buttons.forEach(button => {
-            button.addEventListener('click', () => {
-                const location = button.getAttribute('data-location');
-                fetchHotelsByLocation(location);
-            });
-        });
-    });
+  // 내일 날짜를 계산합니다.
+  var tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
 
-      function fetchHotelsByLocation(location) {
-    console.log(`Fetching hotels for location: ${location}`);
+  // 내일 날짜를 'YYYY-MM-DD' 형식으로 변환합니다.
+  var tomorrowDate = tomorrow.toISOString().split('T')[0];
 
-    // 요청 URL 구성
-    const url = `http://localhost:8080/hotels/mains?location=${encodeURIComponent(location)}`;
-    console.log(`Request URL: ${url}`);
+  // checkin_date에 오늘 날짜를 설정합니다.
+  document.getElementById("checkin_date").value = todayDate;
 
-    fetch(url)
-        .then(response => {
-            console.log(`Response status: ${response.status}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Received data:', data);
-            updateHotelCards(data); // 수신한 데이터로 UI 업데이트
-        })
-        .catch(error => {
-            console.error('Error fetching hotels:', error);
-        });
+  // checkout_date에 내일 날짜를 설정합니다.
+  document.getElementById("checkout_date").value = tomorrowDate;
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+      // 기본 위치 코드를 설정하여 페이지 로드 시 호텔 정보를 가져옴
+      const defaultLocationCode = 2; // 서울의 위치 코드
+
+      // 페이지 로드 시 기본 위치의 호텔을 가져옴
+      fetchHotelsByLocation(defaultLocationCode);
+
+      // 지역 버튼에 대한 클릭 이벤트 설정
+      const buttons = document.querySelectorAll('.kor_area_button');
+      buttons.forEach(button => {
+          button.addEventListener('click', () => {
+              const location = button.getAttribute('data-location');
+              fetchHotelsByLocation(location);
+          });
+      });
+  });
+
+    function fetchHotelsByLocation(location) {
+  console.log(`Fetching hotels for location: ${location}`);
+
+  // 요청 URL 구성
+  const url = `http://localhost:8080/hotels/mains?location=${encodeURIComponent(location)}`;
+  console.log(`Request URL: ${url}`);
+
+  fetch(url)
+      .then(response => {
+          console.log(`Response status: ${response.status}`);
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+      })
+      .then(data => {
+          console.log('Received data:', data);
+          updateHotelCards(data); // 수신한 데이터로 UI 업데이트
+      })
+      .catch(error => {
+          console.error('Error fetching hotels:', error);
+      });
 }
 
-      function updateHotelCards(hotels) {
-          const container = document.getElementById('hotel-cards-container');
-          if (!container) {
-              console.error('Container element not found');
-              return;
-          }
+    function updateHotelCards(hotels) {
+        const container = document.getElementById('hotel-cards-container');
+        if (!container) {
+            console.error('Container element not found');
+            return;
+        }
 
-          container.innerHTML = ''; // Clear previous cards
+        container.innerHTML = ''; // Clear previous cards
 
-          // Create the main container div
-          const titleCommentDiv = document.createElement('div');
-          titleCommentDiv.className = 'title-comment2';
+        // Create the main container div
+        const titleCommentDiv = document.createElement('div');
+        titleCommentDiv.className = 'title-comment2';
 
-          // Create the card container div
-          const cardContainerDiv = document.createElement('div');
-          cardContainerDiv.className = 'title-card1';
-          cardContainerDiv.style.marginLeft = '0px';
+        // Create the card container div
+        const cardContainerDiv = document.createElement('div');
+        cardContainerDiv.className = 'title-card1';
+        cardContainerDiv.style.marginLeft = '0px';
 
-          // Append to the main container
-          titleCommentDiv.appendChild(cardContainerDiv);
-          container.appendChild(titleCommentDiv);
+        // Append to the main container
+        titleCommentDiv.appendChild(cardContainerDiv);
+        container.appendChild(titleCommentDiv);
 
-          // Loop through hotels and create card elements
-          hotels.forEach((hotel, index) => {
-              if (index < 3) { // Only display the first 3 hotels
-                  const cardDiv = document.createElement('div');
-                  cardDiv.className = 'col-md-4 mb-3';
-
-
-                  cardDiv.innerHTML = `
-                      <div class="card product_img_size">
-                          <a href="/hotels/detail/${hotel.hotelId}">
-                              <img src="data:image/png;base64,${hotel.hotelMainImgBase64}" class="card-img-top product_img" alt="호텔 이미지">
-                              <div class="card-body" style="border-bottom: solid 1px #afb0b3;">
-                                  <h5 class="product_title">${hotel.hotelName}
-                                  <label class="product_rating" style="float: right; margin-bottom:20px;">★★★★★</label>
-                                <h6 class="product_date" style="float:left; margin: -20px 0 0px;">${hotel.address}</h6>
-                              </h5>
-
-                              <h5 class="product_price" style="margin-right:0px;">￦${hotel.price}
-                                       <br>
-                                       <p class="product_date">1박 요금</p>
-                                   </h5>
-                                   </div>
-                          </a>
-                      </div>
-                  `;
+        // Loop through hotels and create card elements
+        hotels.forEach((hotel, index) => {
+            if (index < 3) { // Only display the first 3 hotels
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'col-md-4 mb-3';
 
 
-                  cardContainerDiv.appendChild(cardDiv);
-              }
-          });
-      }
+                cardDiv.innerHTML = `
+                    <div class="card product_img_size">
+                        <a href="/hotels/detail/${hotel.hotelId}">
+                            <img src="data:image/png;base64,${hotel.hotelMainImgBase64}" class="card-img-top product_img" alt="호텔 이미지">
+                            <div class="card-body" style="border-bottom: solid 1px #afb0b3;">
+                                <h5 class="product_title">${hotel.hotelName}
+                                <label class="product_rating" style="float: right; margin-bottom:20px;">★★★★★</label>
+                              <h6 class="product_date" style="float:left; margin: -20px 0 0px;">${hotel.address}</h6>
+                            </h5>
+
+                            <h5 class="product_price" style="margin-right:0px;">￦${hotel.price}
+                                     <br>
+                                     <p class="product_date">1박 요금</p>
+                                 </h5>
+                                 </div>
+                        </a>
+                    </div>
+                `;
+
+
+                cardContainerDiv.appendChild(cardDiv);
+            }
+        });
+    }
 </script>
 
 <script>
@@ -434,43 +482,79 @@
         });
     }
 </script>
-
 <script>
-function performSearch() {
-
-const address = encodeURIComponent(document.getElementById('address').value);
-const checkinDate = encodeURIComponent(document.getElementById('checkin_date').value);
-const checkoutDate = encodeURIComponent(document.getElementById('checkout_date').value);
-const guests = encodeURIComponent(document.getElementById('guests').value);
-
-if (!address || !checkinDate || !checkoutDate) {
-        alert('주소, 체크인 날짜 및 체크아웃 날짜를 모두 입력해 주세요.');
-         event.preventDefault();
-        return; // 검색 요청을 보내지 않습니다
-    }
 
 
-const url = `http://localhost:8080/hotels/searchResult?address=${address}&checkin_date=${checkinDate}&checkout_date=${checkoutDate}&guests=${guests}`;
+          // 검색 요청 함수
+          function performSearch() {
+ event.preventDefault();
 
-console.log(`Request URL: ${url}`);
+              const address = encodeURIComponent(document.getElementById('address').value);
+              const checkinDate = encodeURIComponent(document.getElementById('checkin_date').value);
+              const checkoutDate = encodeURIComponent(document.getElementById('checkout_date').value);
+              const guests = encodeURIComponent(document.getElementById('guests').value);
 
-fetch(url)
-.then(response => {
-if (!response.ok) {
-throw new Error(`HTTP error! status: ${response.status}`);
-}
-return response.text(); // 또는 response.json()을 사용하여 JSON 데이터를 받습니다.
-})
-.then(data => {
-console.log('Received data:', data);
-window.location.href = url; // 페이지 리디렉션을 통해 데이터를 전송할 수도 있습니다.
-})
-.catch(error => {
-console.error('Error fetching search results:', error);
-});
-}
-    document.getElementById('checkin_date').setAttribute('min', new Date().toISOString().split('T')[0]);
-    document.getElementById('checkout_date').setAttribute('min', new Date().toISOString().split('T')[0]);
+              if (!address || !checkinDate || !checkoutDate) {
+                  alert('주소, 체크인 날짜 및 체크아웃 날짜를 모두 입력해 주세요.');
+                  return; // 검색 요청을 보내지 않습니다
+              }
+
+
+        const selectedRatings = [];
+                  $('input[type="checkbox"].rating:checked').each(function() {
+                   const rating = parseInt($(this).data('rating'), 10); // 별점 값을 정수로 변환
+                   selectedRatings.push(rating);
+                 });
+            console.log('Selected Ratings:', selectedRatings);
+
+              // 기본 URL 생성
+              let baseUrl = `http://localhost:8080/hotels/searchResult?address=${address}&checkin_date=${checkinDate}&checkout_date=${checkoutDate}&guests=${guests}`;
+
+              // 체크박스 필터 추가
+              const checkedFilters = [];
+              if (document.getElementById("rating5").checked) {
+                  checkedFilters.push(5);
+                  baseUrl += "&rating=5";
+              }
+              else if (document.getElementById("rating4").checked) {
+                  checkedFilters.push(4);
+                    baseUrl += "&rating=4";
+              }
+              else if (document.getElementById("rating3").checked) {
+                  checkedFilters.push(3);
+                    baseUrl += "&rating=3";
+              }
+
+
+            else  if (checkedFilters.length > 0) {
+                  baseUrl += `&checked=${checkedFilters.join(',')}`;
+              }
+
+              // 디버그를 위한 콘솔 로그
+              console.log(`Request URL: ${baseUrl}`);
+
+              // fetch 요청 보내기
+              fetch(baseUrl)
+                  .then(response => {
+                      if (!response.ok) {
+                          throw new Error(`HTTP error! status: ${response.status}`);
+                      }
+                      return response.text(); // 또는 response.json()을 사용하여 JSON 데이터를 받습니다.
+                  })
+                  .then(data => {
+                      console.log('Received data:', data);
+    window.location.href = baseUrl; // 필요한 경우 페이지 리디렉션
+
+                  })
+                  .catch(error => {
+                      console.error('Error fetching search results:', error);
+                  });
+          }
+
+        // 체크인, 체크아웃 날짜 제한 설정
+        document.getElementById('checkin_date').setAttribute('min', new Date().toISOString().split('T')[0]);
+        document.getElementById('checkout_date').setAttribute('min', new Date().toISOString().split('T')[0]);
+
 </script>
 
 <script>
@@ -494,13 +578,28 @@ console.error('Error fetching search results:', error);
             }
         }
 
-      // Event listeners for Guest adjustments
-        document.getElementById('increment-guests').addEventListener('click', () => {
-            adjustValue(guestsSelect, true);
-        });
-        document.getElementById('decrement-guests').addEventListener('click', () => {
-            adjustValue(guestsSelect, false);
-        });
+document.addEventListener('DOMContentLoaded', () => {
+    const userName = sessionStorage.getItem('userName') || 'Guest'; // 또는 localStorage.getItem('userName');
+    console.log('저장된 사용자 이름:', userName);
+});
+
+    function handleCheckboxChange(event) {
+    const checkbox = event.target;
+    if (checkbox.checked) {
+        console.log(`체크된 체크박스 ID: ${checkbox.id}`);
+       <!-- console.log(`체크된 체크박스 값: ${checkbox.value}`);-->
+    } else {
+        console.log(`해제된 체크박스 ID: ${checkbox.id}`);
+    }
+}
+
+// 모든 체크박스 요소를 가져와서 이벤트 리스너 추가
+document.querySelectorAll('.filters input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', handleCheckboxChange);
+});
+
+
+
 </script>
 </body>
 </html>

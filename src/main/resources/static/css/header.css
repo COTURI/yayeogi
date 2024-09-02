@@ -1,34 +1,31 @@
-
 body {
 
 }
 
-/* Header 스타일 */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #05203C;
-    padding: 10px 20px 0;
-}
+    padding: 10px 20px 0px;
 
-.header-body {
-    width: 1200px;
+}
+.header-body{
+  width: 1200px;
     margin: 0 auto;
     position: relative;
-}
+    font-family: Arial, sans-serif;
+    }
 
-/* 로고 버튼 */
+
 .logo-button {
     flex: 1;
 }
 
 .logo-button img {
-    height: 40px; /* 로고 이미지 높이 */
-    width: auto;  /* 비율 유지 */
+    height: 40px; /* 로고 이미지 높이 조정 */
+    width: auto; /* 비율 유지 */
 }
 
-/* 메뉴 컨테이너 */
 .menu-container {
     display: flex;
     justify-content: center;
@@ -43,7 +40,7 @@ header {
 .menu button {
     margin: 0 5px;
     padding: 10px 15px;
-    background-color: #17a2b8; /* 버튼 배경색 */
+    background-color: #17a2b8; /* 버튼 배경색 조정 */
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -51,7 +48,6 @@ header {
     color: #fff;
 }
 
-/* 인증 관련 스타일 */
 .auth {
     flex: 1;
     display: flex;
@@ -72,5 +68,51 @@ header {
 .auth button:hover {
     background-color: #5a6268;
 }
+.footer-body{
+    margin: 0;
+    font-family: "Noto Sans KR", sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 30vh;
+                }
+ .content {
+ flex: 1;
+}
 
+#footer {
+    overflow: hidden;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    max-width: 100%;
+    padding: 20px;
+    font-weight: 400;
+    font-size: 12px;
+    color: black;
+    background-color:#05203C;
+     /*whitesmoke;*/
+    z-index: 2;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    text-align: left; /* 텍스트를 왼쪽으로 정렬 */
+}
+
+.footer-box {
+    max-width: 1200px;
+    margin: 0; /* margin을 0으로 설정하여 왼쪽에 붙이기 */
+    padding: 0; /* padding을 제거하여 왼쪽 정렬을 유지 */
+    text-align: center; /* 텍스트를 왼쪽으로 정렬 */
+}
+
+hr {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    margin: 10px 0;
+}
+
+.gray_subtext {
+    color: white;
+    /*#555;*/
+    line-height: 1.6;
+    text-align: left; /* 텍스트를 왼쪽으로 정렬 */
+}
 

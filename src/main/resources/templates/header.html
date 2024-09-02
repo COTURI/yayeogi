@@ -21,11 +21,14 @@
             <!-- Thymeleaf 조건문을 사용한 버튼 표시 제어 -->
             <div th:if="${session.user != null}">
                 <!-- 로그인된 상태 -->
-                <button type="button" class="btn btn-secondary" onclick="window.location.href='/mypage'">
-                    <span th:text="${session.user.name}">내정보</span>
+                <button type="button" class="btn btn-secondary">
+                    <img src="#" alt="내정보"/>
+                    <span th:text="${session.user.name}">유저님</span>
                 </button>
-                <form action="/logout" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-secondary">로그아웃</button>
+                <form action="/logout" method="post">
+                    <button type="submit" class="btn btn-secondary">
+                        <img src="/html/layout/logout.png" alt="로그아웃"> 로그아웃
+                    </button>
                 </form>
             </div>
             <div th:if="${session.user == null}">
@@ -35,11 +38,8 @@
             </div>
         </div>
         <div class="menu">
-            <button type="button" class="btn btn-info" onclick="window.location.href='http://localhost:8080'">항공권
-            </button>
-            <button type="button" class="btn btn-info"
-                    onclick="window.location.href='http://localhost:8080/hotels/main'">호텔
-            </button>
+            <button type="button" class="btn btn-info" onclick="window.location.href='http://localhost:8080/main'">항공권</button>
+            <button type="button" class="btn btn-info" onclick="window.location.href='http://localhost:8080/hotels/main'">호텔</button>
         </div>
     </div>
 </header>

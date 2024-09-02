@@ -31,6 +31,7 @@ public class HotelDTO {
     private String hotelImg3Base64;
     private String hotelImg4Base64;
     private String hotelImg5Base64;
+    private Integer clas;
 
 
 

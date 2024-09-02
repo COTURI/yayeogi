@@ -18,16 +18,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
+import yayeogi.Green3.service.HotelReservationService;
+import yayeogi.Green3.entity.HotelReservation;
 import org.springframework.web.client.RestTemplate;
-import yayeogi.Green3.service.ReservationService;
-import yayeogi.Green3.entity.ReservationFlight;
-import yayeogi.Green3.service.ReservationService;
-
-import java.util.Map;
 
 @Controller
-public class PaymentController {
+public class HotelPaymentController {
 
     @Value("${kakao.client.id}")
     private String kakaoClientId;
@@ -40,23 +36,24 @@ public class PaymentController {
     private static final String CID = "TC0ONETIME"; // 테스트용 CID
 
     @Autowired
-    private ReservationService reservationService;
+    private HotelReservationService hotelReservationService;
 
-    @GetMapping("/kakao-login")
-    public String kakaoLogin() {
-        String kakaoAuthUrl = "https://kauth.kakao.com/oauth/authorize" +
-                "?client_id=" + kakaoClientId +
-                "&redirect_uri=" + kakaoRedirectUri +
-                "&response_type=code";
-        return "redirect:" + kakaoAuthUrl;
-    }
+  //  @GetMapping("/kakao-login")
+  //  public String kakaoLogin() {
+  //      String kakaoAuthUrl = "https://kauth.kakao.com/oauth/authorize" +
+  //              "?client_id=" + kakaoClientId +
+  //              "&redirect_uri=" + kakaoRedirectUri +
+  //              "&response_type=code";
+  //      return "redirect:" + kakaoAuthUrl;
+  //  }
 
-    @PostMapping("/payment")
+    @PostMapping("/HotelPayment")
     public ModelAndView handlePayment(HttpSession session) {
         String accessToken = (String) session.getAttribute("accessToken");
-        ReservationFlight reservationFlight = (ReservationFlight) session.getAttribute("reservationFlight");
+        HotelReservation hotelReservation = (HotelReservation) session.getAttribute("HotelReservation");
+        System.out.println("HotelReservation1 is null in session");
+        if (accessToken == null || hotelReservation == null) {
 
-        if (accessToken == null || reservationFlight == null) {
             return new ModelAndView("redirect:/kakao-login");
         }
 
@@ -65,7 +62,7 @@ public class PaymentController {
         paymentHeaders.set("Content-Type", "application/x-www-form-urlencoded");
 
         MultiValueMap<String, String> paymentParams = new LinkedMultiValueMap<>();
-        paymentParams.add("cid", "TC0ONETIME"); // 테스트용 CID
+        paymentParams.add("cid", CID); // 테스트용 CID
         paymentParams.add("partner_order_id", "partner_order_id");
         paymentParams.add("partner_user_id", "partner_user_id");
         paymentParams.add("item_name", "Item");
@@ -73,15 +70,16 @@ public class PaymentController {
         paymentParams.add("total_amount", "1000");
         paymentParams.add("vat_amount", "0");
         paymentParams.add("tax_free_amount", "0");
-        paymentParams.add("approval_url", "http://localhost:8080/approve");
-        paymentParams.add("cancel_url", "http://localhost:8080/cancel");
-        paymentParams.add("fail_url", "http://localhost:8080/fail");
+        paymentParams.add("approval_url", "http://localhost:8080/HotelApprove");
+        paymentParams.add("cancel_url", "http://localhost:8080/HotelCancel");
+        paymentParams.add("fail_url", "http://localhost:8080/HotelFail");
 
         HttpEntity<MultiValueMap<String, String>> paymentEntity = new HttpEntity<>(paymentParams, paymentHeaders);
         RestTemplate restTemplate = new RestTemplate();
 
         try {
             ResponseEntity<String> paymentResponse = restTemplate.exchange(PAYMENT_URL, HttpMethod.POST, paymentEntity, String.class);
+            System.out.println("checking");
             if (paymentResponse.getStatusCode() == HttpStatus.OK) {
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode root = mapper.readTree(paymentResponse.getBody());
@@ -99,36 +97,40 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/payment")
+    @GetMapping("/HotelPayment")
     public ModelAndView preparePayment(HttpSession session) {
-        ReservationFlight reservationFlight = (ReservationFlight) session.getAttribute("reservationFlight");
-
-        if (reservationFlight == null) {
-            return new ModelAndView("redirect:/reservation");
+        HotelReservation hotelReservation = (HotelReservation) session.getAttribute("HotelReservation");
+        System.out.println("HotelReservation retrieved in preparePayment: " + hotelReservation);
+          System.out.println(session.getAttribute("user"));
+        if (hotelReservation == null) {
+            System.out.println("HotelReservation is null in session");
+            return new ModelAndView("redirect:/HotelReservation");
         }
 
-        // 결제 요청을 서버에서 자동으로 처리하도록 클라이언트를 준비합니다.
-        return new ModelAndView("payment")
-                .addObject("reservationFlight", reservationFlight);
+        return new ModelAndView("HotelPayment")
+                .addObject("hotelReservation", hotelReservation);
     }
-
-    @GetMapping("/approve")
+    @GetMapping("/HotelApprove")
     public String approvePayment(@RequestParam("pg_token") String pgToken, HttpSession session) {
         String accessToken = (String) session.getAttribute("accessToken");
         String tid = (String) session.getAttribute("tid");
-        ReservationFlight reservationFlight = (ReservationFlight) session.getAttribute("reservationFlight");
+        HotelReservation hotelReservation = (HotelReservation) session.getAttribute("HotelReservation");
+        System.out.println("hotelReservation = " + hotelReservation);
+        System.out.println("accessToken = " + accessToken);
+        System.out.println("tid =" +tid);
 
-        if (accessToken == null || tid == null || reservationFlight == null) {
+
+
+        if (accessToken == null || tid == null || hotelReservation == null) {
             return "redirect:/error";
         }
-
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         headers.set("Content-Type", "application/x-www-form-urlencoded");
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("cid", "TC0ONETIME");
+        params.add("cid", CID);
         params.add("tid", tid);
         params.add("partner_order_id", "partner_order_id");
         params.add("partner_user_id", "partner_user_id");
@@ -143,11 +145,11 @@ public class PaymentController {
             JsonNode root = mapper.readTree(response.getBody());
 
             session.setAttribute("alertMessage", "결제가 성공적으로 완료되었습니다!");
-            reservationService.saveReservationFlight(reservationFlight);
-            session.removeAttribute("reservationFlight");
+            hotelReservationService.saveHotelReservation(hotelReservation);
 
+            session.removeAttribute("HotelReservation");
 
-            return "redirect:/confirmation";
+            return "redirect:/hotels/main";
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("alertMessage", "결제 처리 중 오류 발생");
@@ -155,12 +157,12 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/cancel")
+    @GetMapping("/HotelCancel")
     public String cancelPayment() {
         return "payment-cancelled";
     }
 
-    @GetMapping("/fail")
+    @GetMapping("/HotelFail")
     public String failPayment() {
         return "payment-failed";
     }
