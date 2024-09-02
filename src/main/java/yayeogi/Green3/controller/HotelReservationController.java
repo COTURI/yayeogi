@@ -34,7 +34,7 @@ public class HotelReservationController {
     private String kakaoClientId;
 
     @Value("${kakao.redirect.uri}")
-    private String kakaoRedirectUri;
+    private String kakaoRedirectUri1;
 
 
     @Autowired
@@ -129,7 +129,7 @@ public class HotelReservationController {
         String accessToken = (String) session.getAttribute("accessToken");
         if (accessToken == null) {
             session.setAttribute("pendingReservation", hotelReservation);
-            return "redirect:/kakao-login";
+            return "redirect:/kakao-login1";
         }
 
         // 액세스 토큰이 있는 경우 예약을 처리하고 리디렉션
@@ -137,11 +137,18 @@ public class HotelReservationController {
         return "redirect:/HotelPayment";
     }
 
-
+    @GetMapping("/kakao-login1")
+    public String kakaoLogin() {
+        String kakaoAuthUrl = "https://kauth.kakao.com/oauth/authorize" +
+                "?client_id=" + kakaoClientId +
+                "&redirect_uri=" + kakaoRedirectUri1 +
+                "&response_type=code";
+        return "redirect:" + kakaoAuthUrl;
+    }
 
 
     // 카카오 콜백 처리
-    @GetMapping("/kakao-callback")
+    @GetMapping("/kakao-callback1")
     public String kakaoCallback(@RequestParam("code") String code, HttpSession session) throws JsonProcessingException {
         final String tokenUrl = "https://kauth.kakao.com/oauth/token";
         HttpHeaders headers = new HttpHeaders();
@@ -150,7 +157,7 @@ public class HotelReservationController {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", kakaoClientId);
-        params.add("redirect_uri", kakaoRedirectUri);
+        params.add("redirect_uri", kakaoRedirectUri1);
         params.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);

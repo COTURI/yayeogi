@@ -174,6 +174,8 @@ public class HotelController {
     }
 
 
+
+
     @GetMapping("/detail") //  이건 검색결과에서 상세페이지 가는거
     public String getHotelById(
             @RequestParam("id") Integer id,
