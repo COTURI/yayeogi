@@ -1,0 +1,79 @@
+ body {
+            display: flex;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+        }
+        .sidebar {
+            background-color: #343a40;
+            padding: 20px;
+            width: 220px;
+            min-height: 100vh;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h1, .sidebar li a {
+            color: white;
+            text-decoration: none;
+        }
+        .sidebar img {
+            display: block;
+            margin: 0 auto 20px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin: 20px 0;
+            color: white;
+        }
+        .sidebar li a {
+            display: block;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .sidebar li a:hover {
+            background-color: #495057;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+        }
+        .main-content h2 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+        .filter {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .filter select, .filter button {
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        .filter button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .filter button:hover {
+            background-color: #0056b3;
+        }
+        #salesChart, #regionSalesChart {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .view {
+            display: none;
+        }
+        .view.active {
+            display: block;
+        }
