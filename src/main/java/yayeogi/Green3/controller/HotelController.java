@@ -1,18 +1,21 @@
 package yayeogi.Green3.controller;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.servlet.ModelAndView;
 import yayeogi.Green3.DTO.HotelDTO;
 import yayeogi.Green3.DTO.HotelReviewsDTO;
-import yayeogi.Green3.DTO.UserDTO;
 import yayeogi.Green3.entity.Hotel;
+import yayeogi.Green3.entity.HotelReservation;
+import yayeogi.Green3.entity.User;
+import yayeogi.Green3.repository.HotelRepository;
 import yayeogi.Green3.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import java.util.*;
+import java.util.stream.*;
 
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -26,6 +29,10 @@ public class HotelController {
 
     @Autowired
     private HotelService hotelService;
+
+    @Autowired
+    private HotelRepository hotelRepository;
+
 
     @GetMapping("/mains")
     public ResponseEntity<List<HotelDTO>> getHotelsByLocation(@RequestParam Integer location) {
@@ -92,17 +99,17 @@ public class HotelController {
         return new ResponseEntity<>(createdHotel, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<HotelDTO> getHotelById(@PathVariable("id") Integer id) {
+  /*  @GetMapping("/detail/{id}")
+    public String getHotelById(@PathVariable("id") Integer id) {
         try {
             HotelDTO hotel = hotelService.getHotelById(id);
-            return new ResponseEntity<>(hotel, HttpStatus.OK);
+            return "detail";
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return "detail";
         }
 
     }
-
+*/
     @PutMapping("/{id}")
     public ResponseEntity<HotelDTO> updateHotel(@PathVariable("id") Integer id, @RequestBody HotelDTO hotelDTO) {
         try {
@@ -133,13 +140,51 @@ public class HotelController {
         return "deals"; // 'deals.html' 템플릿을 반환
     }
 
-    @GetMapping("/detail")
+    @GetMapping("/detail/{id}")
+    public String getHotelById(@PathVariable("id") Integer id,
+                               @RequestParam(value = "location", required = false) Integer location,
+                               HotelReservation hotelReservation, HttpSession session,
+                               Model model) {
+
+        // ID로 호텔 정보를 조회합니다.
+        HotelDTO hotelDTO = hotelService.getHotelById(id);
+        if (hotelDTO == null) {
+            // 호텔이 없는 경우 처리 (예: 오류 페이지로 리다이렉트)
+            return "detail"; // 예시: error.html
+        }
+        User authenticatedUser = (User) session.getAttribute("user");
+        if (authenticatedUser != null) {
+            // 사용자의 이메일을 모델에 추가
+            model.addAttribute("email", authenticatedUser.getEmail());
+        } else {
+            // 사용자 정보가 없는 경우 처리
+            model.addAttribute("message", "사용자 정보가 세션에 없습니다.");
+        }
+
+        model.addAttribute("hotel", hotelDTO);
+        List<HotelReviewsDTO> hotelReviews = hotelService.getHotelReviews(id);
+        model.addAttribute("reviews", hotelReviews);
+
+        // 평균 별점 계산
+        double averageRating = hotelService.getAverageRating(Long.valueOf(id));
+        String formattedRating = String.format("%.1f", averageRating);
+        model.addAttribute("averageRating", formattedRating);
+
+        return "detail"; // 반환할 View 이름 (예: hotel-details.html)
+    }
+
+
+    @GetMapping("/detail") //  이건 검색결과에서 상세페이지 가는거
     public String getHotelById(
             @RequestParam("id") Integer id,
             @RequestParam("checkin_date") String checkinDate,
             @RequestParam("checkout_date") String checkoutDate,
-            Model model) {
-
+            HttpSession session, Model model) {
+        User authenticatedUser = (User) session.getAttribute("user");
+        if (authenticatedUser != null) {
+            // 사용자의 이메일을 모델에 추가
+            model.addAttribute("email", authenticatedUser.getEmail());
+        }
         // ID로 호텔 정보를 조회합니다.
         HotelDTO hotelDTO = hotelService.getHotelById(id);
         if (hotelDTO == null) {
@@ -165,27 +210,32 @@ public class HotelController {
     }
 
 
-
     @GetMapping("/searchResult")
+    public String searchResult(
+            @RequestParam("address") String address,
+            @RequestParam("checkin_date") String checkinDate,
+            @RequestParam("checkout_date") String checkoutDate,
+            @RequestParam(value = "clas", required = false) String clas, // clas 파라미터는 선택적
+            Model model) {
 
-   public String searchResult(
-           @RequestParam("address") String address,
-           @RequestParam("checkin_date") String checkinDate,
-           @RequestParam("checkout_date") String checkoutDate,
-           Model model) {
+        List<Map<String, Object>> hotels = hotelService.searchHotels(address);
+        /*HotelDTO hotelDTO = (HotelDTO) hotelService.getHotelById(id);*/
+        // 데이터 확인용 로그 추가
+        System.out.println("Hotels found: " + hotels);
 
-       List<Map<String, Object>> hotels = hotelService.searchHotels(address);
+        model.addAttribute("address", address);
+        model.addAttribute("checkinDate", checkinDate);
+        model.addAttribute("checkoutDate", checkoutDate);
 
-       // 데이터 확인용 로그 추가
-       System.out.println("Hotels found: " + hotels);
+        if (clas != null) {
+            // clas 파라미터가 있을 때
+            model.addAttribute("clas", clas);
+        }
 
-       model.addAttribute("address", address);
-       model.addAttribute("checkinDate", checkinDate);
-       model.addAttribute("checkoutDate", checkoutDate);
-       model.addAttribute("hotels", hotels); // 뷰에서 사용될 데이터 추가
+        model.addAttribute("hotels", hotels); // 뷰에서 사용될 데이터 추가
 
-       return "searchResult";
-   }
+        return "searchResult";
+    }
 
 
     @GetMapping("/hotels")
@@ -193,5 +243,28 @@ public class HotelController {
         List<Map<String, Object>> hotels = hotelService.searchHotels(address);
         return hotelService.searchHotels(address);
     }
+
+
+
+
+    private List<Integer> parseRatings(String ratings) {
+        if (ratings != null && !ratings.trim().isEmpty()) {
+            return Arrays.stream(ratings.split(","))
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+    private List<Integer> parsePrices(String prices) {
+        if (prices != null && !prices.trim().isEmpty()) {
+            return Arrays.stream(prices.split(","))
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+
 
 }

@@ -1,11 +1,11 @@
 package yayeogi.Green3.service;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import yayeogi.Green3.DTO.HotelDTO;
 import yayeogi.Green3.DTO.HotelReviewsDTO;
-import yayeogi.Green3.entity.Hotel;
-import yayeogi.Green3.entity.User;
-import yayeogi.Green3.entity.HotelReservation;
-import yayeogi.Green3.entity.HotelReview;
+import yayeogi.Green3.DTO.HotelSpecification;
+import yayeogi.Green3.entity.*;
 import yayeogi.Green3.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -126,7 +126,7 @@ public class HotelService {
         hotel.setLocation(hotelDTO.getLocation());
         hotel.setPrice(hotelDTO.getPrice());
         hotel.setAddress(hotelDTO.getAddress());
-
+        hotel.setClas(hotel.getClas());
         Hotel updatedHotel = hotelRepository.save(hotel);
         return convertToDTO(updatedHotel);
     }
@@ -194,6 +194,7 @@ public class HotelService {
         dto.setHotelImg3Base64(convertImageToBase64(hotel.getHotelImg3()));
         dto.setHotelImg4Base64(convertImageToBase64(hotel.getHotelImg4()));
         dto.setHotelImg5Base64(convertImageToBase64(hotel.getHotelImg5()));
+        dto.setClas(hotel.getClas());
 
         // 나머지 필드 설정
         return dto;
@@ -218,6 +219,7 @@ public class HotelService {
         hotel.setHotelImg3(hotelDTO.getHotelImg3());
         hotel.setHotelImg4(hotelDTO.getHotelImg4());
         hotel.setHotelImg5(hotelDTO.getHotelImg5());
+
         return hotel;
     }
 
@@ -273,6 +275,7 @@ public class HotelService {
                         hotelDTO.setLocation(hotel.getLocation());
                         hotelDTO.setPrice(hotel.getPrice());
                         hotelDTO.setAddress(hotel.getAddress());
+                        hotelDTO.setClas(hotel.getClas());
 
                         // Base64 변환 처리
                         if (hotel.getHotelMainImg() != null) {
@@ -345,16 +348,17 @@ public class HotelService {
         String sql = "SELECT * FROM hotels WHERE address LIKE CONCAT('%', ?, '%')";
         System.out.println("Executing query for address: " + sql);
         List<Map<String, Object>> result = jdbcTemplate.queryForList(sql, address);
-        System.out.println("Query result: " + result);
+       /* System.out.println("Query result: " + result);*/
 
         return result;
 
     }
 
-    public void createReservation(String email, Integer hotelId, LocalDate checkinDate, LocalDate checkoutDate, Integer guestAdult, Integer guestKid, Integer rooms) {
+    public void createReservation(String email, Integer hotelId, String checkinDate, String checkoutDate, Integer guestAdult, Integer guestKid, Integer rooms,HotelReservationRepository hotelReservationRepository) {
         // 호텔과 사용자 엔티티 조회
         Hotel hotel = hotelRepository.findById(Long.valueOf(hotelId))
-                .orElseThrow(() -> new RuntimeException("호텔을 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("Hotel not found with id: " + hotelId));
+
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
@@ -369,15 +373,16 @@ public class HotelService {
                 .checkinDate(checkinDate)
                 .checkoutDate(checkoutDate)
                 .guestAdult(guestAdult)
-                .hotel(hotel)
+                .rooms(rooms)
+                .hotel(hotel)  // Hotel 엔티티를 설정
                 .user(user)
                 .build();
 
-        // reservation 인스턴스를 데이터베이스에 저장
-        reservationRepository.save(reservation);
+        // HotelReservation 객체를 저장
+        hotelReservationRepository.save(reservation);
     }
 
-    private boolean isAvailable(Hotel hotel, LocalDate checkinDate, LocalDate checkoutDate) {
+    private boolean isAvailable(Hotel hotel, String checkinDate, String checkoutDate) {
         List<HotelReservation> reservations = reservationRepository.findByHotelAndDateRange(hotel, checkinDate, checkoutDate);
 
         // 현재 총 객실 수는 1개로 설정
@@ -389,4 +394,22 @@ public class HotelService {
         // 예약된 객실 수가 총 객실 수보다 적으면 예약 가능
         return (totalRooms - reservedRooms) > 0;
     }
+
+    public List<Hotel> getHotelsByFilter(String address, String checkinDate, String checkoutDate, Integer guest, List<Integer> ratings) {
+        Specification<Hotel> spec = Specification.where(HotelSpecification.hasAddress(address))
+                .and(HotelSpecification.hasCheckinDate(checkinDate))
+                .and(HotelSpecification.hasCheckoutDate(checkoutDate))
+                .and(HotelSpecification.hasGuest(guest))
+                .and(HotelSpecification.hasRatings(ratings));
+
+        return hotelRepository.findAll((Sort) spec);
+    }
+    public List<Hotel> findHotelsByCriteria(String address, String checkinDate, String checkoutDate, List<Integer> clas, Integer guest) {
+        // clas가 null이거나 비어 있는 경우, 필터링 조건에서 제외
+        if (clas == null || clas.isEmpty()) {
+            clas = null; // Repository 쿼리에서 null 처리를 위해
+        }
+        return hotelRepository.findByCriteria(address, checkinDate, checkoutDate, clas, guest);
+    }
+
 }

@@ -23,13 +23,14 @@ public class HotelReservation {
     private String email;
 
     @Column(name = "checkindate", nullable = false)
-    private LocalDate checkinDate;
+    private String checkinDate;
 
     @Column(name = "checkoutdate", nullable = false)
-    private LocalDate checkoutDate;
+    private String checkoutDate;
 
     @Column(name = "guest_adult", columnDefinition = "INT(2) DEFAULT 2")
     private Integer guestAdult;
+
 
 
     @Column(name = "rooms", columnDefinition = "INT(2) DEFAULT 1")
@@ -40,6 +41,8 @@ public class HotelReservation {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "hotel_id", nullable = false)
-    private Hotel hotel;
+    @JoinColumn(name = "hotel_id") // 호텔 엔티티와 연결할 외래 키 컬럼명
+    private Hotel hotel; // Hotel 엔티티를 직접 참조
+
+
 }

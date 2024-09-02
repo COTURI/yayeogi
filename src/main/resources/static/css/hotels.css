@@ -22,10 +22,10 @@
 
 }
 .background_image{              /* 검색창 뒷배경 */
-
+    float:left;
     background-size: cover;
     background-position: center;
-    width:1920px;
+    width:1900px;
     height: 550px;
     display: flex;
     align-items: center;

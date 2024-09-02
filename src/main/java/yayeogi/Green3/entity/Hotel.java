@@ -67,6 +67,9 @@ public class Hotel implements Serializable {
     @Column(name = "country", nullable = false)
     private Integer country;
 
+    @Column(name = "clas", nullable = false)
+    private Integer clas;
+
     @Column(name = "location", nullable = false)
     private Integer location;
 
@@ -81,5 +84,7 @@ public class Hotel implements Serializable {
 
     @Column(name = "address", length = 255, nullable = false)
     private String address;
+
+
 }
 
