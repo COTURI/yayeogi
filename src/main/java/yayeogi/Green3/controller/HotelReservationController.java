@@ -1,3 +1,4 @@
+
 package yayeogi.Green3.controller;
 
 import yayeogi.Green3.entity.Hotel;
@@ -33,7 +34,7 @@ public class HotelReservationController {
     @Value("${kakao.client.id}")
     private String kakaoClientId;
 
-    @Value("${kakao.redirect.uri}")
+    @Value("${kakao.redirect.uri1}")
     private String kakaoRedirectUri1;
 
 
@@ -54,39 +55,35 @@ public class HotelReservationController {
         this.userRepository = userRepository;
     }
 
-    // 예약 상세 조회
-    @GetMapping("/HotelReservation-detail/{reservationId}")
-    public String getReservationDetail(@PathVariable Integer reservationId, Model model) {
-        HotelReservation hotelReservation = hotelReservationService.findById(reservationId);
-        if (hotelReservation != null) {
-            model.addAttribute("hotelReservation", hotelReservation);
-            return "reservation-detail"; // Thymeleaf 템플릿 이름
-        } else {
-            model.addAttribute("message", "예약 정보를 찾을 수 없습니다.");
-            return "error"; // 에러 페이지 이름
-        }
-    }
+
 
     // 예약 확인
     @GetMapping("/HotelConfirmation")
     public String getReservationConfirmation(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("user") != null) {
-            User user = (User) session.getAttribute("user");
-            String email = user.getEmail();  // 세션에서 사용자 이메일 가져오기
 
-            // 이메일로 예약 정보를 조회
-            List<HotelReservation> reservations = hotelReservationService.findHotelReservationsByUserEmail(email);
-            if (reservations.isEmpty()) {
-                model.addAttribute("message", "예약 정보가 없습니다.");
+
+            HttpSession session = request.getSession(false);
+            if (session != null && session.getAttribute("user") != null) {
+                User user = (User) session.getAttribute("user");
+                String email = user.getEmail();  // 세션에서 사용자 이메
+                // 일 가져오기
+
+                // 이메일로 예약 정보를 조회
+                List<HotelReservation> reservations = hotelReservationService.findHotelReservationsByUserEmail(email);
+                if (reservations.isEmpty()) {
+                    model.addAttribute("message", "예약 정보가 없습니다.");
+                } else {
+                    model.addAttribute("reservations", reservations);
+                }
             } else {
-                model.addAttribute("reservations", reservations);
+                model.addAttribute("message", "로그인 상태가 아닙니다.");
             }
-        } else {
-            model.addAttribute("message", "로그인 상태가 아닙니다.");
-        }
-        return "reservation-confirmation-flight";
+            return "reservation-confirmation-hotel";
+
+
+
     }
+
 
     // 예약 취소
     @PostMapping("/HotelReservation/cancel/{reservationId}")
@@ -149,7 +146,7 @@ public class HotelReservationController {
 
     // 카카오 콜백 처리
     @GetMapping("/kakao-callback1")
-    public String kakaoCallback(@RequestParam("code") String code, HttpSession session) throws JsonProcessingException {
+    public String kakaoCallback1(@RequestParam("code") String code, HttpSession session) throws JsonProcessingException {
         final String tokenUrl = "https://kauth.kakao.com/oauth/token";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -157,7 +154,7 @@ public class HotelReservationController {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", kakaoClientId);
-        params.add("redirect_uri", kakaoRedirectUri1);
+        params.add("redirect_uri", kakaoRedirectUri1); // 새로운 URI 사용
         params.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
