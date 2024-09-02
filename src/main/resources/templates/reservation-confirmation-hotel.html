@@ -68,6 +68,7 @@
                 <th>체크아웃 날짜</th>
                 <th>인원 수</th>
                 <th>방 개수</th>
+                <th>작업</th>
             </tr>
             </thead>
             <tbody>
@@ -77,6 +78,11 @@
                 <td th:text="${reservation.checkoutDate}"></td>
                 <td th:text="${reservation.guestAdult}"></td>
                 <td th:text="${reservation.rooms}"></td>
+                <td>
+                    <form th:action="@{/HotelReservation/cancel/{reservationId}(reservationId=${reservation.reservationId})}" method="post">
+                        <button type="submit" class="button cancel-button">취소하기</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>

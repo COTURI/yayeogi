@@ -95,7 +95,7 @@ public class HotelReservationController {
             model.addAttribute("message", "예약 취소 중 오류가 발생했습니다.");
             e.printStackTrace();
         }
-        return "redirect:/confirmation"; // 취소 후 목록 페이지로 리디렉션
+        return "redirect:/HotelConfirmation"; // 취소 후 목록 페이지로 리디렉션
     }
 
     @PostMapping("/HotelReservation")
@@ -134,6 +134,9 @@ public class HotelReservationController {
         return "redirect:/HotelPayment";
     }
 
+
+
+
     @GetMapping("/kakao-login1")
     public String kakaoLogin() {
         String kakaoAuthUrl = "https://kauth.kakao.com/oauth/authorize" +
@@ -142,6 +145,8 @@ public class HotelReservationController {
                 "&response_type=code";
         return "redirect:" + kakaoAuthUrl;
     }
+
+
 
 
     // 카카오 콜백 처리
