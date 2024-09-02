@@ -138,7 +138,7 @@ public class ReservationController {
 //                return "redirect:/payment";
             }
 
-            return "redirect:/reservation";
+            return "redirect:/payment";
         } else {
             return "error"; // 에러 페이지로 리디렉션
         }

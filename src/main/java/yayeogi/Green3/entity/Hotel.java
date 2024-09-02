@@ -58,10 +58,10 @@ public class Hotel implements Serializable {
     @Column(name = "checkout_state", columnDefinition = "TINYINT DEFAULT 1")
     private Integer checkoutState;
 
-    @Column(name = "checkin_time", nullable = false)
+    @Column(name = "checkin_time")
     private String checkinTime;
 
-    @Column(name = "checkout_time", nullable = false)
+    @Column(name = "checkout_time")
     private String checkoutTime;
 
     @Column(name = "country", nullable = false)
