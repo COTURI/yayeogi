@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReservationService {
@@ -19,5 +20,19 @@ public class ReservationService {
     // 사용자의 이메일로 예약 정보를 찾는 메서드
     public List<ReservationFlight> findReservationsByUserEmail(String email) {
         return reservationFlightRepository.findByUserId(email);
+    }
+
+    // 예약 정보를 저장하는 메서드
+    public ReservationFlight saveReservationFlight(ReservationFlight reservationFlight) {
+        return reservationFlightRepository.save(reservationFlight);
+    }
+
+    public void cancelReservation(Long id) {
+        reservationFlightRepository.deleteById(id);
+    }
+
+    public ReservationFlight findById(Long id) {
+        Optional<ReservationFlight> reservation = reservationFlightRepository.findById(id);
+        return reservation.orElse(null);
     }
 }

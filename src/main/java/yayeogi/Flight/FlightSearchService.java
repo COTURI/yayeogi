@@ -56,7 +56,7 @@ public class FlightSearchService {
                     "&departureDate=" + departureDate +
                     "&returnDate=" + (returnDate != null ? returnDate : "") +
                     "&adults=" + adults +
-                    "&max=50";
+                    "&max=10";
 
             // 요청 헤더 구성
             HttpHeaders headers = new HttpHeaders();

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.client.RestTemplate;
+import yayeogi.Green3.service.ReservationService;
+import yayeogi.Green3.entity.ReservationFlight;
+import yayeogi.Green3.service.ReservationService;
 
 import java.util.Map;
 
@@ -26,23 +30,36 @@ import java.util.Map;
 public class PaymentController {
 
     @Value("${kakao.client.id}")
-    private String clientId;
+    private String kakaoClientId;
 
     @Value("${kakao.redirect.uri}")
-    private String redirectUri;
+    private String kakaoRedirectUri;
 
-    @Value("${kakao.client.secret}")
-    private String clientSecret;
+    private static final String PAYMENT_URL = "https://kapi.kakao.com/v1/payment/ready";
+    private static final String APPROVE_URL = "https://kapi.kakao.com/v1/payment/approve";
+    private static final String CID = "TC0ONETIME"; // 테스트용 CID
 
-    @GetMapping("/payment")
-    public ModelAndView startPayment(HttpSession session) {
+    @Autowired
+    private ReservationService reservationService;
+
+    @GetMapping("/kakao-login")
+    public String kakaoLogin() {
+        String kakaoAuthUrl = "https://kauth.kakao.com/oauth/authorize" +
+                "?client_id=" + kakaoClientId +
+                "&redirect_uri=" + kakaoRedirectUri +
+                "&response_type=code";
+        return "redirect:" + kakaoAuthUrl;
+    }
+
+    @PostMapping("/payment")
+    public ModelAndView handlePayment(HttpSession session) {
         String accessToken = (String) session.getAttribute("accessToken");
+        ReservationFlight reservationFlight = (ReservationFlight) session.getAttribute("reservationFlight");
 
-        if (accessToken == null) {
-            return new ModelAndView("redirect:/paymentlogin");
+        if (accessToken == null || reservationFlight == null) {
+            return new ModelAndView("redirect:/kakao-login");
         }
 
-        String paymentUrl = "https://kapi.kakao.com/v1/payment/ready";
         HttpHeaders paymentHeaders = new HttpHeaders();
         paymentHeaders.set("Authorization", "Bearer " + accessToken);
         paymentHeaders.set("Content-Type", "application/x-www-form-urlencoded");
@@ -64,14 +81,14 @@ public class PaymentController {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            ResponseEntity<String> paymentResponse = restTemplate.exchange(paymentUrl, HttpMethod.POST, paymentEntity, String.class);
-
+            ResponseEntity<String> paymentResponse = restTemplate.exchange(PAYMENT_URL, HttpMethod.POST, paymentEntity, String.class);
             if (paymentResponse.getStatusCode() == HttpStatus.OK) {
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode root = mapper.readTree(paymentResponse.getBody());
                 String redirectUrl = root.path("next_redirect_pc_url").asText();
                 String tid = root.path("tid").asText();
                 session.setAttribute("tid", tid);
+
                 return new ModelAndView("redirect:" + redirectUrl);
             } else {
                 return new ModelAndView("error").addObject("error", "결제 요청 중 오류 발생: " + paymentResponse.getBody());
@@ -82,67 +99,29 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/paymentlogin")
-    public RedirectView paymentLogin() {
-        String authorizationUrl = "https://kauth.kakao.com/oauth/authorize" +
-                "?client_id=" + clientId +
-                "&redirect_uri=" + redirectUri +
-                "&response_type=code";
-        return new RedirectView(authorizationUrl);
-    }
+    @GetMapping("/payment")
+    public ModelAndView preparePayment(HttpSession session) {
+        ReservationFlight reservationFlight = (ReservationFlight) session.getAttribute("reservationFlight");
 
-    @GetMapping("/callback")
-    public ModelAndView callback(@RequestParam("code") String code, HttpSession session) {
-        RestTemplate restTemplate = new RestTemplate();
-        String tokenUrl = "https://kauth.kakao.com/oauth/token";
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", clientId);
-        params.add("redirect_uri", redirectUri);
-        params.add("code", code);
-        params.add("client_secret", clientSecret);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/x-www-form-urlencoded");
-
-        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, entity, String.class);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            String accessToken = extractAccessToken(response.getBody());
-            session.setAttribute("accessToken", accessToken);
-
-            // 결제 페이지로 리디렉션
-            return new ModelAndView("redirect:/payment");
-        } else {
-            ModelAndView mav = new ModelAndView("error");
-            mav.addObject("error", "Failed to get access token");
-            return mav;
+        if (reservationFlight == null) {
+            return new ModelAndView("redirect:/reservation");
         }
-    }
 
-    private String extractAccessToken(String body) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            JsonNode root = mapper.readTree(body);
-            return root.path("access_token").asText();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
+        // 결제 요청을 서버에서 자동으로 처리하도록 클라이언트를 준비합니다.
+        return new ModelAndView("payment")
+                .addObject("reservationFlight", reservationFlight);
     }
 
     @GetMapping("/approve")
     public String approvePayment(@RequestParam("pg_token") String pgToken, HttpSession session) {
         String accessToken = (String) session.getAttribute("accessToken");
         String tid = (String) session.getAttribute("tid");
+        ReservationFlight reservationFlight = (ReservationFlight) session.getAttribute("reservationFlight");
 
-        if (accessToken == null || tid == null) {
+        if (accessToken == null || tid == null || reservationFlight == null) {
             return "redirect:/error";
         }
 
-        String kakaoPayApproveUrl = "https://kapi.kakao.com/v1/payment/approve";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
@@ -159,20 +138,16 @@ public class PaymentController {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            ResponseEntity<String> response = restTemplate.exchange(kakaoPayApproveUrl, HttpMethod.POST, entity, String.class);
-            System.out.println("Approve Response: " + response.getBody()); // 응답 출력
-
+            ResponseEntity<String> response = restTemplate.exchange(APPROVE_URL, HttpMethod.POST, entity, String.class);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response.getBody());
 
-            // 결제 성공 메시지를 세션에 저장
             session.setAttribute("alertMessage", "결제가 성공적으로 완료되었습니다!");
 
+            reservationService.saveReservationFlight(reservationFlight);
+            session.removeAttribute("reservationFlight");
 
-
-
-
-            return "redirect:/confirmation"; //
+            return "redirect:/confirmation";
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("alertMessage", "결제 처리 중 오류 발생");
