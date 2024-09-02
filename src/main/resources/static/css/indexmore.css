@@ -7,12 +7,14 @@ body {
     color: #333;
 }
 
-h1{
+h1 {
     background-color: #007bff;
     color: #fff;
     padding: 20px;
     text-align: center;
     font-size: 24px;
+    height: 150px;
+    line-height: 150px; /* 높이와 같은 값을 설정 */
 }
 
 main {
@@ -85,3 +87,35 @@ h2 {
     font-size: 20px;
     margin-top: 0;
 }
+
+.title-with-background {
+    background: url('/images/more.jpg') no-repeat center center; /* 배경 이미지 설정 */
+    background-size: cover; /* 배경 이미지가 요소를 완전히 덮도록 설정 */
+    color: #fff; /* 텍스트 색상 설정 */
+    padding: 20px; /* 패딩 설정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    font-size: 24px; /* 폰트 사이즈 설정 */
+    border-radius: 8px; /* 모서리 둥글게 처리 */
+    margin: 0; /* 여백 제거 */
+}
+ .social-media {
+     position: fixed; /* 스크롤해도 위치를 고정 */
+     bottom: 20px; /* 상단에서의 위치 */
+     left: 20px; /* 왼쪽에서의 위치 */
+     display: flex;
+     flex-direction: column; /* 세로 정렬 */
+     gap: 10px; /* 아이콘 간 간격 */
+     z-index: 1000; /* 다른 요소들 위에 표시 */
+ }
+
+ .social-icon {
+     display: inline-block;
+     font-size: 24px;
+     color: #007bff; /* 아이콘 색상 */
+     text-decoration: none;
+     transition: color 0.3s ease;
+ }
+
+ .social-icon:hover {
+     color: #fff; /* 호버 시 색상 변경 */
+ }

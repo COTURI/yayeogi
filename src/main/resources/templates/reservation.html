@@ -6,6 +6,7 @@
     <title>예약 확인</title>
     <link rel="stylesheet" href="/css/reservation.css">
     <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="/js/reservation.js" defer></script>
 
 
@@ -17,8 +18,8 @@
 <div th:replace="header :: header"></div>
 
 
-    <h1>예약 확인</h1>
 
+<h1 class="title-with-background">예약 확인</h1>
 
 <main>
     <!-- 예약 요약 -->
@@ -131,6 +132,15 @@
         <button type="submit" class="book-now-button" id="bookNowButton">예약하기</button>
     </form>
 </main>
+
+
+<div class="social-media">
+    <a href="https://www.facebook.com" class="social-icon" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://twitter.com" class="social-icon" aria-label="Twitter" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+    <a href="https://www.instagram.com" class="social-icon" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+    <a href="https://github.com/COTURI/yayeogi" class="social-icon" aria-label="GitHub" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
+</div>
+
 
 <br> <br><br><br><br><br>
 <div th:replace="~{footer :: footer}"></div>

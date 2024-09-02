@@ -143,6 +143,7 @@ public class PaymentController {
             JsonNode root = mapper.readTree(response.getBody());
 
             session.setAttribute("alertMessage", "결제가 성공적으로 완료되었습니다!");
+
             reservationService.saveReservationFlight(reservationFlight);
             session.removeAttribute("reservationFlight");
 
