@@ -32,7 +32,7 @@ public class UserController {
     public String registerUser(@ModelAttribute User user, Model model) {
         try {
             userService.registerNewUser(user);
-            return "redirect:/";
+            return "redirect:/register?success";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "signUp";
@@ -42,7 +42,7 @@ public class UserController {
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         model.addAttribute("user", new User());
-        return "/login";
+        return "login";
     }
 
     @PostMapping("/login")
@@ -60,10 +60,10 @@ public class UserController {
             response.addCookie(loggedInCookie);
             response.addCookie(usernameCookie);
 
-            return "/index";  // 메인 페이지로 리다이렉트
+            return "/";  // 메인 페이지로 리다이렉트
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "/error";
+            return "login";
         }
     }
 
@@ -71,6 +71,6 @@ public class UserController {
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();  // 세션 무효화
-        return "redirect:/";  // 로그인 페이지로 리다이렉트
+        return "redirect:/login";  // 로그인 페이지로 리다이렉트
     }
 }

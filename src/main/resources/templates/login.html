@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <style>
         body {
             height: 100vh;
@@ -199,7 +198,6 @@
             50% { transform: perspective(120px) rotateY(180deg) }
             100% { transform: perspective(120px) rotateY(180deg) rotateX(180deg) }
         }
-
     </style>
 </head>
 
@@ -231,9 +229,6 @@
                 <p class="button-text">SIGN IN</p>
             </button>
         </form>
-
-        <!-- 카카오 로그인 버튼 추가 -->
-        <div id="kakao-login-btn" style="margin: 10px 40px;"></div>
     </div>
     <div class="finished">
         <svg>
@@ -248,33 +243,5 @@
         <polyline points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
     </symbol>
 </svg>
-
-<script>
-    // SDK 초기화
-    Kakao.init('YOUR_JAVASCRIPT_KEY');
-
-    // 카카오 로그인 버튼 설정
-    Kakao.Auth.createLoginButton({
-        container: '#kakao-login-btn',
-        success: function(authObj) {
-            console.log(authObj);
-
-            // 사용자 정보 가져오기
-            Kakao.API.request({
-                url: '/v2/user/me',
-                success: function(res) {
-                    console.log(res);
-                    alert('환영합니다, ' + res.kakao_account.profile.nickname + '님!');
-                },
-                fail: function(error) {
-                    console.log(error);
-                }
-            });
-        },
-        fail: function(err) {
-            alert(JSON.stringify(err));
-        }
-    });
-</script>
 </body>
 </html>

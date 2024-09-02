@@ -1,0 +1,112 @@
+<!-- mypage.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <style>
+        .container {
+            width:1200px;
+            margin:0 auto;
+            display: flex;
+            justify-content: space-between;
+        }
+        .user-info {
+            width: 45%;
+        }
+        .tables {
+            width: 45%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 2px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<div th:replace="header :: header"></div>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- User Info Section -->
+    <div class="user-info">
+        <h2>마이페이지</h2>
+        <div>
+            <label for="userId">아이디: </label>
+            <span id="userId" th:text="${user.email}"></span>
+        </div>
+        <div>
+            <label for="password">비밀번호: </label>
+            <span id="password" th:text="${user.password}">********</span>
+        </div>
+        <div>
+            <label for="name">이름: </label>
+            <span id="name" th:text="${user.name}"></span>
+        </div>
+        <div>
+            <label for="dob">생년월일: </label>
+            <span id="dob" th:text="${user.birthDate}"></span>
+        </div>
+    </div>
+
+    <!-- Tables Section -->
+    <div class="tables">
+        <!-- Hotel Table -->
+        <table>
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>호텔이름</th>
+                <th>날짜</th>
+                <th>인원</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Example row -->
+            <tr>
+                <td>1</td>
+                <td>호텔 A</td>
+                <td>2024-08-25</td>
+                <td>2명</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Flight Table -->
+        <table>
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>항공권명</th>
+                <th>날짜</th>
+                <th>인원</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Example row -->
+            <tr>
+                <td>1</td>
+                <td>항공권 A</td>
+                <td>2024-08-26</td>
+                <td>1명</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Footer -->
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+/* footer.css */
+
+body {
+
+}
+
+.content {
+    flex: 1;
+}
+
+#footer {
+    overflow: hidden;
+    width: 100%;
+    padding: 20px 0; /* 위아래 padding만 지정 */
+    font-weight: 400;
+    font-size: 12px;
+    color: #fff;
+    background-color: #05203C;
+    z-index: 2;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display:flex;
+    bottom: 0;
+    left: 0;
+}
+
+.footer-box {
+    max-width: 1200px; /* 컨텐츠 너비 제한 */
+    margin: 0 auto;
+    padding: 0 20px; /* 내부 padding */
+}
+
+hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 20px 0;
+}
+
+.gray_subtext {
+    color: #ccc;
+    line-height: 1.8;
+    font-size: 14px;
+    text-align: left;
+}
+
+.gray_subtext span {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.gray_subtext span:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    #footer {
+        padding: 15px 0;
+    }
+
+    .footer-box {
+        padding: 0 10px;
+    }
+
+    .gray_subtext {
+        font-size: 12px;
+    }
+}

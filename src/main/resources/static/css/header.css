@@ -7,7 +7,7 @@ header {
     display: flex;
     justify-content: center; /* 중앙 정렬 */
     padding: 10px 20px;
-    background-color: #fff; /* 밝은 배경색 */
+    background-color: #05203c; /* 밝은 배경색 */
 
 }
 
@@ -30,7 +30,7 @@ header {
 }
 
 .logo-button {
-    background-color: #ffffff; /* 로고 배경색 하얀색 */
+    background-color: #05203c; /* 로고 배경색 하얀색 */
     border: none; /* 버튼 테두리 제거 */
     padding: 0; /* 버튼 패딩 제거 */
     box-shadow: none; /* 버튼 그림자 제거 */
