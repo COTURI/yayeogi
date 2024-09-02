@@ -135,7 +135,7 @@ public class ReservationController {
             if (pendingReservation != null) {
                 session.removeAttribute("pendingReservation");
                 session.setAttribute("reservationFlight", pendingReservation);
-                return "redirect:/payment";
+//                return "redirect:/payment";
             }
 
             return "redirect:/reservation";
