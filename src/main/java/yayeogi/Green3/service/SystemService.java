@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import yayeogi.Green3.repository.SystemRepository;
 
-import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class SystemService {
@@ -12,14 +14,17 @@ public class SystemService {
     @Autowired
     private SystemRepository systemRepository;
 
-    public Integer getAveragePriceByCheckinDate(LocalDate checkinDate) {
-        Double averagePrice = systemRepository.findAveragePriceByCheckinDate(checkinDate);
-        return averagePrice != null ? averagePrice.intValue() : null;
-    }
+    public Map<Integer, Double> getMonthlySales(int year) {
+        Map<Integer, Double> monthlySales = new HashMap<>();
 
-    public Double getTotalSalesByLocation(Integer location, LocalDate startDate, LocalDate endDate) {
-        return systemRepository.findTotalSalesByLocation(location, startDate, endDate);
-    }
+        // 호텔 예약 매출
+        List<Object[]> hotelSales = systemRepository.findMonthlySalesForHotels(year);
+        for (Object[] result : hotelSales) {
+            Integer month = (Integer) result[0];
+            Double totalSales = (Double) result[1];
+            monthlySales.put(month, totalSales);
+        }
 
-    // 필요한 경우 다른 통계 계산 로직 추가
+        return monthlySales;
+    }
 }

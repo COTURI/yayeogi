@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import yayeogi.Green3.service.SystemService;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 @Controller
 public class SystemController {
@@ -39,25 +40,13 @@ public class SystemController {
         return "system"; // 관리자 페이지 뷰
     }
 
-    // 평균 매출을 구하는 엔드포인트
-    @GetMapping("/system/average-price")
-    public String getAveragePrice(@RequestParam String checkinDate, Model model) {
-        LocalDate date = LocalDate.parse(checkinDate);
-        Integer averagePrice = systemService.getAveragePriceByCheckinDate(date);
-        model.addAttribute("averagePrice", averagePrice);
-        return "averagePriceView";  // 데이터를 전달할 뷰 이름
-    }
+    @GetMapping("/system")
+    public String adminDashboard(@RequestParam(defaultValue = "2024") int year, Model model) {
+        Map<Integer, Double> monthlySales = systemService.getMonthlySales(year);
+        model.addAttribute("monthlySales", monthlySales);
+        return "system"; // 관리자 페이지 뷰
 
-    // 지역별 매출 합계를 구하는 엔드포인트
-    @GetMapping("/system/region-sales")
-    public String getTotalSalesByRegion(@RequestParam Integer location,
-                                        @RequestParam String startDate,
-                                        @RequestParam String endDate,
-                                        Model model) {
-        LocalDate start = LocalDate.parse(startDate);
-        LocalDate end = LocalDate.parse(endDate);
-        Double totalSales = systemService.getTotalSalesByLocation(location, start, end);
-        model.addAttribute("totalSales", totalSales);
-        return "regionSalesView";  // 데이터를 전달할 뷰 이름
     }
 }
+
+
