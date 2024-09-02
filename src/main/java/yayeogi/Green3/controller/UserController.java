@@ -60,7 +60,7 @@ public class UserController {
             response.addCookie(loggedInCookie);
             response.addCookie(usernameCookie);
 
-            return "/";  // 메인 페이지로 리다이렉트
+            return "index";  // 메인 페이지로 리다이렉트
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "login";
@@ -71,6 +71,6 @@ public class UserController {
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();  // 세션 무효화
-        return "redirect:/login";  // 로그인 페이지로 리다이렉트
+        return "index";  // 로그인 페이지로 리다이렉트
     }
 }

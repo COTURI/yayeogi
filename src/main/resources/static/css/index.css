@@ -1,6 +1,8 @@
 /* 전체 페이지 스타일 */
+html,
 body {
     font-family: '맑은 고딕', Arial, sans-serif;
+    height: 100%;
     margin: 0;
     padding: 0;
     background-color: #fff;
@@ -19,11 +21,10 @@ h1 {
 /* 검색 컨테이너 스타일 */
 .search-container {
     max-width: 100%; /* 최대 너비 설정 */
-    margin: 20px auto; /* 사진과의 간격 조정 */
+    margin: 0px auto; /* 사진과의 간격 조정 */
     padding: 20px;
     background: url('/images/search.jpg') no-repeat center center; /* 배경 이미지 설정 */
     background-size: cover; /* 이미지가 컨테이너를 완전히 덮도록 설정 */
-    border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     position: relative; /* 자식 요소의 위치를 상대적으로 설정 */
     color: white; /* 텍스트 색상을 흰색으로 설정 */
