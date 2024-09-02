@@ -3,114 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <title>Join</title>
     <style>
-        table {
-            width: 280px;
-            height: 550px;
-            margin: auto;
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-        .email {
-            width: 127px;
-            height: 32px;
-            font-size: 15px;
-            border: 0;
-            border-color: lightgray;
-            border-radius: 15px;
-            outline: none;
-            padding-left: 10px;
-            background-color: rgb(233,233,233);
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 350px;
         }
-        .text {
-            width: 250px;
-            height: 32px;
-            font-size: 15px;
-            border: 0;
-            border-radius: 15px;
-            outline: none;
-            padding-left: 10px;
-            background-color: rgb(233,233,233);
+        h2 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 30px;
         }
-        select {
-            width: 100px;
-            height: 32px;
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            color: #333333;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .input-group input, .input-group select {
+            width: calc(100% - 20px);
+            padding: 10px;
             font-size: 15px;
-            border: 1;
-            border-color: lightgray;
-            border-radius: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             outline: none;
-            padding-left: 10px;
+            background-color: #f9f9f9;
+        }
+        .input-group input:focus, .input-group select:focus {
+            border-color: #007BFF;
+            background-color: #ffffff;
         }
         .btn {
-            width: 262px;
-            height: 32px;
-            font-size: 15px;
-            border: 0;
-            border-radius: 15px;
-            outline: none;
-            padding-left: 10px;
-            background-color: rgb(164, 199, 255);
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-        .btn:active {
-            width: 262px;
-            height: 32px;
-            font-size: 15px;
-            border: 0;
-            border-radius: 15px;
-            outline: none;
-            padding-left: 10px;
-            background-color: rgb(61, 135, 255);
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: #ff4d4f;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-<form th:action="@{/register}" th:object="${user}" method="post">
-    <table>
-        <tr>
-            <td><h2>회원가입</h2></td>
-        </tr>
-        <tr>
-            <td><input type="text" th:field="*{email}" class="email"> @
+<div class="container">
+    <h2>회원가입</h2>
+    <form th:action="@{/register}" th:object="${user}" method="post">
+        <div class="input-group">
+            <label for="email">이메일</label>
+            <div style="display: flex; gap: 5px;">
+                <input type="text" th:field="*{email}" id="email">
                 <select th:field="*{domain}">
                     <option value="naver.com">naver.com</option>
                     <option value="gmail.com">gmail.com</option>
                     <option value="daum.net">daum.net</option>
                     <option value="nate.com">nate.com</option>
                 </select>
-            </td>
-        </tr>
-        <tr>
-            <td>비밀번호</td>
-        </tr>
-        <tr>
-            <td><input type="password" th:field="*{password}" class="text"></td>
-        </tr>
-        <tr>
-            <td>비밀번호 확인</td>
-        </tr>
-        <tr>
-            <td><input type="password" th:field="*{passwordConfirm}" class="text"></td>
-        </tr>
-        <tr>
-            <td>이름</td>
-        </tr>
-        <tr>
-            <td><input type="text" th:field="*{name}" class="text"></td>
-        </tr>
-        <tr>
-            <td>생년월일</td>
-        </tr>
-        <tr>
-            <td><input type="date" th:field="*{birthDate}" class="text"></td>
-        </tr>
-        <tr>
-            <td><input type="submit" value="가입하기" class="btn"></td>
-        </tr>
-        <tr th:if="${errorMessage}">
-            <td><p th:text="${errorMessage}"></p></td>
-        </tr>
-    </table>
-</form>
+            </div>
+        </div>
+        <div class="input-group">
+            <label for="password">비밀번호</label>
+            <input type="password" th:field="*{password}" id="password">
+        </div>
+        <div class="input-group">
+            <label for="passwordConfirm">비밀번호 확인</label>
+            <input type="password" th:field="*{passwordConfirm}" id="passwordConfirm">
+        </div>
+        <div class="input-group">
+            <label for="name">이름</label>
+            <input type="text" th:field="*{name}" id="name">
+        </div>
+        <div class="input-group">
+            <label for="birthDate">생년월일</label>
+            <input type="date" th:field="*{birthDate}" id="birthDate">
+        </div>
+        <button type="submit" class="btn">가입하기</button>
+        <div th:if="${errorMessage}" class="error-message">
+            <p th:text="${errorMessage}"></p>
+        </div>
+    </form>
+</div>
 </body>
 </html>
