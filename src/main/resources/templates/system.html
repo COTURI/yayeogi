@@ -8,8 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="/css/system.css">
 
-    <!-- Chart.js 추가 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+
+    </style>
 </head>
 <body>
 <div th:replace="systemsidebar :: systemsidebar"></div>
@@ -19,49 +21,24 @@
     <div id="monthly-sales" class="view active">
         <h2>월별 매출</h2>
         <div class="filter">
-            <form method="get" action="/system">
-                <select name="year" id="yearSelect">
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <!-- 원하는 연도 추가 -->
-                </select>
-                <button type="submit">검색</button>
-            </form>
+            <select id="monthSelect">
+                <option value="1">1월</option>
+                <option value="2">2월</option>
+                <option value="3">3월</option>
+                <option value="4">4월</option>
+                <option value="5">5월</option>
+                <option value="6">6월</option>
+                <option value="7">7월</option>
+                <option value="8">8월</option>
+                <option value="9">9월</option>
+                <option value="10">10월</option>
+                <option value="11">11월</option>
+                <option value="12">12월</option>
+            </select>
+            <button onclick="updateChart()">검색</button>
         </div>
         <canvas id="salesChart"></canvas>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var ctx = document.getElementById('salesChart').getContext('2d');
-        var monthlySales = /*[[${monthlySales}]]*/ {}; // 서버에서 전달된 월별 매출 데이터
-
-        var labels = Object.keys(monthlySales).map(month => `${month}월`);
-        var data = Object.values(monthlySales);
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: '월별 매출',
-                    data: data,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    });
-</script>
 </body>
 </html>

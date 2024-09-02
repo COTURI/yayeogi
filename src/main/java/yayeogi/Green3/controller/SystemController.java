@@ -35,18 +35,9 @@ public class SystemController {
         }
     }
 
-    @GetMapping("/system")
-    public String adminDashboard() {
-        return "system"; // 관리자 페이지 뷰
-    }
 
-    @GetMapping("/system")
-    public String adminDashboard(@RequestParam(defaultValue = "2024") int year, Model model) {
-        Map<Integer, Double> monthlySales = systemService.getMonthlySales(year);
-        model.addAttribute("monthlySales", monthlySales);
-        return "system"; // 관리자 페이지 뷰
-
-    }
 }
+
+
 
 
