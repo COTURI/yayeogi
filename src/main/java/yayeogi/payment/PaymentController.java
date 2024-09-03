@@ -37,7 +37,7 @@ public class PaymentController {
 
     private static final String PAYMENT_URL = "https://kapi.kakao.com/v1/payment/ready";
     private static final String APPROVE_URL = "https://kapi.kakao.com/v1/payment/approve";
-    private static final String CID = "TC0ONETIME"; // 테스트용 CID
+    private static final String CID = "TC0ONETIME";
 
     @Autowired
     private ReservationService reservationService;

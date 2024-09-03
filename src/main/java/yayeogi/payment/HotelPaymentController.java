@@ -147,7 +147,7 @@ public class HotelPaymentController {
             session.setAttribute("alertMessage", "결제가 성공적으로 완료되었습니다!");
             hotelReservationService.saveHotelReservation(hotelReservation);
 
-            session.removeAttribute("HotelReservation");
+            session.removeAttribute("hotelReservation");
 
             return "redirect:/hotels/main";
         } catch (Exception e) {

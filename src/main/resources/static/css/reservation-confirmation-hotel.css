@@ -1,0 +1,143 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f9fc;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1.title-with-background {
+    background: url('/images/hotel-confirmation.jpg') no-repeat center center; /* 호텔 배경 이미지 */
+    background-size: cover;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    height: 150px;
+    line-height: 150px;
+    border-radius: 8px;
+    margin: 0;
+}
+
+table {
+    width: 100%;
+    border: 1px solid #e1e8eb;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    border: 1px solid #e1e8eb;
+    padding: 15px;
+}
+
+/* Header cells */
+th {
+    background-color: #3498db;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+/* Data cells */
+td {
+    color: #2c3e50;
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* Alternate row background color */
+tr:nth-child(even) {
+    background-color: #f2f4f8;
+}
+
+/* Column width adjustments */
+.date-column {
+    width: 120px; /* 좁은 너비 */
+}
+
+.time-column {
+    width: 200px; /* 넓은 너비 */
+}
+
+.action-column {
+    width: 150px; /* 버튼 너비 */
+}
+
+/* Center align the button inside the table cell */
+td:last-child {
+    text-align: center;
+}
+
+/* Button styling */
+.button, .cancel-button {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover, .cancel-button:hover {
+    background-color: #2980b9;
+}
+
+/* Header and Footer Styling (Assuming they are in separate CSS files) */
+header, footer {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e1e8eb;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+header {
+    border-bottom: 1px solid #3498db;
+}
+
+footer {
+    border-top: 1px solid #3498db;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #7f8c8d;
+    padding: 10px 0;
+}
+
+.social-media {
+    position: fixed; /* 스크롤해도 위치를 고정 */
+    bottom: 20px; /* 상단에서의 위치 */
+    left: 20px; /* 왼쪽에서의 위치 */
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    gap: 10px; /* 아이콘 간 간격 */
+    z-index: 1000; /* 다른 요소들 위에 표시 */
+}
+
+.social-icon {
+    display: inline-block;
+    font-size: 24px;
+    color: #007bff; /* 아이콘 색상 */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-icon:hover {
+    color: #fff; /* 호버 시 색상 변경 */
+}
